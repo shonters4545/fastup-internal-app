@@ -100,7 +100,7 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
     if (!currentUser || !surveyRequest) return;
     setIsSubmittingSurvey(true);
     try {
-      await supabase.from('survey_responses').insert({
+      await (supabase.from('survey_responses') as any).insert({
         user_id: currentUser.id,
         class_id: surveyRequest.class_id || null,
         survey_model_id: surveyRequest.survey_model_id,
@@ -109,8 +109,7 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
         responses: responses,
       });
 
-      await supabase
-        .from('survey_requests')
+      await (supabase.from('survey_requests') as any)
         .update({ status: 'completed' })
         .eq('id', surveyRequest.id);
 
