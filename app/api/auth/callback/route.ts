@@ -38,11 +38,16 @@ export async function GET(request: Request) {
 
           if (emailMatch) {
             // Update auth_id to the new Supabase Auth UUID
-            await (serviceClient.from('users') as any)
+            const { error: updateError } = await (serviceClient.from('users') as any)
               .update({ auth_id: user.id })
               .eq('id', emailMatch.id);
-            console.log('Linked Supabase auth to existing user:', user.email);
+            if (updateError) {
+              console.error('Failed to update auth_id:', updateError);
+            } else {
+              console.log('Linked Supabase auth to existing user:', user.email);
+            }
           } else {
+            console.log('No user found by email, redirecting to verify-invite:', user.email);
             // Truly new user — verify invite
             return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
           }
