@@ -35,7 +35,7 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
         .select('*')
         .eq('user_id', currentUser.id)
         .eq('status', 'pending')
-        .order('requested_at', { ascending: true });
+        .order('requested_at', { ascending: true }) as { data: any[] | null };
 
       if (!requests || requests.length === 0) {
         setIsSurveyModalOpen(false);
@@ -48,7 +48,7 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
             .from('survey_models')
             .select('*')
             .eq('id', request.survey_model_id)
-            .single();
+            .single() as { data: any };
 
           if (model) {
             setSurveyRequest(request);
@@ -63,12 +63,12 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
               .from('survey_models')
               .select('*')
               .eq('id', request.survey_model_id)
-              .single(),
+              .single() as Promise<{ data: any }>,
             supabase
               .from('classes')
               .select('*')
               .eq('id', request.class_id)
-              .single(),
+              .single() as Promise<{ data: any }>,
           ]);
 
           if (model && classData) {
