@@ -8,10 +8,9 @@ type TimelinePost = {
   id: string;
   title: string;
   content: string;
-  author_name: string;
-  image_url?: string;
+  author_name?: string;
+  thumbnail_url?: string;
   category_id?: string;
-  published_at: string;
   created_at: string;
 };
 
@@ -49,7 +48,7 @@ export default function TimelinePage() {
       try {
         const { data, error } = await supabase
           .from('timeline_posts')
-          .select('id, title, content, author_name, image_url, category_id, published_at, created_at')
+          .select('id, title, content, author_name, thumbnail_url, category_id, created_at')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -122,8 +121,8 @@ export default function TimelinePage() {
           filteredPosts.map(post => (
             <Link key={post.id} href={`/timeline/${post.id}`} className="block group">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden h-full flex flex-col transition-all duration-300 transform group-hover:-translate-y-1 group-hover:shadow-xl">
-                {post.image_url ? (
-                  <img src={post.image_url} alt={post.title} className="w-full h-48 object-cover" />
+                {post.thumbnail_url ? (
+                  <img src={post.thumbnail_url} alt={post.title} className="w-full h-48 object-cover" />
                 ) : (
                   <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                     <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

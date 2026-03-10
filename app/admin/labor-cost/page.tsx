@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -39,6 +40,7 @@ type DashboardData = {
 
 export default function AdminLaborCostPage() {
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [selectedMonth, setSelectedMonth] = useState<Date>(new Date());
   const [dailyMetrics, setDailyMetrics] = useState<DailyMetric[]>([]);
   const [loading, setLoading] = useState(true);
@@ -343,6 +345,11 @@ export default function AdminLaborCostPage() {
         <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

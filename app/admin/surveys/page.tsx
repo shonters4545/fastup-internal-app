@@ -17,7 +17,7 @@ type SurveyModel = {
 };
 
 export default function AdminSurveysListPage() {
-  const { loading: authLoading } = useAuth();
+  const { currentUser, loading: authLoading } = useAuth();
   const router = useRouter();
   const [surveys, setSurveys] = useState<SurveyModel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +80,11 @@ export default function AdminSurveysListPage() {
         <p className="text-gray-600 dark:text-gray-300 mt-4">アンケートを読み込み中...</p>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

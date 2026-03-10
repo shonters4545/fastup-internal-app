@@ -95,7 +95,6 @@ export default function InputPage() {
         nickname: nickname.trim(),
         target_college: targetCollege.trim(),
         profile_completed: true,
-        curriculum_generated: false,
       }).eq('id', currentUser.id);
 
       if (userError) throw userError;

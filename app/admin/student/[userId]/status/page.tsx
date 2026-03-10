@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
 
@@ -29,6 +29,7 @@ type ProgressSummary = {
 export default function AdminStudentStatusPage() {
   const { userId } = useParams<{ userId: string }>();
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const supabase = createClient();
 
   const [studentName, setStudentName] = useState('');
@@ -156,6 +157,11 @@ export default function AdminStudentStatusPage() {
         <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   const dailyProgressPct = targetTime > 0 ? Math.min((todaySeconds / targetTime) * 100, 100) : 0;

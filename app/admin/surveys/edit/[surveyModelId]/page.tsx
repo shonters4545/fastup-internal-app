@@ -16,7 +16,7 @@ type FormField = {
 
 export default function AdminEditSurveyPage() {
   const { surveyModelId } = useParams<{ surveyModelId: string }>();
-  const { loading: authLoading } = useAuth();
+  const { currentUser, loading: authLoading } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [deliveryTime, setDeliveryTime] = useState('');
@@ -138,6 +138,11 @@ export default function AdminEditSurveyPage() {
 
   if (authLoading || loading) {
     return <div className="text-center p-8"><div className="w-12 h-12 border-4 border-sky-500 border-dashed rounded-full animate-spin mx-auto"></div></div>;
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

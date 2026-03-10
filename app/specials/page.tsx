@@ -10,8 +10,8 @@ type SpecialCourse = {
   title: string;
   description: string;
   thumbnail_url: string;
-  entry_start: string;
-  entry_end: string;
+  start_date: string;
+  end_date: string;
 };
 
 const statusMap: { [key: string]: { text: string; style: string } } = {
@@ -37,9 +37,9 @@ export default function SpecialsPage() {
         // Fetch open special courses: entry_start <= now AND entry_end >= now
         const { data: specialsData, error: specialsError } = await supabase
           .from('specials')
-          .select('id, title, description, thumbnail_url, entry_start, entry_end')
-          .lte('entry_start', now)
-          .gte('entry_end', now);
+          .select('id, title, description, thumbnail_url, start_date, end_date')
+          .lte('start_date', now)
+          .gte('end_date', now);
 
         if (specialsError) throw specialsError;
         setSpecials(specialsData || []);
@@ -109,7 +109,7 @@ export default function SpecialsPage() {
                   {special.title}
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4">
-                  申込期間: {new Date(special.entry_start).toLocaleDateString('ja-JP')} ~ {new Date(special.entry_end).toLocaleDateString('ja-JP')}
+                  申込期間: {new Date(special.start_date).toLocaleDateString('ja-JP')} ~ {new Date(special.end_date).toLocaleDateString('ja-JP')}
                 </p>
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed flex-grow line-clamp-3">
                   {special.description}

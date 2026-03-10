@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { uploadFile, generatePath } from '@/lib/supabase/storage';
 import { useAuth } from '@/hooks/useAuth';
@@ -124,6 +125,7 @@ function ContractedStudentsModal({
 
 export default function AdminSpecialsPage() {
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [specials, setSpecials] = useState<SpecialCourse[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -271,6 +273,11 @@ export default function AdminSpecialsPage() {
         <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto"></div>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

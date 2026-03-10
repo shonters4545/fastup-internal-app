@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
 
@@ -19,6 +19,7 @@ type SubjectItem = { id: string; name: string };
 export default function AdminStudentProfilePage() {
   const { userId } = useParams<{ userId: string }>();
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const supabase = createClient();
 
   const [nickname, setNickname] = useState('');
@@ -144,6 +145,11 @@ export default function AdminStudentProfilePage() {
         <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

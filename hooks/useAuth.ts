@@ -49,13 +49,21 @@ export const useAuth = () => {
         .eq('auth_id', user.id)
         .single<{ id: string; role: string }>();
 
+      if (!profile) {
+        // User authenticated but no profile in users table yet
+        // This can happen for new users before invite processing completes
+        console.warn('No user profile found for auth_id:', user.id);
+        setCurrentUser(null);
+        setLoading(false);
+        return;
+      }
       setCurrentUser({
-        id: profile?.id ?? '',
+        id: profile.id,
         authId: user.id,
         displayName: user.user_metadata?.full_name ?? null,
         email: user.email ?? null,
         photoURL: user.user_metadata?.avatar_url ?? null,
-        role: (profile?.role as UserRole) ?? 'student',
+        role: (profile.role as UserRole) ?? 'student',
       });
       setLoading(false);
     };

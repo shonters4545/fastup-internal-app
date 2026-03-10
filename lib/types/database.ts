@@ -408,6 +408,9 @@ export interface Database {
         Row: {
           id: string;
           title: string;
+          instructor_id: string | null;
+          instructor_name: string | null;
+          passcode: string | null;
           start_time: string;
           end_time: string;
           survey_sent: boolean;
@@ -417,6 +420,9 @@ export interface Database {
         Insert: {
           id?: string;
           title: string;
+          instructor_id?: string | null;
+          instructor_name?: string | null;
+          passcode?: string | null;
           start_time: string;
           end_time: string;
           survey_sent?: boolean;
@@ -426,6 +432,9 @@ export interface Database {
         Update: {
           id?: string;
           title?: string;
+          instructor_id?: string | null;
+          instructor_name?: string | null;
+          passcode?: string | null;
           start_time?: string;
           end_time?: string;
           survey_sent?: boolean;
@@ -439,6 +448,10 @@ export interface Database {
           class_id: string;
           user_id: string;
           status: string;
+          instructor_name: string | null;
+          student_name: string | null;
+          study_material: string | null;
+          attended_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -446,6 +459,10 @@ export interface Database {
           class_id: string;
           user_id: string;
           status?: string;
+          instructor_name?: string | null;
+          student_name?: string | null;
+          study_material?: string | null;
+          attended_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -453,6 +470,10 @@ export interface Database {
           class_id?: string;
           user_id?: string;
           status?: string;
+          instructor_name?: string | null;
+          student_name?: string | null;
+          study_material?: string | null;
+          attended_at?: string | null;
           created_at?: string;
         };
       };
@@ -627,6 +648,8 @@ export interface Database {
           title: string;
           content: string;
           thumbnail_url: string | null;
+          author_name: string | null;
+          excerpt: string | null;
           category_id: string | null;
           author_id: string;
           published: boolean;
@@ -638,6 +661,8 @@ export interface Database {
           title: string;
           content: string;
           thumbnail_url?: string | null;
+          author_name?: string | null;
+          excerpt?: string | null;
           category_id?: string | null;
           author_id: string;
           published?: boolean;
@@ -649,6 +674,8 @@ export interface Database {
           title?: string;
           content?: string;
           thumbnail_url?: string | null;
+          author_name?: string | null;
+          excerpt?: string | null;
           category_id?: string | null;
           author_id?: string;
           published?: boolean;
@@ -664,6 +691,8 @@ export interface Database {
           start_date: string;
           end_date: string;
           capacity: number | null;
+          thumbnail_url: string | null;
+          form_fields: Json;
           created_at: string;
           updated_at: string;
         };
@@ -674,6 +703,8 @@ export interface Database {
           start_date: string;
           end_date: string;
           capacity?: number | null;
+          thumbnail_url?: string | null;
+          form_fields?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -684,6 +715,8 @@ export interface Database {
           start_date?: string;
           end_date?: string;
           capacity?: number | null;
+          thumbnail_url?: string | null;
+          form_fields?: Json;
           created_at?: string;
           updated_at?: string;
         };
@@ -694,21 +727,27 @@ export interface Database {
           special_id: string;
           user_id: string;
           status: string;
+          form_data: Json | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           special_id: string;
           user_id: string;
           status?: string;
+          form_data?: Json | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
           special_id?: string;
           user_id?: string;
           status?: string;
+          form_data?: Json | null;
           created_at?: string;
+          updated_at?: string;
         };
       };
       personal_entries: {
@@ -719,6 +758,10 @@ export interface Database {
           preferred_date: string;
           notes: string | null;
           status: string;
+          contracted_subjects: string[] | null;
+          phone_number: string | null;
+          desired_subjects: string[] | null;
+          additional_desired_subject: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -729,6 +772,10 @@ export interface Database {
           preferred_date: string;
           notes?: string | null;
           status?: string;
+          contracted_subjects?: string[] | null;
+          phone_number?: string | null;
+          desired_subjects?: string[] | null;
+          additional_desired_subject?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -739,6 +786,10 @@ export interface Database {
           preferred_date?: string;
           notes?: string | null;
           status?: string;
+          contracted_subjects?: string[] | null;
+          phone_number?: string | null;
+          desired_subjects?: string[] | null;
+          additional_desired_subject?: string | null;
           created_at?: string;
           updated_at?: string;
         };

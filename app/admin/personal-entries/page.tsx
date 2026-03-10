@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -47,6 +48,7 @@ const formatStatus = (
 
 export default function AdminPersonalEntriesPage() {
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [allEntries, setAllEntries] = useState<DisplayEntry[]>([]);
   const [subjectsMap, setSubjectsMap] = useState<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -183,6 +185,11 @@ export default function AdminPersonalEntriesPage() {
         <div className="w-12 h-12 border-4 border-lime-500 border-dashed rounded-full animate-spin mx-auto"></div>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   if (error) {

@@ -74,6 +74,11 @@ export default function AdminPostsListPage() {
     );
   }
 
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
+  }
+
   return (
     <div className="w-full max-w-6xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
       <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">

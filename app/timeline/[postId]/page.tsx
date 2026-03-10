@@ -9,10 +9,9 @@ type TimelinePost = {
   id: string;
   title: string;
   content: string;
-  author_name: string;
-  image_url?: string;
+  author_name?: string;
+  thumbnail_url?: string;
   category_id?: string;
-  published_at: string;
   created_at: string;
 };
 
@@ -34,7 +33,7 @@ export default function PostDetailPage() {
         const supabase = createClient();
         const { data, error: fetchError } = await supabase
           .from('timeline_posts')
-          .select('id, title, content, author_name, image_url, category_id, published_at, created_at')
+          .select('id, title, content, author_name, thumbnail_url, category_id, created_at')
           .eq('id', postId)
           .single();
 
@@ -104,8 +103,8 @@ export default function PostDetailPage() {
       </div>
 
       <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-        {post.image_url && (
-          <img src={post.image_url} alt={post.title} className="w-full h-80 object-cover" />
+        {post.thumbnail_url && (
+          <img src={post.thumbnail_url} alt={post.title} className="w-full h-80 object-cover" />
         )}
         <div className="p-8 md:p-12">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">{post.title}</h1>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -17,7 +18,8 @@ type UnpaidStudent = {
 };
 
 export default function AdminUnpaidPage() {
-  const { loading: authLoading } = useAuth();
+  const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [students, setStudents] = useState<UnpaidStudent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +95,11 @@ export default function AdminUnpaidPage() {
         <p className="text-gray-500 dark:text-gray-400 mt-4">読み込み中...</p>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

@@ -87,7 +87,7 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
       setIsSurveyModalOpen(false);
       return false;
     }
-  }, [currentUser, supabase]);
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser) {

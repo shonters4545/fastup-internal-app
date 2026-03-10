@@ -11,8 +11,8 @@ type SpecialCourse = {
   title: string;
   description: string;
   thumbnail_url: string;
-  entry_start: string;
-  entry_end: string;
+  start_date: string;
+  end_date: string;
   form_fields: {
     label: string;
     type: 'text' | 'select';
@@ -125,18 +125,17 @@ export default function SpecialEntryPage() {
         special_id: special.id,
         status: 'applied',
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
       }).select('id').single();
 
       if (entryError) throw entryError;
 
-      // 2. Create EntryDetails
-      const { error: detailError } = await (supabase.from('entry_details') as any).insert({
-        entry_id: entryData.id,
-        form_data: formValues,
-      });
-
-      if (detailError) throw detailError;
+      // 2. Update entry with form data
+      if (Object.keys(formValues).length > 0) {
+        const { error: updateError } = await (supabase.from('entries') as any)
+          .update({ form_data: formValues })
+          .eq('id', entryData.id);
+        if (updateError) throw updateError;
+      }
 
       alert('お申し込みが完了しました。');
       router.push('/specials');

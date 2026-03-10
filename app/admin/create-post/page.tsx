@@ -55,7 +55,7 @@ export default function CreatePostPage() {
         content: content.trim(),
         excerpt: excerpt.trim() || null,
         category_id: categoryId || null,
-        image_url: finalImageUrl,
+        thumbnail_url: finalImageUrl,
         author_id: currentUser.id,
         author_name: currentUser.displayName || currentUser.email,
       };
@@ -79,6 +79,11 @@ export default function CreatePostPage() {
         <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   return (

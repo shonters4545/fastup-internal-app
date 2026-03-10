@@ -103,7 +103,7 @@ export default function AttendancePlanPage() {
       }
     };
     fetchPlans();
-  }, [authLoading, currentUser, router, supabase]);
+  }, [authLoading, currentUser, router]);
 
   // Batch day-of-week selection (toggle, only for unconfirmed months)
   const handleDayOfWeekSelect = (dayIndex: number) => {

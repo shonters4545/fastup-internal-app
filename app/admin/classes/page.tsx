@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -153,6 +154,7 @@ function CreateClassModal({
 // --- Main Page ---
 export default function AdminClassesPage() {
   const { currentUser, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const [instructors, setInstructors] = useState<Instructor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -213,6 +215,11 @@ export default function AdminClassesPage() {
         <p className="text-gray-500 dark:text-gray-400">読み込み中...</p>
       </div>
     );
+  }
+
+  if (!authLoading && currentUser && !['admin', 'super'].includes(currentUser.role)) {
+    router.push('/');
+    return null;
   }
 
   const now = new Date();
