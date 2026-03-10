@@ -18,7 +18,7 @@ export async function GET(request: Request) {
           .from('users')
           .select('id')
           .eq('auth_id', user.id)
-          .single();
+          .single<{ id: string }>();
 
         if (!existingUser) {
           // New user - redirect to invite verification
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
           .from('contracts')
           .select('current_period_end, cancel_at_period_end')
           .eq('user_id', existingUser.id)
-          .single();
+          .single<{ current_period_end: string; cancel_at_period_end: boolean }>();
 
         if (contract?.cancel_at_period_end && new Date(contract.current_period_end) < new Date()) {
           await supabase.auth.signOut();
