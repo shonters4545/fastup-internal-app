@@ -10,6 +10,10 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
+    if (error) {
+      console.error('Auth callback error:', error.message, error);
+    }
+
     if (!error) {
       // Check if user exists in our users table, if not verify invite
       const { data: { user } } = await supabase.auth.getUser();
@@ -21,8 +25,10 @@ export async function GET(request: Request) {
           .single<{ id: string }>();
 
         if (!existingUser) {
-          // New user - redirect to invite verification
-          return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
+          // TODO: Re-enable after data migration
+          // For now, skip invite verification since users table is empty
+          // return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
+          console.log('New user detected, skipping invite check (pre-migration):', user.email);
         }
 
         // Existing user - check contract
@@ -50,5 +56,6 @@ export async function GET(request: Request) {
     }
   }
 
+  console.error('Auth failed - no code or exchange failed. URL:', request.url);
   return NextResponse.redirect(`${origin}/login?error=auth_failed`);
 }
