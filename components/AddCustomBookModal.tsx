@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { uploadFile, generatePath } from '@/lib/supabase/storage';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function AddCustomBookModal({ isOpen, onClose, userId, divisionId
   const [maxLaps, setMaxLaps] = useState(1);
   const [taskNames, setTaskNames] = useState<string[]>(['']);
   const [remarks, setRemarks] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const supabase = createClient();
 
@@ -41,6 +43,7 @@ export default function AddCustomBookModal({ isOpen, onClose, userId, divisionId
     setMaxLaps(1);
     setTaskNames(['']);
     setRemarks('');
+    setImageFile(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,6 +60,13 @@ export default function AddCustomBookModal({ isOpen, onClose, userId, divisionId
 
     setIsSubmitting(true);
     try {
+      // Upload image if provided
+      let imageUrl: string | null = null;
+      if (imageFile) {
+        const path = generatePath(`custom/${userId}`, imageFile.name);
+        imageUrl = await uploadFile('book-images', path, imageFile);
+      }
+
       // 1. Create custom book
       const { data: book, error: bookError } = await (supabase.from('books') as any).insert({
         name: bookName,
@@ -65,6 +75,7 @@ export default function AddCustomBookModal({ isOpen, onClose, userId, divisionId
         max_laps: maxLaps,
         is_custom: true,
         remarks,
+        image_url: imageUrl,
         user_id: userId,
         display_order: 9999,
       }).select('id').single();
@@ -106,6 +117,16 @@ export default function AddCustomBookModal({ isOpen, onClose, userId, divisionId
                 className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="例: 英単語帳（カスタム）"
                 required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">参考書画像（任意）</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
               />
             </div>
 

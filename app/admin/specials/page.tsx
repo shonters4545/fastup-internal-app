@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { uploadFile, generatePath } from '@/lib/supabase/storage';
 import { useAuth } from '@/hooks/useAuth';
 
 type SpecialCourse = {
@@ -138,6 +139,7 @@ export default function AdminSpecialsPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [capacity, setCapacity] = useState('');
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -171,6 +173,7 @@ export default function AdminSpecialsPage() {
     setStartDate('');
     setEndDate('');
     setCapacity('');
+    setThumbnailFile(null);
     setIsSubmitting(false);
     setError('');
     setEditingSpecial(null);
@@ -225,13 +228,21 @@ export default function AdminSpecialsPage() {
     setIsSubmitting(true);
     try {
       const supabase = createClient();
-      const specialData = {
+
+      let thumbnailUrl: string | undefined;
+      if (thumbnailFile) {
+        const path = generatePath('specials', thumbnailFile.name);
+        thumbnailUrl = await uploadFile('post-thumbnails', path, thumbnailFile);
+      }
+
+      const specialData: any = {
         title,
         description,
         start_date: new Date(startDate).toISOString(),
         end_date: new Date(endDate).toISOString(),
         capacity: capacity ? parseInt(capacity, 10) : null,
       };
+      if (thumbnailUrl) specialData.thumbnail_url = thumbnailUrl;
 
       if (editingSpecial) {
         const { error: updateError } = await (supabase.from('specials') as any)
@@ -459,6 +470,18 @@ export default function AdminSpecialsPage() {
                   onChange={(e) => setCapacity(e.target.value)}
                   className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
                   min="0"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  サムネイル画像（任意）
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
+                  className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white text-sm"
                 />
               </div>
 

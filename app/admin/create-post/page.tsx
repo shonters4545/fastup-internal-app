@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
+import { uploadFile, generatePath } from '@/lib/supabase/storage';
 
 type Category = {
   id: string;
@@ -21,6 +22,7 @@ export default function CreatePostPage() {
   const [excerpt, setExcerpt] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -42,12 +44,18 @@ export default function CreatePostPage() {
     setSaving(true);
 
     try {
+      let finalImageUrl = imageUrl.trim() || null;
+      if (imageFile) {
+        const path = generatePath('posts', imageFile.name);
+        finalImageUrl = await uploadFile('post-thumbnails', path, imageFile);
+      }
+
       const postData = {
         title: title.trim(),
         content: content.trim(),
         excerpt: excerpt.trim() || null,
         category_id: categoryId || null,
-        image_url: imageUrl.trim() || null,
+        image_url: finalImageUrl,
         author_id: currentUser.id,
         author_name: currentUser.displayName || currentUser.email,
       };
@@ -123,17 +131,25 @@ export default function CreatePostPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">画像URL</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">画像アップロード</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => { setImageFile(e.target.files?.[0] || null); if (e.target.files?.[0]) setImageUrl(''); }}
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-sm"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">または画像URLを直接入力:</p>
             <input
               type="url"
               value={imageUrl}
-              onChange={e => setImageUrl(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+              onChange={e => { setImageUrl(e.target.value); if (e.target.value) setImageFile(null); }}
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md mt-1"
               placeholder="https://example.com/image.jpg"
             />
-            {imageUrl && (
+            {(imageUrl || imageFile) && (
               <div className="mt-2">
-                <img src={imageUrl} alt="Preview" className="max-h-40 rounded-lg object-cover" onError={e => (e.currentTarget.style.display = 'none')} />
+                {imageUrl && <img src={imageUrl} alt="Preview" className="max-h-40 rounded-lg object-cover" onError={e => (e.currentTarget.style.display = 'none')} />}
+                {imageFile && <p className="text-sm text-green-600">{imageFile.name} が選択されています</p>}
               </div>
             )}
           </div>
