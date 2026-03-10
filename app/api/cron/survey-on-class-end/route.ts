@@ -14,7 +14,8 @@ export async function GET(request: Request) {
 
   try {
     // Call the PL/pgSQL function that handles survey distribution
-    const { error } = await supabase.rpc('send_survey_on_class_end');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.rpc as any)('send_survey_on_class_end');
 
     if (error) {
       console.error('Error running send_survey_on_class_end:', error);

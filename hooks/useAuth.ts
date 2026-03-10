@@ -47,7 +47,7 @@ export const useAuth = () => {
         .from('users')
         .select('id, role')
         .eq('auth_id', user.id)
-        .single();
+        .single<{ id: string; role: string }>();
 
       setCurrentUser({
         id: profile?.id ?? '',

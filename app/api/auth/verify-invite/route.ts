@@ -14,7 +14,8 @@ export async function GET(request: Request) {
   }
 
   // Call the PL/pgSQL function to atomically process the invite
-  const { data, error } = await serviceClient.rpc('process_new_user_invite', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (serviceClient.rpc as any)('process_new_user_invite', {
     p_auth_id: user.id,
     p_email: user.email,
     p_display_name: user.user_metadata?.full_name ?? user.email,

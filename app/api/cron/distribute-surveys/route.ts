@@ -12,7 +12,8 @@ export async function GET(request: Request) {
   const supabase = createServiceClient();
 
   try {
-    const { error } = await supabase.rpc('distribute_scheduled_surveys');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.rpc as any)('distribute_scheduled_surveys');
 
     if (error) {
       console.error('Error running distribute_scheduled_surveys:', error);
