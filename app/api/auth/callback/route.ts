@@ -28,10 +28,23 @@ export async function GET(request: Request) {
           .single<{ id: string }>();
 
         if (!existingUser) {
-          // TODO: Re-enable after data migration
-          // For now, skip invite verification since users table is empty
-          // return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
-          console.log('New user detected, skipping invite check (pre-migration):', user.email);
+          // No match by auth_id — try matching by email (migrated users have Firebase UIDs)
+          const { data: emailMatch } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', user.email!)
+            .single<{ id: string }>();
+
+          if (emailMatch) {
+            // Update auth_id to the new Supabase Auth UUID
+            await (supabase.from('users') as any)
+              .update({ auth_id: user.id })
+              .eq('id', emailMatch.id);
+            console.log('Linked Supabase auth to existing user:', user.email);
+          } else {
+            // Truly new user — verify invite
+            return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
+          }
         } else {
           // Existing user - check contract
           const { data: contract } = await supabase
