@@ -29,18 +29,18 @@ export async function GET(request: Request) {
           // For now, skip invite verification since users table is empty
           // return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
           console.log('New user detected, skipping invite check (pre-migration):', user.email);
-        }
+        } else {
+          // Existing user - check contract
+          const { data: contract } = await supabase
+            .from('contracts')
+            .select('current_period_end, cancel_at_period_end')
+            .eq('user_id', existingUser.id)
+            .single<{ current_period_end: string; cancel_at_period_end: boolean }>();
 
-        // Existing user - check contract
-        const { data: contract } = await supabase
-          .from('contracts')
-          .select('current_period_end, cancel_at_period_end')
-          .eq('user_id', existingUser.id)
-          .single<{ current_period_end: string; cancel_at_period_end: boolean }>();
-
-        if (contract?.cancel_at_period_end && new Date(contract.current_period_end) < new Date()) {
-          await supabase.auth.signOut();
-          return NextResponse.redirect(`${origin}/login?error=contract_expired`);
+          if (contract?.cancel_at_period_end && new Date(contract.current_period_end) < new Date()) {
+            await supabase.auth.signOut();
+            return NextResponse.redirect(`${origin}/login?error=contract_expired`);
+          }
         }
       }
 
