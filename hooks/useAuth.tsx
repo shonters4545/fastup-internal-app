@@ -43,15 +43,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const fetchUserProfile = async (user: User) => {
+      console.log('[Auth] fetchUserProfile started for:', user.email, 'auth_id:', user.id);
       try {
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from('users')
           .select('id, role')
           .eq('auth_id', user.id)
           .single<{ id: string; role: string }>();
 
+        console.log('[Auth] profile query result:', profile, 'error:', profileError?.message ?? 'none');
+
         if (!profile) {
-          console.warn('No user profile found for auth_id:', user.id);
+          console.warn('[Auth] No user profile found for auth_id:', user.id);
           setCurrentUser(null);
           setLoading(false);
           return;
@@ -73,15 +76,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     const getUser = async () => {
+      console.log('[Auth] getUser started');
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user }, error } = await supabase.auth.getUser();
+        console.log('[Auth] getUser result:', user?.email ?? 'no user', error?.message ?? 'no error');
         if (user) {
           await fetchUserProfile(user);
         } else {
           setCurrentUser(null);
           setLoading(false);
         }
-      } catch {
+      } catch (err) {
+        console.error('[Auth] getUser exception:', err);
         setCurrentUser(null);
         setLoading(false);
       }
