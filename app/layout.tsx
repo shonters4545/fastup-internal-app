@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Header } from '@/components/Header';
-import { BottomNavBar } from '@/components/BottomNavBar';
-import { SurveyProvider } from '@/components/SurveyProvider';
+import { ClientProviders } from '@/components/ClientProviders';
 
 export const metadata: Metadata = {
   title: 'FAST-UP',
@@ -17,15 +15,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <SurveyProvider>
-          <div className="min-h-screen w-full flex flex-col items-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-            <Header />
-            <main className="w-full flex flex-col items-center justify-center p-4 pb-24 md:pb-4">
-              {children}
-            </main>
-            <BottomNavBar />
-          </div>
-        </SurveyProvider>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );
