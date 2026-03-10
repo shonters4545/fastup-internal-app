@@ -12,9 +12,12 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Auth callback error:', error.message, error);
+      return NextResponse.redirect(
+        `${origin}/login?error=exchange_failed&detail=${encodeURIComponent(error.message)}`
+      );
     }
 
-    if (!error) {
+    {
       // Check if user exists in our users table, if not verify invite
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
@@ -56,6 +59,6 @@ export async function GET(request: Request) {
     }
   }
 
-  console.error('Auth failed - no code or exchange failed. URL:', request.url);
-  return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  console.error('Auth failed - no code param. URL:', request.url);
+  return NextResponse.redirect(`${origin}/login?error=no_code`);
 }
