@@ -138,6 +138,11 @@ export interface Database {
           name: string;
           image_url: string | null;
           display_order: number;
+          max_laps: number;
+          is_custom: boolean;
+          drive_url: string | null;
+          remarks: string | null;
+          user_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -147,6 +152,11 @@ export interface Database {
           name: string;
           image_url?: string | null;
           display_order?: number;
+          max_laps?: number;
+          is_custom?: boolean;
+          drive_url?: string | null;
+          remarks?: string | null;
+          user_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -156,6 +166,11 @@ export interface Database {
           name?: string;
           image_url?: string | null;
           display_order?: number;
+          max_laps?: number;
+          is_custom?: boolean;
+          drive_url?: string | null;
+          remarks?: string | null;
+          user_id?: string | null;
           created_at?: string;
         };
       };
@@ -854,6 +869,8 @@ export interface Database {
           id: string;
           user_id: string;
           task_id: string;
+          book_id: string | null;
+          lap: number;
           status: string;
           score: number | null;
           created_at: string;
@@ -863,6 +880,8 @@ export interface Database {
           id?: string;
           user_id: string;
           task_id: string;
+          book_id?: string | null;
+          lap?: number;
           status?: string;
           score?: number | null;
           created_at?: string;
@@ -872,6 +891,8 @@ export interface Database {
           id?: string;
           user_id?: string;
           task_id?: string;
+          book_id?: string | null;
+          lap?: number;
           status?: string;
           score?: number | null;
           created_at?: string;
