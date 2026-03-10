@@ -63,12 +63,12 @@ export function SurveyProvider({ children }: { children: React.ReactNode }) {
               .from('survey_models')
               .select('*')
               .eq('id', request.survey_model_id)
-              .single() as Promise<{ data: any }>,
+              .single() as unknown as Promise<{ data: any }>,
             supabase
               .from('classes')
               .select('*')
               .eq('id', request.class_id)
-              .single() as Promise<{ data: any }>,
+              .single() as unknown as Promise<{ data: any }>,
           ]);
 
           if (model && classData) {
