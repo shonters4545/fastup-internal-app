@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createServiceClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -21,23 +21,24 @@ export async function GET(request: Request) {
       // Check if user exists in our users table, if not verify invite
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data: existingUser } = await supabase
-          .from('users')
+        // Use service role client to bypass RLS for user lookup/update
+        const serviceClient = createServiceClient();
+
+        const { data: existingUser } = await (serviceClient.from('users') as any)
           .select('id')
           .eq('auth_id', user.id)
-          .single<{ id: string }>();
+          .single();
 
         if (!existingUser) {
           // No match by auth_id — try matching by email (migrated users have Firebase UIDs)
-          const { data: emailMatch } = await supabase
-            .from('users')
+          const { data: emailMatch } = await (serviceClient.from('users') as any)
             .select('id')
             .eq('email', user.email!)
-            .single<{ id: string }>();
+            .single();
 
           if (emailMatch) {
             // Update auth_id to the new Supabase Auth UUID
-            await (supabase.from('users') as any)
+            await (serviceClient.from('users') as any)
               .update({ auth_id: user.id })
               .eq('id', emailMatch.id);
             console.log('Linked Supabase auth to existing user:', user.email);
@@ -47,11 +48,10 @@ export async function GET(request: Request) {
           }
         } else {
           // Existing user - check contract
-          const { data: contract } = await supabase
-            .from('contracts')
+          const { data: contract } = await (serviceClient.from('contracts') as any)
             .select('current_period_end, cancel_at_period_end')
             .eq('user_id', existingUser.id)
-            .single<{ current_period_end: string; cancel_at_period_end: boolean }>();
+            .single();
 
           if (contract?.cancel_at_period_end && new Date(contract.current_period_end) < new Date()) {
             await supabase.auth.signOut();
