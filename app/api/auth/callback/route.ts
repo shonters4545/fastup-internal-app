@@ -47,9 +47,20 @@ export async function GET(request: Request) {
               console.log('Linked Supabase auth to existing user:', user.email);
             }
           } else {
-            console.log('No user found by email, redirecting to verify-invite:', user.email);
-            // Truly new user — verify invite
-            return NextResponse.redirect(`${origin}/api/auth/verify-invite`);
+            // Truly new user — process invite directly (no redirect to avoid cookie issues)
+            console.log('New user, processing invite for:', user.email);
+            const { error: inviteError } = await (serviceClient.rpc as any)('process_new_user_invite', {
+              p_auth_id: user.id,
+              p_email: user.email,
+              p_display_name: user.user_metadata?.full_name ?? user.email,
+              p_photo_url: user.user_metadata?.avatar_url ?? null,
+            });
+
+            if (inviteError) {
+              console.error('Error processing invite:', inviteError);
+              await supabase.auth.signOut();
+              return NextResponse.redirect(`${origin}/login?error=no_invite`);
+            }
           }
         } else {
           // Existing user - check contract
