@@ -114,8 +114,8 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
 
       // Send invite email via API route
       try {
-        const appUrl = window.location.origin;
-        await fetch('/api/email', {
+        const appUrl = `${window.location.origin}/login`;
+        const emailRes = await fetch('/api/email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -133,8 +133,14 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
             </div>`,
           }),
         });
-      } catch {
-        alert('招待情報は保存されましたが、メール送信に失敗しました。');
+        if (!emailRes.ok) {
+          const errBody = await emailRes.json().catch(() => ({}));
+          console.error('Email API error:', emailRes.status, errBody);
+          alert(`招待情報は保存されましたが、メール送信に失敗しました: ${errBody.error || emailRes.statusText}`);
+        }
+      } catch (emailErr) {
+        console.error('Email send network error:', emailErr);
+        alert('招待情報は保存されましたが、メール送信に失敗しました（ネットワークエラー）。');
       }
 
       alert('生徒を招待リストに登録しました。');

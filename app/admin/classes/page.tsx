@@ -172,7 +172,7 @@ export default function AdminClassesPage() {
         (supabase.from('classes') as any).select('*').order('start_time', { ascending: false }),
         (supabase.from('users') as any).select('id, display_name').in('role', ['admin', 'super']),
         (supabase.from('attendance_records') as any).select('class_id'),
-        (supabase.from('survey_responses') as any).select('class_id').eq('type', 'practice'),
+        (supabase.from('survey_responses') as any).select('class_id').eq('type', 'class_feedback'),
       ]);
       if (classesRes.error) throw classesRes.error;
       if (instructorsRes.error) throw instructorsRes.error;

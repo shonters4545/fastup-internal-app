@@ -79,7 +79,7 @@ export default function AdminClassSurveysPage() {
       if (surveyModelId) {
         modelQuery = modelQuery.eq('id', surveyModelId);
       } else {
-        modelQuery = modelQuery.eq('type', 'practice');
+        modelQuery = modelQuery.eq('type', 'class_feedback');
       }
       const { data: modelData, error: modelError } = await modelQuery.limit(1).single();
       if (modelError || !modelData) throw new Error('アンケートの型が見つかりません。');
