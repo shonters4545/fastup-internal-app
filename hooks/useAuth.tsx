@@ -61,7 +61,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         const profile = Array.isArray(rows) ? rows[0] : null;
         if (!profile) {
-          console.warn('[Auth] No user profile found for auth_id:', user.id);
+          // No profile found — try processing pending invite via API
+          console.warn('[Auth] No user profile found, attempting invite processing for:', user.email);
+          try {
+            const inviteRes = await fetch('/api/auth/process-invite', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                authId: user.id,
+                email: user.email,
+                displayName: user.user_metadata?.full_name ?? user.email,
+                photoUrl: user.user_metadata?.avatar_url ?? null,
+              }),
+            });
+            if (inviteRes.ok) {
+              // Retry fetching profile after invite processing
+              const retryRes = await fetch(url, {
+                headers: {
+                  'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Accept': 'application/json',
+                },
+              });
+              const retryRows = await retryRes.json();
+              const retryProfile = Array.isArray(retryRows) ? retryRows[0] : null;
+              if (retryProfile) {
+                setCurrentUser({
+                  id: retryProfile.id,
+                  authId: user.id,
+                  displayName: user.user_metadata?.full_name ?? null,
+                  email: user.email ?? null,
+                  photoURL: user.user_metadata?.avatar_url ?? null,
+                  role: (retryProfile.role as UserRole) ?? 'student',
+                });
+                setLoading(false);
+                return;
+              }
+            }
+          } catch (inviteErr) {
+            console.error('[Auth] Invite processing failed:', inviteErr);
+          }
+          console.warn('[Auth] No user profile and no invite found for:', user.email);
           setCurrentUser(null);
           setLoading(false);
           return;
