@@ -23,7 +23,8 @@ export function BottomNavBar() {
   const pathname = usePathname();
   const { currentUser } = useAuth();
 
-  if (!currentUser) return null;
+  // Only show for students (admin/super use desktop layout on all devices)
+  if (!currentUser || ['admin', 'super'].includes(currentUser.role)) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around items-center shadow-top z-40 md:hidden">
