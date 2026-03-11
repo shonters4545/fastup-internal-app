@@ -268,6 +268,18 @@ export default function AttendancePlanPage() {
   const confirmedMonths = visibleMonths.filter(m => m.isConfirmed);
   const unconfirmedMonths = visibleMonths.filter(m => !m.isConfirmed);
 
+  // Count only dates in unconfirmed months
+  const unconfirmedSelectedCount = useMemo(() => {
+    let count = 0;
+    selectedDates.forEach(dateStr => {
+      const [y, m] = dateStr.split('-').map(Number);
+      if (unconfirmedMonths.some(um => um.year === y && um.month === m - 1)) {
+        count++;
+      }
+    });
+    return count;
+  }, [selectedDates, unconfirmedMonths]);
+
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-8 animate-fade-in pb-40">
       <div className="mb-8">
@@ -315,7 +327,7 @@ export default function AttendancePlanPage() {
           <div className="flex items-center justify-between gap-4">
             <div className="text-left bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-xl border border-gray-100 dark:border-gray-700">
               <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">合計選択日数</p>
-              <p className="text-xl font-black text-blue-600 dark:text-blue-400">{selectedDates.size}<span className="text-xs ml-1 font-normal text-gray-400">日</span></p>
+              <p className="text-xl font-black text-blue-600 dark:text-blue-400">{unconfirmedSelectedCount}<span className="text-xs ml-1 font-normal text-gray-400">日</span></p>
             </div>
             <button
               onClick={handleSave}
