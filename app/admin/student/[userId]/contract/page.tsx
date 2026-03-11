@@ -23,8 +23,8 @@ type Contract = {
   id: string;
   user_id: string;
   payment_method: string | null;
-  contract_start_date: string | null;
-  contract_end_date: string | null;
+  current_period_start: string | null;
+  current_period_end: string | null;
   status: string | null;
   notes: string | null;
 };
@@ -72,8 +72,8 @@ export default function AdminStudentContractPage() {
           const c = contractData as Contract;
           setContract(c);
           setPaymentMethod(c.payment_method || '');
-          setStartDate(c.contract_start_date || '');
-          setEndDate(c.contract_end_date || '');
+          setStartDate(c.current_period_start ? c.current_period_start.split('T')[0] : '');
+          setEndDate(c.current_period_end ? c.current_period_end.split('T')[0] : '');
           setStatus(c.status || 'active');
           setNotes(c.notes || '');
         }
@@ -94,8 +94,8 @@ export default function AdminStudentContractPage() {
       const contractData = {
         user_id: userId,
         payment_method: paymentMethod || null,
-        contract_start_date: startDate || null,
-        contract_end_date: endDate || null,
+        current_period_start: startDate ? new Date(startDate).toISOString() : null,
+        current_period_end: endDate ? new Date(endDate).toISOString() : null,
         status,
         notes: notes || null,
       };
@@ -138,7 +138,7 @@ export default function AdminStudentContractPage() {
   }
 
   return (
-    <div className="w-full max-w-4xl animate-fade-in mt-8">
+    <div className="w-full max-w-4xl mt-8">
       {/* Breadcrumbs */}
       <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
         <Link href="/admin/students" className="hover:text-blue-600 dark:hover:text-blue-400">生徒一覧</Link>
