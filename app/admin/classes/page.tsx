@@ -295,6 +295,25 @@ export default function AdminClassesPage() {
                       <Link href={`/admin/classes/${cls.id}/attendance`} className="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-800 dark:text-white">
                         出席者一覧
                       </Link>
+                      {currentUser?.role === 'super' && (
+                        <button
+                          onClick={async () => {
+                            if (!window.confirm(`「${cls.title}」を削除しますか？関連する出席記録・アンケート回答も削除されます。`)) return;
+                            try {
+                              const supabase = createClient();
+                              const { error: delErr } = await (supabase.from('classes') as any).delete().eq('id', cls.id);
+                              if (delErr) throw delErr;
+                              fetchData();
+                            } catch (err) {
+                              console.error('Error deleting class:', err);
+                              alert('削除に失敗しました。');
+                            }
+                          }}
+                          className="px-3 py-2 text-sm font-medium bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 rounded-md hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors"
+                        >
+                          削除
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
