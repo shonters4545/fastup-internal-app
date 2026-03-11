@@ -269,17 +269,18 @@ export default function AttendancePlanPage() {
   const unconfirmedMonths = visibleMonths.filter(m => !m.isConfirmed);
 
   // Count only dates in unconfirmed months
-  const unconfirmedSelectedCount = useMemo(() => {
-    const uncMonths = visibleMonths.filter(m => !m.isConfirmed);
-    let count = 0;
-    selectedDates.forEach(dateStr => {
-      const [y, m] = dateStr.split('-').map(Number);
-      if (uncMonths.some(um => um.year === y && um.month === m - 1)) {
-        count++;
+  let unconfirmedSelectedCount = 0;
+  selectedDates.forEach(dateStr => {
+    const parts = dateStr.split('-');
+    const y = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10) - 1;
+    for (const um of unconfirmedMonths) {
+      if (um.year === y && um.month === m) {
+        unconfirmedSelectedCount++;
+        break;
       }
-    });
-    return count;
-  }, [selectedDates, visibleMonths]);
+    }
+  });
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-8 animate-fade-in pb-40">
