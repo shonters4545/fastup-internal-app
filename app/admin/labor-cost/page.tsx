@@ -149,18 +149,22 @@ export default function AdminLaborCostPage() {
           selectedMonth.getMonth() === today.getMonth() &&
           selectedMonth.getFullYear() === today.getFullYear();
 
-        // Get active student count
+        // Get student contracts with period dates for accurate enrollment tracking
         const { data: studentUsers } = await (supabase.from('users') as any)
-          .select('id, created_at')
+          .select('id')
           .eq('role', 'student');
 
-        const { data: activeContracts } = await (supabase.from('contracts') as any)
-          .select('user_id')
-          .eq('status', 'active');
+        const { data: allContracts } = await (supabase.from('contracts') as any)
+          .select('user_id, current_period_start, current_period_end, status');
 
-        const activeUserIds = new Set(
-          (activeContracts || []).map((c: any) => c.user_id)
-        );
+        // Build per-user contract list for date-based filtering
+        const contractsByUser = new Map<string, any[]>();
+        (allContracts || []).forEach((c: any) => {
+          if (!contractsByUser.has(c.user_id)) contractsByUser.set(c.user_id, []);
+          contractsByUser.get(c.user_id)!.push(c);
+        });
+
+        const studentUserIds = new Set((studentUsers || []).map((u: any) => u.id));
 
         // Get classes in the month
         const { data: classesInMonth } = await (supabase.from('classes') as any)
@@ -216,18 +220,18 @@ export default function AdminLaborCostPage() {
           const isPast = currentDate < todayDate;
           const isFuture = currentDate > todayDate;
 
-          // Total students: created before end of day & has active contract
-          const endOfDay = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            d,
-            23,
-            59,
-            59
-          );
+          // Total students: count students whose contract was active on this date
+          // A student is counted if: current_period_start <= date AND current_period_end >= date
           const totalStudentCount = (studentUsers || []).filter((u: any) => {
-            const createdAt = new Date(u.created_at);
-            return createdAt <= endOfDay && activeUserIds.has(u.id);
+            if (!studentUserIds.has(u.id)) return false;
+            const contracts = contractsByUser.get(u.id);
+            if (!contracts || contracts.length === 0) return false;
+            return contracts.some((c: any) => {
+              if (!c.current_period_start) return false;
+              const start = new Date(c.current_period_start);
+              const end = c.current_period_end ? new Date(c.current_period_end) : new Date('2099-12-31');
+              return start <= currentDate && end >= currentDate;
+            });
           }).length;
 
           let attendingStudentCount = 0;
