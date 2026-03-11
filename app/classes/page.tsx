@@ -216,7 +216,7 @@ export default function ClassesPage() {
           student_name: currentUser.displayName || 'Unknown Student',
           instructor_name: instructorName,
           study_material: studyMaterial,
-          checked_in_at: new Date().toISOString(),
+          attended_at: new Date().toISOString(),
         });
         if (error) throw error;
 
