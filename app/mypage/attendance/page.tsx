@@ -27,7 +27,6 @@ export default function AttendancePlanPage() {
   // Determine which months to display
   const visibleMonths = useMemo((): MonthData[] => {
     const now = new Date();
-    const currentDay = now.getDate();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
 
@@ -41,34 +40,14 @@ export default function AttendancePlanPage() {
       deadlineMessage: '確定済み',
     });
 
-    // Next month
+    // Next month: editable until end of current month (月末締め)
     const nextDate = new Date(currentYear, currentMonth + 1, 1);
-    const nextMonthYear = nextDate.getFullYear();
-    const nextMonth = nextDate.getMonth();
-
-    if (currentDay <= 10) {
-      result.push({
-        year: nextMonthYear,
-        month: nextMonth,
-        isConfirmed: false,
-        deadlineMessage: `${currentMonth + 1}月10日24時で確定されます`,
-      });
-    } else {
-      result.push({
-        year: nextMonthYear,
-        month: nextMonth,
-        isConfirmed: true,
-        deadlineMessage: '確定済み',
-      });
-
-      const afterNextDate = new Date(currentYear, currentMonth + 2, 1);
-      result.push({
-        year: afterNextDate.getFullYear(),
-        month: afterNextDate.getMonth(),
-        isConfirmed: false,
-        deadlineMessage: `${nextMonth + 1}月10日24時で確定されます`,
-      });
-    }
+    result.push({
+      year: nextDate.getFullYear(),
+      month: nextDate.getMonth(),
+      isConfirmed: false,
+      deadlineMessage: `${currentMonth + 1}月末日で確定されます`,
+    });
 
     return result;
   }, []);
@@ -300,7 +279,7 @@ export default function AttendancePlanPage() {
         </h1>
         <p className="text-sm text-gray-500 mt-2 font-medium leading-relaxed">
           毎日個別特訓に参加する日程をタップして選択してください。<br />
-          <span className="text-blue-600 dark:text-blue-400 font-bold">※毎月10日</span>に翌月分が確定されます。
+          <span className="text-blue-600 dark:text-blue-400 font-bold">※毎月末日</span>に翌月分が確定されます。
         </p>
       </div>
 

@@ -119,11 +119,11 @@ export default function AdminAttendancePage() {
   // Visible months for calendar
   const visibleMonths = useMemo((): MonthData[] => {
     const now = new Date();
-    const currentDay = now.getDate();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const result: MonthData[] = [];
 
+    // Current month is always confirmed
     result.push({
       year: currentYear,
       month: currentMonth,
@@ -131,29 +131,15 @@ export default function AdminAttendancePage() {
       deadlineMessage: '確定済み',
     });
 
+    // Next month: editable until end of current month (月末締め)
     const nextDate = new Date(currentYear, currentMonth + 1, 1);
-    if (currentDay <= 10) {
-      result.push({
-        year: nextDate.getFullYear(),
-        month: nextDate.getMonth(),
-        isConfirmed: false,
-        deadlineMessage: `${currentMonth + 2}月10日24時で確定されます`,
-      });
-    } else {
-      result.push({
-        year: nextDate.getFullYear(),
-        month: nextDate.getMonth(),
-        isConfirmed: true,
-        deadlineMessage: '確定済み',
-      });
-      const afterNextDate = new Date(currentYear, currentMonth + 2, 1);
-      result.push({
-        year: afterNextDate.getFullYear(),
-        month: afterNextDate.getMonth(),
-        isConfirmed: false,
-        deadlineMessage: `${currentMonth + 2}月10日24時で確定されます`,
-      });
-    }
+    result.push({
+      year: nextDate.getFullYear(),
+      month: nextDate.getMonth(),
+      isConfirmed: false,
+      deadlineMessage: `${currentMonth + 1}月末日で確定されます`,
+    });
+
     return result;
   }, []);
 
