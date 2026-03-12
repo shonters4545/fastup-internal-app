@@ -223,49 +223,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      level_rules: {
-        Row: {
-          id: string;
-          subject_id: string;
-          level: number;
-          book_id: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          subject_id: string;
-          level: number;
-          book_id: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          subject_id?: string;
-          level?: number;
-          book_id?: string;
-          created_at?: string;
-        };
-      };
-      unlocks: {
-        Row: {
-          id: string;
-          user_id: string;
-          book_id: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          book_id: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          book_id?: string;
-          created_at?: string;
-        };
-      };
       user_curriculum: {
         Row: {
           id: string;
@@ -820,101 +777,6 @@ export interface Database {
           updated_at?: string;
         };
       };
-      quizzes: {
-        Row: {
-          id: string;
-          task_id: string;
-          title: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          task_id: string;
-          title: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          task_id?: string;
-          title?: string;
-          created_at?: string;
-        };
-      };
-      questions: {
-        Row: {
-          id: string;
-          quiz_id: string;
-          text: string;
-          display_order: number;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          quiz_id: string;
-          text: string;
-          display_order?: number;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          quiz_id?: string;
-          text?: string;
-          display_order?: number;
-          created_at?: string;
-        };
-      };
-      options: {
-        Row: {
-          id: string;
-          question_id: string;
-          text: string;
-          is_correct: boolean;
-          display_order: number;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          question_id: string;
-          text: string;
-          is_correct?: boolean;
-          display_order?: number;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          question_id?: string;
-          text?: string;
-          is_correct?: boolean;
-          display_order?: number;
-          created_at?: string;
-        };
-      };
-      results: {
-        Row: {
-          id: string;
-          user_id: string;
-          quiz_id: string;
-          score: number;
-          total: number;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          quiz_id: string;
-          score: number;
-          total: number;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          quiz_id?: string;
-          score?: number;
-          total?: number;
-          created_at?: string;
-        };
-      };
       progress: {
         Row: {
           id: string;
@@ -948,32 +810,6 @@ export interface Database {
           score?: number | null;
           created_at?: string;
           updated_at?: string;
-        };
-      };
-      reviews: {
-        Row: {
-          id: string;
-          user_id: string;
-          curriculum_id: string;
-          review_date: string;
-          status: string;
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          curriculum_id: string;
-          review_date: string;
-          status?: string;
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          curriculum_id?: string;
-          review_date?: string;
-          status?: string;
-          created_at?: string;
         };
       };
     };
