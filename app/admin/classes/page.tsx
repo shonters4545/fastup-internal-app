@@ -448,6 +448,8 @@ function CreateClassModal({
     humanitiesRooms: number;
   } | null>(null);
   const [generatingRooms, setGeneratingRooms] = useState(false);
+  // 各ルームの講師割当 (index → instructor_id)
+  const [roomInstructors, setRoomInstructors] = useState<Map<number, string>>(new Map());
 
   const timeOptions = useMemo(() => {
     const opts: string[] = [];
@@ -539,32 +541,52 @@ function CreateClassModal({
 
   const handleGenerateRooms = async () => {
     if (!createdClassId || !roomPrompt) return;
+
+    // 全ルーム(Zを除く)に講師が設定されているかチェック
+    const totalRegularRooms = roomPrompt.humanitiesRooms + roomPrompt.scienceRooms;
+    for (let i = 0; i < totalRegularRooms; i++) {
+      if (!roomInstructors.get(i)) {
+        alert('すべてのルームに担当講師を設定してください。');
+        return;
+      }
+    }
+
     setGeneratingRooms(true);
     try {
       const supabase = createClient();
-      // 既存ルームがあれば削除（重複防止）
       await (supabase.from('class_rooms') as any).delete().eq('class_id', createdClassId);
       const roomsToInsert: any[] = [];
       const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
       let labelIndex = 0;
+      let roomIndex = 0;
 
       for (let i = 0; i < roomPrompt.humanitiesRooms; i++) {
+        const instId = roomInstructors.get(roomIndex) || null;
+        const inst = instructors.find(ins => ins.id === instId);
         roomsToInsert.push({
           class_id: createdClassId,
           label: labels[labelIndex++] || `H${i + 1}`,
           room_type: 'humanities',
+          instructor_id: instId,
+          instructor_name: inst?.display_name || null,
           capacity: 10,
         });
+        roomIndex++;
       }
       for (let i = 0; i < roomPrompt.scienceRooms; i++) {
+        const instId = roomInstructors.get(roomIndex) || null;
+        const inst = instructors.find(ins => ins.id === instId);
         roomsToInsert.push({
           class_id: createdClassId,
           label: labels[labelIndex++] || `S${i + 1}`,
           room_type: 'science',
+          instructor_id: instId,
+          instructor_name: inst?.display_name || null,
           capacity: 10,
         });
+        roomIndex++;
       }
-      // Zルーム
+      // Zルーム（講師不要）
       roomsToInsert.push({
         class_id: createdClassId,
         label: 'Z',
@@ -602,37 +624,89 @@ function CreateClassModal({
             <h3 className="text-xl font-bold text-gray-800 dark:text-white">特訓を開講しました</h3>
           </div>
 
-          {/* ルーム未作成の警告 */}
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6">
-            <h4 className="font-bold text-yellow-800 dark:text-yellow-200 mb-2">ルームが作成されていません</h4>
-            {roomPrompt.total > 0 ? (
-              <div className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                <p>この日の出席予定者: <span className="font-bold">{roomPrompt.total}名</span> (理系: {roomPrompt.scienceCount}名)</p>
-                <p>想定ルーム: 文系 <span className="font-bold">{roomPrompt.humanitiesRooms}</span> / 理系 <span className="font-bold">{roomPrompt.scienceRooms}</span> / Z(未提出用) 1</p>
-                <p>必要講師数: <span className="font-bold">{roomPrompt.totalRooms}名</span></p>
+          {roomPrompt.total > 0 ? (
+            <>
+              {/* ルーム情報 */}
+              <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 mb-4">
+                <div className="text-sm text-indigo-700 dark:text-indigo-300 space-y-1">
+                  <p>出席予定者: <span className="font-bold">{roomPrompt.total}名</span> (理系: {roomPrompt.scienceCount}名)</p>
+                  <p>想定ルーム: 文系 <span className="font-bold">{roomPrompt.humanitiesRooms}</span> / 理系 <span className="font-bold">{roomPrompt.scienceRooms}</span> / Z(未提出用) 1</p>
+                </div>
               </div>
-            ) : (
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">この日の出席予定者はまだ登録されていません。後から特訓詳細画面で手動作成できます。</p>
-            )}
-          </div>
 
-          <div className="flex flex-col gap-2">
-            {roomPrompt.total > 0 && (
+              {/* 各ルームの講師選択 */}
+              <div className="mb-4 space-y-2">
+                <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">各ルームの担当講師を選択してください</h4>
+                {(() => {
+                  const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
+                  let labelIndex = 0;
+                  const roomRows: { index: number; label: string; type: string; typeLabel: string }[] = [];
+                  for (let i = 0; i < roomPrompt.humanitiesRooms; i++) {
+                    roomRows.push({ index: roomRows.length, label: labels[labelIndex++], type: 'humanities', typeLabel: '文系' });
+                  }
+                  for (let i = 0; i < roomPrompt.scienceRooms; i++) {
+                    roomRows.push({ index: roomRows.length, label: labels[labelIndex++], type: 'science', typeLabel: '理系' });
+                  }
+                  return roomRows.map(room => (
+                    <div key={room.index} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                      <div className="flex items-center gap-2 min-w-[100px]">
+                        <span className="font-bold text-gray-800 dark:text-white">教室{room.label}</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
+                          room.type === 'science' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300'
+                        }`}>{room.typeLabel}</span>
+                      </div>
+                      <select
+                        value={roomInstructors.get(room.index) || ''}
+                        onChange={(e) => {
+                          setRoomInstructors(prev => {
+                            const next = new Map(prev);
+                            next.set(room.index, e.target.value);
+                            return next;
+                          });
+                        }}
+                        className="flex-grow p-2 border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md text-sm dark:text-white"
+                        required
+                      >
+                        <option value="">-- 講師を選択 --</option>
+                        {instructors.map(inst => (
+                          <option key={inst.id} value={inst.id}>{inst.display_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  ));
+                })()}
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg opacity-50">
+                  <div className="flex items-center gap-2 min-w-[100px]">
+                    <span className="font-bold text-gray-800 dark:text-white">教室Z</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">未提出</span>
+                  </div>
+                  <span className="text-sm text-gray-400">講師なし（自動）</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={handleGenerateRooms}
+                  disabled={generatingRooms}
+                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors disabled:bg-gray-400"
+                >
+                  {generatingRooms ? '生成中...' : 'ルームを作成して開講する'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-4">
+                <p className="text-sm text-yellow-700 dark:text-yellow-300">この日の出席予定者はまだ登録されていません。特訓詳細画面から手動でルームを作成できます。</p>
+              </div>
               <button
-                onClick={handleGenerateRooms}
-                disabled={generatingRooms}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors disabled:bg-gray-400"
+                onClick={handleSkipRooms}
+                className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                {generatingRooms ? '生成中...' : 'ルームを自動生成する'}
+                あとで作成する
               </button>
-            )}
-            <button
-              onClick={handleSkipRooms}
-              className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-            >
-              あとで作成する
-            </button>
-          </div>
+            </>
+          )}
         </div>
       </div>
     );
