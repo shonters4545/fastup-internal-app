@@ -172,17 +172,17 @@ export default function AdminClassSurveysPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
-        <div className="w-12 h-12 border-4 border-purple-500 border-dashed rounded-full animate-spin mx-auto"></div>
+        <div className="spinner mx-auto"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
-        <Link href="/admin/classes" className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">特訓管理に戻る</Link>
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-card animate-fade-in mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
+        <Link href="/admin/classes" className="mt-6 inline-block btn-danger">特訓管理に戻る</Link>
       </div>
     );
   }
@@ -190,65 +190,65 @@ export default function AdminClassSurveysPage() {
   const questionLabels = surveyModel?.form_fields.map((f) => f.label) || [];
 
   return (
-    <div className="w-full max-w-7xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8 mx-auto">
-      <div className="flex justify-between items-start mb-6 border-b dark:border-gray-700 pb-4">
+    <div className="w-full max-w-7xl card animate-fade-in mt-8 mx-auto">
+      <div className="flex justify-between items-start mb-6 border-b dark:border-primary-800 pb-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">アンケート結果分析</h1>
-          {classInfo && <p className="text-gray-500 dark:text-gray-400 mt-1">{classInfo.title} ({new Date(classInfo.start_time).toLocaleDateString('ja-JP')})</p>}
+          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">アンケート結果分析</h1>
+          {classInfo && <p className="text-warm-500 dark:text-warm-400 mt-1">{classInfo.title} ({new Date(classInfo.start_time).toLocaleDateString('ja-JP')})</p>}
         </div>
-        <Link href="/admin/classes" className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex-shrink-0 mt-1">&larr; 特訓管理に戻る</Link>
+        <Link href="/admin/classes" className="text-sm text-primary-600 dark:text-primary-400 hover:underline flex-shrink-0 mt-1">&larr; 特訓管理に戻る</Link>
       </div>
 
       {/* Analysis Dashboard */}
       {(analysis.overallAvg || analysis.coachAvgs.length > 0) && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-indigo-600 rounded-2xl shadow-lg p-6 text-white flex flex-col justify-center items-center">
-            <div className="text-indigo-100 text-sm font-bold uppercase tracking-wider mb-2">全体満足度平均</div>
+          <div className="bg-primary-600 rounded-card shadow-card p-6 text-white flex flex-col justify-center items-center">
+            <div className="text-primary-100 text-sm font-bold uppercase tracking-wider mb-2">全体満足度平均</div>
             <div className="flex items-baseline">
               <span className="text-5xl font-black">{analysis.overallAvg || '-'}</span>
               <span className="text-xl ml-1 opacity-80">/ 10</span>
             </div>
           </div>
-          <div className="md:col-span-2 bg-white dark:bg-gray-700 rounded-2xl shadow-lg p-6 border border-gray-100 dark:border-gray-600">
-            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">コーチ別満足度平均</h3>
+          <div className="md:col-span-2 bg-white dark:bg-primary-800 rounded-card shadow-card p-6 border border-warm-100 dark:border-primary-700">
+            <h3 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">コーチ別満足度平均</h3>
             <div className="space-y-3 max-h-[120px] overflow-y-auto pr-2">
               {analysis.coachAvgs.length > 0 ? analysis.coachAvgs.map((coach, idx) => (
-                <div key={idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-xl border border-gray-100 dark:border-gray-600">
+                <div key={idx} className="flex items-center justify-between bg-warm-50 dark:bg-primary-900 p-3 rounded-btn border border-warm-100 dark:border-primary-700">
                   <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 rounded-full flex items-center justify-center text-xs font-black">{idx + 1}</div>
-                    <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{coach.name}</span>
+                    <div className="flex-shrink-0 w-8 h-8 bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 rounded-full flex items-center justify-center text-xs font-black">{idx + 1}</div>
+                    <span className="text-sm font-bold text-warm-700 dark:text-warm-200">{coach.name}</span>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-xs text-gray-400">回答: {coach.count}件</span>
-                    <span className="text-lg font-black text-indigo-600 dark:text-indigo-400">{coach.avg}<span className="text-[10px] text-gray-400 ml-0.5">pt</span></span>
+                    <span className="text-xs text-warm-400">回答: {coach.count}件</span>
+                    <span className="text-lg font-black text-primary-600 dark:text-primary-400">{coach.avg}<span className="text-[10px] text-warm-400 ml-0.5">pt</span></span>
                   </div>
                 </div>
-              )) : <p className="text-center text-gray-500 py-4">回答データがありません</p>}
+              )) : <p className="text-center text-warm-500 py-4">回答データがありません</p>}
             </div>
           </div>
         </div>
       )}
 
       {/* Filters */}
-      <div className="flex flex-col mb-8 p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-100 dark:border-gray-600">
-        <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">表示条件で絞り込む</h2>
+      <div className="flex flex-col mb-8 p-6 bg-warm-50 dark:bg-primary-800/50 rounded-card border border-warm-100 dark:border-primary-700">
+        <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">表示条件で絞り込む</h2>
         <div className="space-y-6">
           <div>
-            <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">満足度スコア</span>
-            <label className="inline-flex items-center cursor-pointer bg-white dark:bg-gray-800 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm">
-              <input type="checkbox" checked={showLowScoreOnly} onChange={(e) => setShowLowScoreOnly(e.target.checked)} className="w-5 h-5 text-red-600 border-gray-300 rounded-lg focus:ring-red-500" />
-              <span className="ml-3 text-sm font-bold text-gray-700 dark:text-gray-200">満足度8点以下の生徒のみ表示</span>
+            <span className="block text-xs font-bold text-warm-400 uppercase tracking-widest mb-2 ml-1">満足度スコア</span>
+            <label className="inline-flex items-center cursor-pointer bg-white dark:bg-primary-900 px-4 py-2 rounded-btn border border-warm-200 dark:border-primary-700 shadow-sm">
+              <input type="checkbox" checked={showLowScoreOnly} onChange={(e) => setShowLowScoreOnly(e.target.checked)} className="w-5 h-5 text-danger-600 border-warm-300 rounded-input focus:ring-danger-500" />
+              <span className="ml-3 text-sm font-bold text-warm-700 dark:text-warm-200">満足度8点以下の生徒のみ表示</span>
             </label>
           </div>
           {availableCoaches.length > 0 && (
             <div>
-              <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">担当コーチ (複数選択可)</span>
+              <span className="block text-xs font-bold text-warm-400 uppercase tracking-widest mb-2 ml-1">担当コーチ (複数選択可)</span>
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => setSelectedCoaches([])} className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${selectedCoaches.length === 0 ? 'bg-blue-600 border-blue-600 text-white shadow-md' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300'}`}>全員表示</button>
+                <button onClick={() => setSelectedCoaches([])} className={`px-4 py-2 rounded-btn text-sm font-bold border transition-all ${selectedCoaches.length === 0 ? 'bg-primary-600 border-primary-600 text-white shadow-md' : 'bg-white dark:bg-primary-900 border-warm-200 dark:border-primary-700 text-warm-600 dark:text-warm-300'}`}>全員表示</button>
                 {availableCoaches.map((coach) => {
                   const isSelected = selectedCoaches.includes(coach);
                   return (
-                    <button key={coach} onClick={() => setSelectedCoaches((prev) => isSelected ? prev.filter((n) => n !== coach) : [...prev, coach])} className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${isSelected ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300'}`}>
+                    <button key={coach} onClick={() => setSelectedCoaches((prev) => isSelected ? prev.filter((n) => n !== coach) : [...prev, coach])} className={`px-4 py-2 rounded-btn text-sm font-bold border transition-all ${isSelected ? 'bg-primary-600 border-primary-600 text-white shadow-md' : 'bg-white dark:bg-primary-900 border-warm-200 dark:border-primary-700 text-warm-600 dark:text-warm-300'}`}>
                       {coach}
                     </button>
                   );
@@ -261,50 +261,50 @@ export default function AdminClassSurveysPage() {
 
       {/* Results Table */}
       <div className="flex items-center justify-between mb-4 px-2">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-white">出席者・回答詳細</h2>
+        <h2 className="text-xl font-bold text-primary-800 dark:text-warm-100">出席者・回答詳細</h2>
         <div className="flex items-center gap-4">
           {(selectedCoaches.length > 0 || showLowScoreOnly) && (
-            <span className="text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-800">絞り込み中: {filteredResponses.length}名を表示</span>
+            <span className="text-xs font-bold text-primary-600 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 rounded-full border border-primary-100 dark:border-primary-800">絞り込み中: {filteredResponses.length}名を表示</span>
           )}
-          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+          <span className="text-sm font-semibold text-warm-500 dark:text-warm-400">
             回収率: {analysis.totalSubmitted} / {analysis.totalAttendees}名 ({analysis.totalAttendees > 0 ? Math.round((analysis.totalSubmitted / analysis.totalAttendees) * 100) : 0}%)
           </span>
         </div>
       </div>
 
       {!surveyModel || responses.length === 0 ? (
-        <div className="text-center p-8 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-          <p className="text-gray-600 dark:text-gray-400">この特訓に対する出席記録がありません。</p>
+        <div className="text-center p-8 bg-warm-50 dark:bg-primary-800/50 rounded-card">
+          <p className="text-warm-600 dark:text-warm-400">この特訓に対する出席記録がありません。</p>
         </div>
       ) : (
-        <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+        <div className="overflow-x-auto border border-warm-200 dark:border-primary-700 rounded-card">
+          <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-700">
+            <thead className="bg-warm-50 dark:bg-primary-800">
               <tr>
-                <th className="sticky left-0 z-10 bg-gray-50 dark:bg-gray-700 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">回答者</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">担当コーチ</th>
+                <th className="sticky left-0 z-10 bg-warm-50 dark:bg-primary-800 px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">回答者</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">担当コーチ</th>
                 {questionLabels.map((label) => (
-                  <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[250px]">{label}</th>
+                  <th key={label} className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider min-w-[250px]">{label}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-700">
               {filteredResponses.length === 0 ? (
-                <tr><td colSpan={questionLabels.length + 2} className="px-6 py-10 text-center text-gray-500 italic">条件に一致する生徒はいません</td></tr>
+                <tr><td colSpan={questionLabels.length + 2} className="px-6 py-10 text-center text-warm-500 italic">条件に一致する生徒はいません</td></tr>
               ) : filteredResponses.map((response, index) => (
-                <tr key={index} className={`hover:bg-gray-50 dark:hover:bg-gray-900/50 ${!response.hasSubmitted ? 'opacity-70 bg-gray-50/30' : ''}`}>
-                  <td className="sticky left-0 z-10 bg-inherit px-6 py-4 whitespace-nowrap font-bold border-r dark:border-gray-700">
-                    <Link href={`/admin/student/${response.userId}`} className="text-sm text-blue-600 dark:text-blue-400 hover:underline">{response.nickname}</Link>
-                    {!response.hasSubmitted && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">未回答</span>}
+                <tr key={index} className={`hover:bg-warm-50 dark:hover:bg-primary-900/50 ${!response.hasSubmitted ? 'opacity-70 bg-warm-50/30' : ''}`}>
+                  <td className="sticky left-0 z-10 bg-inherit px-6 py-4 whitespace-nowrap font-bold border-r dark:border-primary-700">
+                    <Link href={`/admin/student/${response.userId}`} className="text-sm text-primary-600 dark:text-primary-400 hover:underline">{response.nickname}</Link>
+                    {!response.hasSubmitted && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-badge text-xs font-medium bg-danger-100 text-danger-800 dark:bg-danger-900/30 dark:text-danger-400">未回答</span>}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{response.instructorName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">{response.instructorName}</td>
                   {questionLabels.map((label) => {
                     const answer = response.responses[label];
                     if (!response.hasSubmitted || answer === undefined) {
-                      return <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-gray-400 italic">未回答</td>;
+                      return <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-warm-400 italic">未回答</td>;
                     }
                     return (
-                      <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                      <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-warm-600 dark:text-warm-300">
                         <div className="max-w-sm whitespace-pre-wrap">{typeof answer === 'string' ? answer : (answer as string[]).join(', ')}</div>
                       </td>
                     );

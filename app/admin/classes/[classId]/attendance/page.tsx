@@ -329,13 +329,13 @@ export default function AdminClassDetailPage() {
 
     // 体験
     if (attendee.is_trial) {
-      badges.push({ text: '体験', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200' });
+      badges.push({ text: '体験', color: 'bg-warning-100 text-warning-800 dark:bg-warning-900/40 dark:text-warning-200' });
     }
 
     // 初回（体験除く出席が1回 = 今回が初）
     const nonTrialCount = attendanceCounts.get(attendee.user_id) || 0;
     if (!attendee.is_trial && nonTrialCount <= 1) {
-      badges.push({ text: '初回', color: 'bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-200' });
+      badges.push({ text: '初回', color: 'bg-accent-100 text-accent-800 dark:bg-accent-900/40 dark:text-accent-200' });
     }
 
     // 1か月以内
@@ -345,7 +345,7 @@ export default function AdminClassDetailPage() {
       const oneMonthAgo = new Date();
       oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
       if (createdAt > oneMonthAgo) {
-        badges.push({ text: '1か月以内', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200' });
+        badges.push({ text: '1か月以内', color: 'bg-info-100 text-info-800 dark:bg-info-900/40 dark:text-info-200' });
       }
     }
 
@@ -353,9 +353,9 @@ export default function AdminClassDetailPage() {
     const score = satisfactionData.get(attendee.user_id);
     if (score !== undefined && score !== null) {
       if (score <= 7) {
-        badges.push({ text: `前回満足度: ${score} 要対応`, color: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200 font-bold' });
+        badges.push({ text: `前回満足度: ${score} 要対応`, color: 'bg-danger-100 text-danger-800 dark:bg-danger-900/40 dark:text-danger-200 font-bold' });
       } else {
-        badges.push({ text: `前回満足度: ${score}`, color: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' });
+        badges.push({ text: `前回満足度: ${score}`, color: 'bg-warm-50 text-warm-600 dark:bg-primary-800 dark:text-warm-300' });
       }
     }
 
@@ -370,18 +370,18 @@ export default function AdminClassDetailPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8 mx-auto">
-        <div className="w-12 h-12 border-4 border-teal-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-500 mt-4">読み込み中...</p>
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-500 mt-4">読み込み中...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8 mx-auto">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
-        <Link href="/admin/classes" className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">特訓管理に戻る</Link>
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-btn animate-fade-in mt-8 mx-auto">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
+        <Link href="/admin/classes" className="mt-6 inline-block btn-danger">特訓管理に戻る</Link>
       </div>
     );
   }
@@ -389,55 +389,55 @@ export default function AdminClassDetailPage() {
   const regularRooms = rooms.filter(r => r.label !== 'Z');
 
   return (
-    <div className="w-full max-w-6xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8 mx-auto">
+    <div className="w-full max-w-6xl card animate-fade-in mt-8 mx-auto">
       {/* ヘッダー */}
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-8 border-b dark:border-gray-700 pb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-8 border-b dark:border-primary-800 pb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">特訓詳細</h1>
+          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">特訓詳細</h1>
           {classInfo && (
             <div className="mt-2 space-y-1">
-              <p className="text-xl font-semibold text-teal-600 dark:text-teal-400">{classInfo.title}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-xl font-semibold text-info-600 dark:text-info-400">{classInfo.title}</p>
+              <p className="text-sm text-warm-500 dark:text-warm-400">
                 {new Date(classInfo.start_time).toLocaleString('ja-JP')} 〜 {new Date(classInfo.end_time).toLocaleTimeString('ja-JP')}
               </p>
             </div>
           )}
         </div>
-        <Link href="/admin/classes" className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex-shrink-0">&larr; 特訓管理に戻る</Link>
+        <Link href="/admin/classes" className="text-sm text-primary-600 dark:text-primary-400 hover:underline flex-shrink-0">&larr; 特訓管理に戻る</Link>
       </div>
 
       {/* サマリー */}
-      <div className="mb-6 flex flex-wrap gap-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
-        <div className="text-lg font-bold text-gray-700 dark:text-gray-200">
-          総出席者: <span className="text-2xl text-teal-600 dark:text-teal-400">{attendees.length}</span> 名
+      <div className="mb-6 flex flex-wrap gap-4 bg-warm-50 dark:bg-primary-800/50 p-4 rounded-xl">
+        <div className="text-lg font-bold text-primary-700 dark:text-warm-200">
+          総出席者: <span className="text-2xl text-info-600 dark:text-info-400">{attendees.length}</span> 名
         </div>
-        <div className="text-lg font-bold text-gray-700 dark:text-gray-200">
-          ルーム数: <span className="text-2xl text-blue-600 dark:text-blue-400">{regularRooms.length}</span>
+        <div className="text-lg font-bold text-primary-700 dark:text-warm-200">
+          ルーム数: <span className="text-2xl text-primary-600 dark:text-primary-400">{regularRooms.length}</span>
         </div>
       </div>
 
       {/* ルーム追加フォーム */}
       <div className="mb-6">
         {showAddRoomForm ? (
-          <div className="flex flex-wrap items-end gap-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
+          <div className="flex flex-wrap items-end gap-3 bg-warm-50 dark:bg-primary-800/50 p-4 rounded-xl border border-warm-200 dark:border-primary-700">
             <div>
-              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">ルーム名</label>
+              <label className="block text-xs font-bold text-warm-500 dark:text-warm-400 mb-1">ルーム名</label>
               <input
                 type="text"
                 value={newRoomLabel}
                 onChange={(e) => setNewRoomLabel(e.target.value)}
                 placeholder="例: A"
                 maxLength={5}
-                className="w-24 p-2 border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md text-sm dark:text-white font-bold text-center"
+                className="w-24 p-2 border border-warm-300 dark:border-primary-600 bg-white dark:bg-primary-700 rounded-input text-sm dark:text-warm-100 font-bold text-center"
                 autoFocus
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">タイプ</label>
+              <label className="block text-xs font-bold text-warm-500 dark:text-warm-400 mb-1">タイプ</label>
               <select
                 value={newRoomType}
                 onChange={(e) => setNewRoomType(e.target.value as 'humanities' | 'science')}
-                className="p-2 border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md text-sm dark:text-white"
+                className="input text-sm"
               >
                 <option value="humanities">文系</option>
                 <option value="science">理系</option>
@@ -446,13 +446,13 @@ export default function AdminClassDetailPage() {
             <button
               onClick={handleAddRoom}
               disabled={addingRoom || !newRoomLabel.trim()}
-              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-bold disabled:bg-gray-400 hover:bg-green-700 transition-colors"
+              className="btn-primary text-sm disabled:bg-warm-400"
             >
               {addingRoom ? '追加中...' : '追加'}
             </button>
             <button
               onClick={() => { setShowAddRoomForm(false); setNewRoomLabel(''); }}
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm text-gray-700 dark:text-white"
+              className="btn-secondary text-sm"
             >
               キャンセル
             </button>
@@ -460,7 +460,7 @@ export default function AdminClassDetailPage() {
         ) : (
           <button
             onClick={() => setShowAddRoomForm(true)}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
+            className="btn-primary text-sm"
           >
             + ルームを追加
           </button>
@@ -469,9 +469,9 @@ export default function AdminClassDetailPage() {
 
       {/* ルームが未作成の場合 */}
       {rooms.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 mb-8">
-          <p className="text-gray-500 dark:text-gray-400 mb-2">ルームが作成されていません。</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500">上の「+ ルームを追加」ボタンから手動で作成するか、出席管理カレンダーから自動生成できます。</p>
+        <div className="text-center py-12 bg-warm-50 dark:bg-primary-950/30 rounded-card border-2 border-dashed border-warm-200 dark:border-primary-800 mb-8">
+          <p className="text-warm-500 dark:text-warm-400 mb-2">ルームが作成されていません。</p>
+          <p className="text-sm text-warm-400 dark:text-warm-500">上の「+ ルームを追加」ボタンから手動で作成するか、出席管理カレンダーから自動生成できます。</p>
         </div>
       )}
 
@@ -481,26 +481,26 @@ export default function AdminClassDetailPage() {
           const members = roomAttendees.get(room.id) || [];
           const isOverCapacity = members.length > 10;
           const roomTypeLabel = room.room_type === 'science' ? '理系' : '文系';
-          const roomTypeColor = room.room_type === 'science' ? 'text-blue-600 dark:text-blue-400' : 'text-pink-600 dark:text-pink-400';
+          const roomTypeColor = room.room_type === 'science' ? 'text-info-600 dark:text-info-400' : 'text-accent-600 dark:text-accent-400';
 
           return (
-            <div key={room.id} className={`bg-white dark:bg-gray-700 rounded-2xl shadow-md border overflow-hidden ${isOverCapacity ? 'border-red-400 dark:border-red-500' : 'border-gray-100 dark:border-gray-600'}`}>
+            <div key={room.id} className={`bg-white dark:bg-primary-800 rounded-card shadow-card border overflow-hidden ${isOverCapacity ? 'border-danger-400 dark:border-danger-500' : 'border-warm-50 dark:border-primary-700'}`}>
               {/* ルームヘッダー */}
-              <div className={`px-6 py-4 border-b flex flex-wrap justify-between items-center gap-3 ${isOverCapacity ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800' : 'bg-teal-50 dark:bg-teal-900/30 border-teal-100 dark:border-teal-800'}`}>
+              <div className={`px-6 py-4 border-b flex flex-wrap justify-between items-center gap-3 ${isOverCapacity ? 'bg-danger-50 dark:bg-danger-900/30 border-danger-200 dark:border-danger-800' : 'bg-info-50 dark:bg-info-900/30 border-info-100 dark:border-info-800'}`}>
                 <div className="flex items-center gap-3">
-                  <h3 className="text-xl font-bold text-gray-800 dark:text-white">教室{room.label}</h3>
+                  <h3 className="text-xl font-bold text-primary-800 dark:text-warm-100">教室{room.label}</h3>
                   <span className={`text-sm font-bold ${roomTypeColor}`}>[{roomTypeLabel}]</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${isOverCapacity ? 'bg-red-200 text-red-800 dark:bg-red-800 dark:text-red-200' : 'bg-white dark:bg-teal-800 text-teal-600 dark:text-teal-300'}`}>
+                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${isOverCapacity ? 'bg-danger-200 text-danger-800 dark:bg-danger-800 dark:text-danger-200' : 'bg-white dark:bg-info-800 text-info-600 dark:text-info-300'}`}>
                     {members.length}名{isOverCapacity && ' (定員超過!)'}
                   </span>
                 </div>
                 {/* 担当講師プルダウン + 削除 */}
                 <div className="flex items-center gap-2">
-                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400">担当講師:</label>
+                  <label className="text-xs font-bold text-warm-500 dark:text-warm-400">担当講師:</label>
                   <select
                     value={room.instructor_id || ''}
                     onChange={(e) => handleInstructorChange(room.id, e.target.value)}
-                    className="p-1.5 text-sm border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md dark:text-white"
+                    className="p-1.5 text-sm border border-warm-300 dark:border-primary-600 bg-white dark:bg-primary-700 rounded-input dark:text-warm-100"
                   >
                     <option value="">-- 未選択 --</option>
                     {instructors.map(inst => (
@@ -509,7 +509,7 @@ export default function AdminClassDetailPage() {
                   </select>
                   <button
                     onClick={() => handleDeleteRoom(room.id, room.label)}
-                    className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors"
+                    className="p-1.5 text-danger-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30 rounded-input transition-colors"
                     title="このルームを削除"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -521,16 +521,16 @@ export default function AdminClassDetailPage() {
 
               {/* メンバーリスト */}
               {members.length === 0 ? (
-                <div className="p-6 text-center text-gray-400">メンバーがいません</div>
+                <div className="p-6 text-center text-warm-400">メンバーがいません</div>
               ) : (
-                <ul className="divide-y divide-gray-100 dark:divide-gray-600">
+                <ul className="divide-y divide-warm-50 dark:divide-primary-700">
                   {members.map(attendee => {
                     const badges = getBadges(attendee);
                     return (
-                      <li key={attendee.id} className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors">
+                      <li key={attendee.id} className="px-6 py-4 hover:bg-warm-50 dark:hover:bg-primary-700/50 transition-colors">
                         <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                            <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-primary-600 dark:text-primary-400 hover:underline">
                               {attendee.student_name || '（名前未設定）'}
                             </Link>
                             {badges.map((badge, i) => (
@@ -540,15 +540,15 @@ export default function AdminClassDetailPage() {
                           <div className="flex items-center gap-2">
                             {/* 周回チェック */}
                             <div className="flex items-center gap-1">
-                              <span className="text-[10px] text-gray-400 mr-1">巡回:</span>
+                              <span className="text-[10px] text-warm-400 mr-1">巡回:</span>
                               {[0, 1, 2].map(i => (
                                 <button
                                   key={i}
                                   onClick={() => handleRoundCheck(attendee.id, i)}
                                   className={`w-5 h-5 rounded border-2 transition-colors ${
                                     attendee.round_checks[i]
-                                      ? 'bg-green-500 border-green-600 text-white'
-                                      : 'bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-500'
+                                      ? 'bg-success-500 border-success-600 text-white'
+                                      : 'bg-white dark:bg-primary-700 border-warm-300 dark:border-primary-600'
                                   }`}
                                   title={`巡回${i + 1}回目`}
                                 >
@@ -561,14 +561,14 @@ export default function AdminClassDetailPage() {
                               ))}
                             </div>
                             {attendee.attended_at && (
-                              <span className="text-[10px] text-gray-400 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
+                              <span className="text-[10px] text-warm-400 bg-warm-50 dark:bg-primary-900 px-1.5 py-0.5 rounded">
                                 {new Date(attendee.attended_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             )}
                             {/* ルームから外す */}
                             <button
                               onClick={() => handleRemoveFromRoom(attendee.id)}
-                              className="text-red-400 hover:text-red-600 p-0.5"
+                              className="text-danger-400 hover:text-danger-600 p-0.5"
                               title="ルームから外す"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -577,8 +577,8 @@ export default function AdminClassDetailPage() {
                             </button>
                           </div>
                         </div>
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-2 rounded text-sm text-gray-600 dark:text-gray-300">
-                          <span className="text-xs font-bold text-gray-400 dark:text-gray-500">教材: </span>
+                        <div className="bg-warm-50 dark:bg-primary-900/50 p-2 rounded text-sm text-warm-600 dark:text-warm-300">
+                          <span className="text-xs font-bold text-warm-400 dark:text-warm-500">教材: </span>
                           {attendee.study_material || '（未入力）'}
                         </div>
                       </li>
@@ -589,13 +589,13 @@ export default function AdminClassDetailPage() {
 
               {/* メンバー追加ボタン（Zルーム or 未割当から） */}
               {(zAttendees.length > 0 || unassignedAttendees.length > 0) && (
-                <div className="px-6 py-3 border-t border-gray-100 dark:border-gray-600">
+                <div className="px-6 py-3 border-t border-warm-50 dark:border-primary-700">
                   {addMemberRoomId === room.id ? (
                     <div className="flex items-center gap-2">
                       <select
                         value={selectedMoveUserId}
                         onChange={(e) => setSelectedMoveUserId(e.target.value)}
-                        className="flex-grow p-1.5 text-sm border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md dark:text-white"
+                        className="input flex-grow text-sm"
                       >
                         <option value="">-- 追加するメンバー --</option>
                         {[...zAttendees, ...unassignedAttendees].map(a => (
@@ -605,13 +605,13 @@ export default function AdminClassDetailPage() {
                       <button
                         onClick={() => handleAddFromZ(room.id)}
                         disabled={!selectedMoveUserId}
-                        className="px-3 py-1.5 text-sm bg-green-600 text-white rounded-md disabled:bg-gray-400"
+                        className="btn-primary text-sm px-3 py-1.5 disabled:bg-warm-400"
                       >
                         追加
                       </button>
                       <button
                         onClick={() => { setAddMemberRoomId(null); setSelectedMoveUserId(''); }}
-                        className="px-3 py-1.5 text-sm bg-gray-200 dark:bg-gray-500 rounded-md"
+                        className="btn-secondary text-sm px-3 py-1.5"
                       >
                         取消
                       </button>
@@ -619,7 +619,7 @@ export default function AdminClassDetailPage() {
                   ) : (
                     <button
                       onClick={() => setAddMemberRoomId(room.id)}
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
                     >
                       + メンバーを追加
                     </button>
@@ -632,22 +632,22 @@ export default function AdminClassDetailPage() {
 
         {/* Zルーム（未提出者） */}
         {zRoom && zAttendees.length > 0 && (
-          <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md border border-yellow-300 dark:border-yellow-700 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800 flex justify-between items-center">
+          <div className="bg-white dark:bg-primary-800 rounded-card shadow-card border border-warning-300 dark:border-warning-700 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-warning-50 dark:bg-warning-900/30 border-warning-200 dark:border-warning-800 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <h3 className="text-xl font-bold text-yellow-800 dark:text-yellow-200">教室Z (出席予定未提出)</h3>
-                <span className="px-2 py-0.5 rounded text-xs font-bold bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200">{zAttendees.length}名</span>
+                <h3 className="text-xl font-bold text-warning-800 dark:text-warning-200">教室Z (出席予定未提出)</h3>
+                <span className="px-2 py-0.5 rounded text-xs font-bold bg-warning-200 text-warning-800 dark:bg-warning-800 dark:text-warning-200">{zAttendees.length}名</span>
               </div>
-              <span className="text-xs text-yellow-600 dark:text-yellow-400">担当講師なし</span>
+              <span className="text-xs text-warning-600 dark:text-warning-400">担当講師なし</span>
             </div>
-            <ul className="divide-y divide-gray-100 dark:divide-gray-600">
+            <ul className="divide-y divide-warm-50 dark:divide-primary-700">
               {zAttendees.map(attendee => {
                 const badges = getBadges(attendee);
                 return (
-                  <li key={attendee.id} className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors">
+                  <li key={attendee.id} className="px-6 py-4 hover:bg-warm-50 dark:hover:bg-primary-700/50 transition-colors">
                     <div className="flex flex-wrap justify-between items-center gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-primary-600 dark:text-primary-400 hover:underline">
                           {attendee.student_name || '（名前未設定）'}
                         </Link>
                         {badges.map((badge, i) => (
@@ -660,7 +660,7 @@ export default function AdminClassDetailPage() {
                             if (e.target.value) handleMoveMember(attendee.id, e.target.value);
                             e.target.value = '';
                           }}
-                          className="p-1 text-xs border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md dark:text-white"
+                          className="p-1 text-xs border border-warm-300 dark:border-primary-600 bg-white dark:bg-primary-700 rounded-input dark:text-warm-100"
                           defaultValue=""
                         >
                           <option value="">ルームに移動...</option>
@@ -670,8 +670,8 @@ export default function AdminClassDetailPage() {
                         </select>
                       </div>
                     </div>
-                    <div className="mt-2 bg-gray-50 dark:bg-gray-800/50 p-2 rounded text-sm text-gray-600 dark:text-gray-300">
-                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500">教材: </span>
+                    <div className="mt-2 bg-warm-50 dark:bg-primary-900/50 p-2 rounded text-sm text-warm-600 dark:text-warm-300">
+                      <span className="text-xs font-bold text-warm-400 dark:text-warm-500">教材: </span>
                       {attendee.study_material || '（未入力）'}
                     </div>
                   </li>
@@ -683,19 +683,19 @@ export default function AdminClassDetailPage() {
 
         {/* 未割当（ルームなし） */}
         {unassignedAttendees.length > 0 && (
-          <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md border border-gray-300 dark:border-gray-600 overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-gray-600 dark:text-gray-300">未割当</h3>
-              <span className="px-2 py-0.5 rounded text-xs font-bold bg-gray-200 text-gray-600">{unassignedAttendees.length}名</span>
+          <div className="bg-white dark:bg-primary-800 rounded-card shadow-card border border-warm-300 dark:border-primary-700 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-warm-50 dark:bg-primary-950/30 border-warm-200 dark:border-primary-800 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-warm-600 dark:text-warm-300">未割当</h3>
+              <span className="px-2 py-0.5 rounded text-xs font-bold bg-warm-200 text-warm-600">{unassignedAttendees.length}名</span>
             </div>
-            <ul className="divide-y divide-gray-100 dark:divide-gray-600">
+            <ul className="divide-y divide-warm-50 dark:divide-primary-700">
               {unassignedAttendees.map(attendee => {
                 const badges = getBadges(attendee);
                 return (
-                  <li key={attendee.id} className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors">
+                  <li key={attendee.id} className="px-6 py-4 hover:bg-warm-50 dark:hover:bg-primary-700/50 transition-colors">
                     <div className="flex flex-wrap justify-between items-center gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        <Link href={`/admin/student/${attendee.user_id}`} className="font-bold text-primary-600 dark:text-primary-400 hover:underline">
                           {attendee.student_name || '（名前未設定）'}
                         </Link>
                         {badges.map((badge, i) => (
@@ -709,7 +709,7 @@ export default function AdminClassDetailPage() {
                               if (e.target.value) handleMoveMember(attendee.id, e.target.value);
                               e.target.value = '';
                             }}
-                            className="p-1 text-xs border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md dark:text-white"
+                            className="p-1 text-xs border border-warm-300 dark:border-primary-600 bg-white dark:bg-primary-700 rounded-input dark:text-warm-100"
                             defaultValue=""
                           >
                             <option value="">ルームに移動...</option>
@@ -720,8 +720,8 @@ export default function AdminClassDetailPage() {
                         )}
                       </div>
                     </div>
-                    <div className="mt-2 bg-gray-50 dark:bg-gray-800/50 p-2 rounded text-sm text-gray-600 dark:text-gray-300">
-                      <span className="text-xs font-bold text-gray-400 dark:text-gray-500">教材: </span>
+                    <div className="mt-2 bg-warm-50 dark:bg-primary-900/50 p-2 rounded text-sm text-warm-600 dark:text-warm-300">
+                      <span className="text-xs font-bold text-warm-400 dark:text-warm-500">教材: </span>
                       {attendee.study_material || '（未入力）'}
                     </div>
                   </li>

@@ -154,9 +154,9 @@ export default function PersonalEntryPage() {
 
   if (loading) {
     return (
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8 text-center">
-        <div className="w-12 h-12 border-4 border-rose-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 mt-4">申請状況を確認中...</p>
+      <div className="w-full max-w-md card p-8 animate-fade-in mt-8 text-center">
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-600 dark:text-warm-300 mt-4">申請状況を確認中...</p>
       </div>
     );
   }
@@ -164,14 +164,14 @@ export default function PersonalEntryPage() {
   if (existingEntry) {
     if (existingEntry.status === 'applied' || existingEntry.status === 'pending_addition') {
       return (
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">申請中です</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">
+        <div className="w-full max-w-md card p-8 animate-fade-in mt-8 text-center">
+          <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4">申請中です</h1>
+          <p className="text-warm-600 dark:text-warm-300 mb-6">
             管理者からの連絡をお待ちください。
             <br />
-            現在のステータス: <span className="font-semibold text-rose-500">{statusMap[existingEntry.status] || existingEntry.status}</span>
+            現在のステータス: <span className="font-semibold text-accent-500">{statusMap[existingEntry.status] || existingEntry.status}</span>
           </p>
-          <button onClick={() => router.push('/')} className="w-full block bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-center">
+          <button onClick={() => router.push('/')} className="btn-accent w-full py-3">
             トップページに戻る
           </button>
         </div>
@@ -186,30 +186,30 @@ export default function PersonalEntryPage() {
       const contractedSubjectNames = contracted.map(id => subjects.find(s => s.id === id)?.name || id);
 
       return (
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">個別講義 追加申請</h1>
+        <div className="w-full max-w-md card p-8 animate-fade-in mt-8">
+          <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4 text-center">個別講義 追加申請</h1>
 
-          <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">現在の契約科目</h2>
+          <div className="mb-6 p-4 bg-warm-50 dark:bg-primary-800 rounded-btn">
+            <h2 className="text-sm font-semibold text-primary-700 dark:text-warm-300">現在の契約科目</h2>
             {contractedSubjectNames.length > 0 ? (
               <ul className="mt-2 space-y-1">
                 {contractedSubjectNames.map(subjectName => (
-                  <li key={subjectName} className="text-gray-900 dark:text-white font-medium">{subjectName}</li>
+                  <li key={subjectName} className="text-primary-800 dark:text-warm-100 font-medium">{subjectName}</li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-1 text-gray-500 dark:text-gray-400">現在契約中の科目はありません。</p>
+              <p className="mt-1 text-warm-500 dark:text-warm-400">現在契約中の科目はありません。</p>
             )}
           </div>
 
           <form onSubmit={handleAdditionalSubmit} className="space-y-6">
             <div>
-              <label htmlFor="additional-subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300">追加希望科目</label>
+              <label htmlFor="additional-subject" className="label">追加希望科目</label>
               <select
                 id="additional-subject"
                 value={additionalSubject}
                 onChange={(e) => setAdditionalSubject(e.target.value)}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm rounded-md"
+                className="input mt-1 block w-full"
                 required
               >
                 <option value="" disabled>-- 選択してください --</option>
@@ -220,28 +220,28 @@ export default function PersonalEntryPage() {
               </select>
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">電話番号（ハイフンなし）</label>
+              <label htmlFor="phone" className="label">電話番号（ハイフンなし）</label>
               <input
                 type="tel"
                 id="phone"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-                className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+                className="input mt-1 block w-full"
                 placeholder="09012345678"
                 maxLength={11}
                 required
               />
             </div>
-            {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+            {error && <p className="text-sm text-danger-500 text-center">{error}</p>}
             <div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center py-3 px-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:bg-gray-400 disabled:cursor-not-allowed dark:focus:ring-offset-gray-800 transition-colors duration-300"
+                className="btn-accent w-full py-3 mt-4 disabled:bg-warm-400 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? '申請中...' : '追加申請する'}
               </button>
-              {availableSubjects.length === 0 && <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">すべての科目を契約済みです。</p>}
+              {availableSubjects.length === 0 && <p className="text-xs text-center mt-2 text-warm-500 dark:text-warm-400">すべての科目を契約済みです。</p>}
             </div>
           </form>
         </div>
@@ -250,17 +250,17 @@ export default function PersonalEntryPage() {
   }
 
   return (
-    <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2 text-center">個別講義 申請フォーム</h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6 text-center text-sm">個別講義をご希望の場合は、以下のフォームから申請してください。</p>
+    <div className="w-full max-w-md card p-8 animate-fade-in mt-8">
+      <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-2 text-center">個別講義 申請フォーム</h1>
+      <p className="text-warm-600 dark:text-warm-300 mb-6 text-center text-sm">個別講義をご希望の場合は、以下のフォームから申請してください。</p>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300">希望科目</label>
+          <label htmlFor="subject" className="label">希望科目</label>
           <select
             id="subject"
             value={desiredSubject}
             onChange={(e) => setDesiredSubject(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-gray-900 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm rounded-md"
+            className="input mt-1 block w-full"
             required
           >
             <option value="" disabled>-- 選択してください --</option>
@@ -271,24 +271,24 @@ export default function PersonalEntryPage() {
           </select>
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">電話番号（ハイフンなし）</label>
+          <label htmlFor="phone" className="label">電話番号（ハイフンなし）</label>
           <input
             type="tel"
             id="phone"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-            className="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-500 focus:border-rose-500 sm:text-sm"
+            className="input mt-1 block w-full"
             placeholder="09012345678"
             maxLength={11}
             required
           />
         </div>
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        {error && <p className="text-sm text-danger-500 text-center">{error}</p>}
         <div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex justify-center py-3 px-4 mt-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 disabled:bg-gray-400 disabled:cursor-not-allowed dark:focus:ring-offset-gray-800 transition-colors duration-300"
+            className="btn-accent w-full py-3 mt-4 disabled:bg-warm-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? '申請中...' : '申請する'}
           </button>

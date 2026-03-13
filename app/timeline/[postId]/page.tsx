@@ -58,20 +58,20 @@ export default function PostDetailPage() {
   if (loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
-        <div className="w-12 h-12 border-4 border-cyan-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 mt-4">記事を読み込み中...</p>
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-600 dark:text-warm-300 mt-4">記事を読み込み中...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-btn animate-fade-in mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
         <Link
           href="/timeline"
-          className="inline-block mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg"
+          className="btn-danger mt-6 inline-block"
         >
           タイムラインに戻る
         </Link>
@@ -97,24 +97,24 @@ export default function PostDetailPage() {
       `}</style>
 
       <div className="text-left mb-8">
-        <Link href="/timeline" className="text-blue-600 dark:text-blue-400 hover:underline">
+        <Link href="/timeline" className="text-primary-600 dark:text-primary-400 hover:underline">
           &larr; タイムラインに戻る
         </Link>
       </div>
 
-      <article className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+      <article className="card overflow-hidden">
         {post.thumbnail_url && (
           <img src={post.thumbnail_url} alt={post.title} className="w-full h-80 object-cover" />
         )}
         <div className="p-8 md:p-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">{post.title}</h1>
-          <div className="text-base text-gray-500 dark:text-gray-400 mt-4 mb-8">
+          <h1 className="text-4xl font-extrabold text-primary-800 dark:text-warm-100">{post.title}</h1>
+          <div className="text-base text-warm-500 dark:text-warm-400 mt-4 mb-8">
             <span>{post.author_name}</span>
             <span className="mx-2">&middot;</span>
             <span>{new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
           </div>
           <div
-            className="text-gray-800 dark:text-gray-200 leading-relaxed prose-styles"
+            className="text-primary-800 dark:text-warm-200 leading-relaxed prose-styles"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>

@@ -173,18 +173,18 @@ export default function TimerPage() {
   if (authLoading || isLoading) {
     return (
       <div className="w-full max-w-lg mx-auto text-center p-8">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto" />
-        <p className="text-gray-600 dark:text-gray-300 mt-4">学習データを準備中...</p>
+        <div className="spinner mx-auto" />
+        <p className="text-warm-600 dark:text-warm-300 mt-4">学習データを準備中...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
-        <button onClick={() => router.push('/curriculums')} className="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-btn animate-fade-in mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
+        <button onClick={() => router.push('/curriculums')} className="btn-danger mt-6">
           ダッシュボードに戻る
         </button>
       </div>
@@ -193,29 +193,29 @@ export default function TimerPage() {
 
   return (
     <>
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8 text-center mx-auto">
+      <div className="w-full max-w-2xl card p-8 animate-fade-in mt-8 text-center mx-auto">
         <div className="mb-8">
           {taskInfo?.bookImageUrl && (
-            <img src={taskInfo.bookImageUrl} alt={taskInfo.name} className="w-24 h-32 object-contain rounded-md mx-auto mb-4" />
+            <img src={taskInfo.bookImageUrl} alt={taskInfo.name} className="w-24 h-32 object-contain rounded-input mx-auto mb-4" />
           )}
-          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+          <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">
             {taskInfo?.subjectName} &gt; {taskInfo?.divisionName}
           </p>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mt-2">{taskInfo?.name}</h1>
+          <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mt-2">{taskInfo?.name}</h1>
         </div>
 
         <div className="my-12">
-          <p className="text-gray-500 dark:text-gray-400">今回の学習時間</p>
-          <p className="text-7xl font-bold font-mono text-gray-800 dark:text-white tracking-widest">{formatTime(currentSessionSeconds)}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">これまでの学習時間: {formatTime(totalElapsedSeconds)}</p>
+          <p className="text-warm-500 dark:text-warm-400">今回の学習時間</p>
+          <p className="text-7xl font-bold font-mono text-primary-800 dark:text-warm-100 tracking-widest">{formatTime(currentSessionSeconds)}</p>
+          <p className="text-sm text-warm-500 dark:text-warm-400 mt-4">これまでの学習時間: {formatTime(totalElapsedSeconds)}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={() => setIsActive(!isActive)}
             disabled={isSubmitting}
-            className={`w-full sm:w-auto text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg ${
-              isActive ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-green-500 hover:bg-green-600'
+            className={`w-full sm:w-auto text-white font-bold py-3 px-6 rounded-btn transition-colors duration-300 text-lg ${
+              isActive ? 'bg-warning-500 hover:bg-warning-600' : 'bg-success-500 hover:bg-success-600'
             }`}
           >
             {isActive ? '一時停止' : '再開'}
@@ -224,7 +224,7 @@ export default function TimerPage() {
           <button
             onClick={() => handleStopTimer('completed')}
             disabled={isSubmitting || !isActive}
-            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="btn-primary w-full sm:w-auto py-3 px-6 text-lg disabled:bg-warm-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? '保存中...' : 'タスク完了'}
           </button>
@@ -234,7 +234,7 @@ export default function TimerPage() {
           <button
             onClick={() => handleStopTimer('paused')}
             disabled={isSubmitting}
-            className="text-sm text-gray-500 dark:text-gray-400 hover:underline disabled:opacity-50"
+            className="text-sm text-warm-500 dark:text-warm-400 hover:underline disabled:opacity-50"
           >
             一旦やめる
           </button>

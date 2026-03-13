@@ -107,7 +107,7 @@ export default function EditPostPage() {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
+        <div className="spinner" />
       </div>
     );
   }
@@ -119,34 +119,34 @@ export default function EditPostPage() {
 
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
-      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
-        <Link href="/admin/posts" className="hover:text-blue-600 dark:hover:text-blue-400">記事管理</Link>
+      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+        <Link href="/admin/posts" className="hover:text-primary-600 dark:hover:text-primary-400">記事管理</Link>
         <span>/</span>
-        <span className="text-gray-800 dark:text-white font-medium">編集</span>
+        <span className="text-primary-800 dark:text-warm-100 font-medium">編集</span>
       </nav>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">記事編集</h1>
+      <div className="card p-8">
+        <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-6">記事編集</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">タイトル *</label>
+            <label className="label mb-1">タイトル *</label>
             <input
               type="text"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-lg"
+              className="input text-lg"
               placeholder="記事のタイトル"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">カテゴリ</label>
+            <label className="label mb-1">カテゴリ</label>
             <select
               value={categoryId}
               onChange={e => setCategoryId(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+              className="input"
             >
               <option value="">カテゴリなし</option>
               {categories.map(cat => (
@@ -156,60 +156,60 @@ export default function EditPostPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">概要（リスト表示用）</label>
+            <label className="label mb-1">概要（リスト表示用）</label>
             <input
               type="text"
               value={excerpt}
               onChange={e => setExcerpt(e.target.value)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+              className="input"
               placeholder="記事の概要（省略可）"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">画像アップロード</label>
+            <label className="label mb-1">画像アップロード</label>
             <input
               type="file"
               accept="image/*"
               onChange={e => { setImageFile(e.target.files?.[0] || null); if (e.target.files?.[0]) setImageUrl(''); }}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-sm"
+              className="input text-sm"
             />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">または画像URLを直接入力:</p>
+            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1">または画像URLを直接入力:</p>
             <input
               type="url"
               value={imageUrl}
               onChange={e => { setImageUrl(e.target.value); if (e.target.value) setImageFile(null); }}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md mt-1"
+              className="input mt-1"
               placeholder="https://example.com/image.jpg"
             />
             {(imageUrl || imageFile) && (
               <div className="mt-2">
-                {imageUrl && <img src={imageUrl} alt="Preview" className="max-h-40 rounded-lg object-cover" onError={e => (e.currentTarget.style.display = 'none')} />}
-                {imageFile && <p className="text-sm text-green-600">{imageFile.name} が選択されています</p>}
+                {imageUrl && <img src={imageUrl} alt="Preview" className="max-h-40 rounded-btn object-cover" onError={e => (e.currentTarget.style.display = 'none')} />}
+                {imageFile && <p className="text-sm text-success-600">{imageFile.name} が選択されています</p>}
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">本文 *</label>
+            <label className="label mb-1">本文 *</label>
             <textarea
               value={content}
               onChange={e => setContent(e.target.value)}
               rows={15}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md font-mono text-sm"
+              className="input font-mono text-sm"
               placeholder="記事の本文を入力..."
               required
             />
           </div>
 
-          <div className="flex justify-between items-center pt-4 border-t dark:border-gray-700">
-            <Link href="/admin/posts" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+          <div className="flex justify-between items-center pt-4 border-t dark:border-primary-800">
+            <Link href="/admin/posts" className="text-warm-500 hover:text-primary-700 dark:text-warm-400 dark:hover:text-warm-200">
               キャンセル
             </Link>
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors disabled:bg-gray-400"
+              className="btn-primary disabled:opacity-50"
             >
               {saving ? '更新中...' : '記事を更新'}
             </button>

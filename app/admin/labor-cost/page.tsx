@@ -328,21 +328,21 @@ export default function AdminLaborCostPage() {
   };
 
   const getLaborCostRatioColor = (ratio: number) => {
-    if (ratio >= 20) return 'text-red-600 bg-red-100';
-    if (ratio >= 18) return 'text-green-600 bg-green-100';
-    return 'text-blue-600 bg-blue-100';
+    if (ratio >= 20) return 'text-danger-600 bg-danger-100';
+    if (ratio >= 18) return 'text-success-600 bg-success-100';
+    return 'text-primary-600 bg-primary-100';
   };
 
   const getStudentsPerInstructorColor = (num: number) => {
-    if (num >= 12) return 'text-red-600 bg-red-100';
-    if (num >= 10) return 'text-green-600 bg-green-100';
-    return 'text-blue-600 bg-blue-100';
+    if (num >= 12) return 'text-danger-600 bg-danger-100';
+    if (num >= 10) return 'text-success-600 bg-success-100';
+    return 'text-primary-600 bg-primary-100';
   };
 
   if (authLoading || loading) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        <div className="spinner"></div>
       </div>
     );
   }
@@ -355,9 +355,9 @@ export default function AdminLaborCostPage() {
   return (
     <div className="w-full max-w-7xl mx-auto p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">人件費管理</h1>
+        <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">人件費管理</h1>
         <select
-          className="p-2 border rounded-md shadow-sm text-gray-700 dark:text-white dark:bg-gray-700 dark:border-gray-600"
+          className="input w-auto"
           value={selectedMonth.toISOString()}
           onChange={(e) => setSelectedMonth(new Date(e.target.value))}
         >
@@ -373,22 +373,22 @@ export default function AdminLaborCostPage() {
       {dashboardData && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Remaining Cost */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-            <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-warm-600 dark:text-warm-300 mb-2">
               残コスト
             </h3>
-            <p className="text-2xl font-bold text-gray-800 dark:text-white">
+            <p className="text-2xl font-bold text-primary-800 dark:text-warm-100">
               ¥{Math.floor(dashboardData.remainingBudget).toLocaleString()}
             </p>
-            <p className="text-xs text-gray-400 mb-2">
+            <p className="text-xs text-warm-400 mb-2">
               上限: ¥{Math.floor(dashboardData.totalBudget).toLocaleString()}
             </p>
-            <div className="mt-2 text-sm text-gray-500 border-t pt-2 dark:border-gray-700">
+            <div className="mt-2 text-sm text-warm-500 border-t pt-2 dark:border-primary-800">
               <p>現時点: ¥{dashboardData.currentLaborCostSum.toLocaleString()}</p>
               <p
                 className={
                   dashboardData.predictedLaborCostSum > dashboardData.remainingBudget
-                    ? 'text-red-500 font-bold'
+                    ? 'text-danger-500 font-bold'
                     : ''
                 }
               >
@@ -398,22 +398,22 @@ export default function AdminLaborCostPage() {
           </div>
 
           {/* Remaining Shifts */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-            <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-warm-600 dark:text-warm-300 mb-2">
               残りシフト数
             </h3>
-            <p className="text-2xl font-bold text-gray-800 dark:text-white">
+            <p className="text-2xl font-bold text-primary-800 dark:text-warm-100">
               {Math.floor(dashboardData.remainingShifts)}枠
             </p>
-            <p className="text-xs text-gray-400 mb-2">
+            <p className="text-xs text-warm-400 mb-2">
               上限: {Math.floor(dashboardData.totalShiftsLimit)}枠
             </p>
-            <div className="mt-2 text-sm text-gray-500 border-t pt-2 dark:border-gray-700">
+            <div className="mt-2 text-sm text-warm-500 border-t pt-2 dark:border-primary-800">
               <p>現時点: {Math.floor(dashboardData.currentShifts)}枠</p>
               <p
                 className={
                   dashboardData.predictedShifts > dashboardData.remainingShifts
-                    ? 'text-red-500 font-bold'
+                    ? 'text-danger-500 font-bold'
                     : ''
                 }
               >
@@ -423,18 +423,18 @@ export default function AdminLaborCostPage() {
           </div>
 
           {/* Average Shift Guide */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
-            <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+          <div className="card p-6">
+            <h3 className="text-lg font-semibold text-warm-600 dark:text-warm-300 mb-2">
               平均シフト目安/日
             </h3>
-            <p className="text-2xl font-bold text-gray-800 dark:text-white">
+            <p className="text-2xl font-bold text-primary-800 dark:text-warm-100">
               {dashboardData.averageShiftGuideline.toFixed(1)}枠
             </p>
-            <div className="mt-2 text-sm text-gray-500 border-t pt-2 dark:border-gray-700">
+            <div className="mt-2 text-sm text-warm-500 border-t pt-2 dark:border-primary-800">
               <p
                 className={
                   dashboardData.predictedAverageShift > dashboardData.averageShiftGuideline
-                    ? 'text-red-500 font-bold'
+                    ? 'text-danger-500 font-bold'
                     : ''
                 }
               >
@@ -444,9 +444,9 @@ export default function AdminLaborCostPage() {
           </div>
 
           {/* Labor Cost Ratio & Students Per Instructor */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+          <div className="card p-6 space-y-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-1">
+              <h3 className="text-lg font-semibold text-warm-600 dark:text-warm-300 mb-1">
                 人件費率
               </h3>
               <div
@@ -454,10 +454,10 @@ export default function AdminLaborCostPage() {
               >
                 {dashboardData.totalLaborCostRatio.toFixed(1)}%
               </div>
-              <p className="text-xs text-gray-400">目標: 18%以下</p>
+              <p className="text-xs text-warm-400">目標: 18%以下</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-1">
+              <h3 className="text-lg font-semibold text-warm-600 dark:text-warm-300 mb-1">
                 平均担当人数
               </h3>
               <div
@@ -465,64 +465,64 @@ export default function AdminLaborCostPage() {
               >
                 {dashboardData.averageStudentsPerInstructor.toFixed(1)}人
               </div>
-              <p className="text-xs text-gray-400">目標: 10人以下</p>
+              <p className="text-xs text-warm-400">目標: 10人以下</p>
             </div>
           </div>
         </div>
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+          <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
+            <thead className="bg-warm-50 dark:bg-primary-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   日付
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   総塾生数
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   特訓参加生徒
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   特訓参加講師
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   人件費
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   人件費率
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                   担当人数
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
               {dailyMetrics.map((metric) => (
                 <tr
                   key={metric.date}
-                  className={metric.isPredicted ? 'bg-yellow-50 dark:bg-yellow-900/10' : ''}
+                  className={metric.isPredicted ? 'bg-warning-50 dark:bg-warning-900/10' : ''}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-800 dark:text-warm-100">
                     {metric.date}{' '}
                     {metric.isPredicted && (
-                      <span className="text-xs text-yellow-600">(予想)</span>
+                      <span className="text-xs text-warning-600">(予想)</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-300">
                     {metric.totalStudentCount}人
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-300">
                     {metric.attendingStudentCount}人
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-300">
                     <input
                       type="number"
                       min="0"
-                      className="w-20 p-1 border rounded text-right dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                      className="w-20 p-1 border rounded-input text-right dark:bg-primary-800 dark:text-warm-100 dark:border-primary-700"
                       value={metric.attendingInstructorCount}
                       onChange={(e) =>
                         handleInstructorCountChange(metric.date, e.target.value)
@@ -530,7 +530,7 @@ export default function AdminLaborCostPage() {
                     />
                     <span className="ml-1">人</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-300">
                     ¥{metric.laborCost.toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">

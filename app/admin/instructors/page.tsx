@@ -65,19 +65,19 @@ function InviteModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+      className="modal-overlay"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
+        className="modal-content w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">講師を新規招待</h3>
+        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">講師を新規招待</h3>
         <form onSubmit={handleInvite} className="space-y-4">
           <div>
             <label
               htmlFor="instructor-name"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="label"
             >
               名前
             </label>
@@ -86,14 +86,14 @@ function InviteModal({
               id="instructor-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+              className="input mt-1"
               required
             />
           </div>
           <div>
             <label
               htmlFor="instructor-email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="label"
             >
               メールアドレス
             </label>
@@ -102,14 +102,14 @@ function InviteModal({
               id="instructor-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+              className="input mt-1"
               required
             />
           </div>
           <div>
             <label
               htmlFor="instructor-role"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="label"
             >
               権限
             </label>
@@ -117,27 +117,27 @@ function InviteModal({
               id="instructor-role"
               value={role}
               onChange={(e) => setRole(e.target.value as 'admin' | 'super')}
-              className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+              className="input mt-1"
               required
             >
               <option value="admin">admin (管理者)</option>
               <option value="super">super (最高管理者)</option>
             </select>
           </div>
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+          {error && <p className="text-sm text-danger-500 text-center">{error}</p>}
           <div className="flex justify-end gap-2 pt-4">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm"
+              className="btn-secondary"
             >
               キャンセル
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:bg-gray-400"
+              className="btn-primary"
             >
               {isSubmitting ? '招待中...' : '招待する'}
             </button>
@@ -199,37 +199,37 @@ function InvitedInstructorsModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+      className="modal-overlay"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg"
+        className="modal-content w-full max-w-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">招待中の講師</h3>
+        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">招待中の講師</h3>
         {loading ? (
-          <p className="text-center text-gray-500 dark:text-gray-400">読み込み中...</p>
+          <p className="text-center text-warm-500 dark:text-warm-400">読み込み中...</p>
         ) : invites.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400">
+          <p className="text-center text-warm-500 dark:text-warm-400">
             現在、招待中の講師はいません。
           </p>
         ) : (
-          <ul className="divide-y divide-gray-200 dark:divide-gray-700 max-h-80 overflow-y-auto">
+          <ul className="divide-y divide-warm-200 dark:divide-primary-800 max-h-80 overflow-y-auto">
             {invites.map((invite) => (
               <li key={invite.id} className="py-3 flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-medium text-primary-800 dark:text-warm-100">
                     {invite.name}
-                    <span className="ml-2 text-[10px] bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-gray-500 dark:text-gray-400 uppercase font-bold">
+                    <span className="ml-2 text-[10px] bg-warm-50 dark:bg-primary-800 px-1.5 py-0.5 rounded-badge text-warm-500 dark:text-warm-400 uppercase font-bold">
                       {invite.role}
                     </span>
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{invite.email}</p>
+                  <p className="text-sm text-warm-500 dark:text-warm-400">{invite.email}</p>
                 </div>
                 <button
                   onClick={() => handleDeleteInvite(invite.id)}
                   disabled={isDeleting === invite.id}
-                  className="px-3 py-1 text-sm bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200 rounded-full hover:bg-red-200 dark:hover:bg-red-900/60 transition-colors disabled:opacity-50"
+                  className="badge-danger cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
                 >
                   {isDeleting === invite.id ? '取消中...' : '招待を取り消し'}
                 </button>
@@ -237,11 +237,11 @@ function InvitedInstructorsModal({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         )}
-        <div className="flex justify-end pt-4 mt-4 border-t dark:border-gray-700">
+        <div className="flex justify-end pt-4 mt-4 border-t dark:border-primary-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm"
+            className="btn-secondary"
           >
             閉じる
           </button>
@@ -314,20 +314,20 @@ export default function AdminInstructorListPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 mx-auto mt-8">
-        <div className="w-12 h-12 border-4 border-red-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 mt-4">読み込み中...</p>
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-600 dark:text-warm-300 mt-4">読み込み中...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg mx-auto mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-card mx-auto mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
         <Link
           href="/"
-          className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg"
+          className="btn-danger mt-6 inline-block"
         >
           トップページに戻る
         </Link>
@@ -337,19 +337,19 @@ export default function AdminInstructorListPage() {
 
   return (
     <>
-      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mx-auto mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">講師一覧</h1>
+      <div className="card w-full max-w-4xl mx-auto mt-8">
+        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
+          <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">講師一覧</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsInvitedModalOpen(true)}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
+              className="btn-accent"
             >
               招待中の講師
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors"
+              className="btn-primary"
             >
               講師を招待
             </button>
@@ -357,16 +357,16 @@ export default function AdminInstructorListPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+          <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
+            <thead className="bg-warm-50 dark:bg-primary-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                   名前
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                   メールアドレス
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                   権限
                 </th>
                 <th className="relative px-6 py-3">
@@ -374,28 +374,28 @@ export default function AdminInstructorListPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
               {instructors.map((instructor) => (
                 <tr key={instructor.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-800 dark:text-warm-100">
                     {instructor.display_name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
                     {instructor.email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 uppercase">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400 uppercase">
                     {instructor.role}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       href={`/admin/instructor/${instructor.id}`}
-                      className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
+                      className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-200"
                     >
                       詳細/編集
                     </Link>
                     <button
                       onClick={() => handleDelete(instructor.id, instructor.display_name)}
-                      className="ml-4 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200"
+                      className="ml-4 text-danger-600 hover:text-danger-700 dark:text-danger-400 dark:hover:text-danger-200"
                     >
                       削除
                     </button>

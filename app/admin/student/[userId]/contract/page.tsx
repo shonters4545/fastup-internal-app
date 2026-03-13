@@ -127,7 +127,7 @@ export default function AdminStudentContractPage() {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
+        <div className="spinner" />
       </div>
     );
   }
@@ -140,51 +140,51 @@ export default function AdminStudentContractPage() {
   return (
     <div className="w-full max-w-4xl mt-8">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
-        <Link href="/admin/students" className="hover:text-blue-600 dark:hover:text-blue-400">生徒一覧</Link>
+      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+        <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
-        <Link href={`/admin/student/${userId}`} className="hover:text-blue-600 dark:hover:text-blue-400">{studentName}</Link>
+        <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-gray-800 dark:text-white font-medium">契約情報</span>
+        <span className="text-primary-800 dark:text-warm-100 font-medium">契約情報</span>
       </nav>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">契約情報</h1>
+      <div className="card">
+        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6">契約情報</h1>
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">支払い方法</label>
-              <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md">
+              <label className="label">支払い方法</label>
+              <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} className="input">
                 <option value="">未設定</option>
                 {Object.entries(paymentMethodOptions).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ステータス</label>
-              <select value={status} onChange={e => setStatus(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md">
+              <label className="label">ステータス</label>
+              <select value={status} onChange={e => setStatus(e.target.value)} className="input">
                 {Object.entries(statusOptions).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">契約開始日</label>
-              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">契約開始日</label>
+              <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">契約終了日</label>
-              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">契約終了日</label>
+              <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="input" />
             </div>
           </div>
 
           {/* Contract Period Status */}
           {startDate && endDate && (
-            <div className={`p-4 rounded-lg ${
+            <div className={`p-4 rounded-btn ${
               new Date(endDate) < new Date()
-                ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
-                : 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800'
+                ? 'bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800'
+                : 'bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-800'
             }`}>
               <p className={`text-sm font-medium ${
-                new Date(endDate) < new Date() ? 'text-red-700 dark:text-red-300' : 'text-green-700 dark:text-green-300'
+                new Date(endDate) < new Date() ? 'text-danger-700 dark:text-danger-300' : 'text-success-700 dark:text-success-300'
               }`}>
                 {new Date(endDate) < new Date()
                   ? '契約期間は終了しています。'
@@ -195,12 +195,12 @@ export default function AdminStudentContractPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">備考</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" placeholder="契約に関するメモ..." />
+            <label className="label">備考</label>
+            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4} className="input" placeholder="契約に関するメモ..." />
           </div>
 
-          <div className="flex justify-end pt-4 border-t dark:border-gray-700">
-            <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors disabled:bg-gray-400">
+          <div className="flex justify-end pt-4 border-t dark:border-primary-800">
+            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-warm-400">
               {saving ? '保存中...' : '保存する'}
             </button>
           </div>

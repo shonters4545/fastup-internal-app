@@ -257,46 +257,46 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
     const roomTypeLabel = roomType === 'science' ? '理系' : roomType === 'humanities' ? '文系' : '';
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={handleResultClose}>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
+      <div className="modal-overlay" onClick={handleResultClose}>
+        <div className="modal-content p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
           <div className="text-center">
             <div className="text-4xl mb-3">{isZRoom ? '⏳' : '✅'}</div>
-            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+            <h3 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">
               {isZRoom ? '出席登録完了' : '出席登録完了'}
             </h3>
           </div>
 
           <div className="space-y-3 mb-6">
             {/* 教室 */}
-            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">あなたの教室</p>
-              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="bg-primary-50 dark:bg-primary-900/30 rounded-btn p-4 text-center">
+              <p className="text-xs text-warm-500 dark:text-warm-400 mb-1">あなたの教室</p>
+              <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">
                 教室{roomLabel}
               </p>
               {roomTypeLabel && (
-                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${
-                  roomType === 'science' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-badge ${
+                  roomType === 'science' ? 'bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300' : 'bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300'
                 }`}>{roomTypeLabel}</span>
               )}
             </div>
 
             {/* 担当講師 */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-xs text-gray-500 dark:text-gray-400">担当講師</span>
-              <span className="text-sm font-bold text-gray-800 dark:text-white">
+            <div className="bg-warm-50 dark:bg-primary-800/50 rounded-btn p-3 flex items-center justify-between">
+              <span className="text-xs text-warm-500 dark:text-warm-400">担当講師</span>
+              <span className="text-sm font-bold text-primary-800 dark:text-warm-100">
                 {isZRoom ? '未定' : (instructorName || '未定')}
               </span>
             </div>
 
             {/* 教材 */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-xs text-gray-500 dark:text-gray-400">教材</span>
-              <span className="text-sm font-bold text-gray-800 dark:text-white truncate ml-2">{bookName}</span>
+            <div className="bg-warm-50 dark:bg-primary-800/50 rounded-btn p-3 flex items-center justify-between">
+              <span className="text-xs text-warm-500 dark:text-warm-400">教材</span>
+              <span className="text-sm font-bold text-primary-800 dark:text-warm-100 truncate ml-2">{bookName}</span>
             </div>
 
             {isZRoom && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-                <p className="text-xs text-yellow-700 dark:text-yellow-300">
+              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3">
+                <p className="text-xs text-warning-700 dark:text-warning-300">
                   出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
                 </p>
               </div>
@@ -305,7 +305,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 
           <button
             onClick={handleResultClose}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors"
+            className="btn-primary w-full py-3"
           >
             OK
           </button>
@@ -315,20 +315,20 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm animate-fade-in max-h-[95vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-bold mb-2 text-gray-800 dark:text-white">出席登録</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">{classItem.title}</p>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content p-6 w-full max-w-sm animate-fade-in max-h-[95vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold mb-2 text-primary-800 dark:text-warm-100">出席登録</h3>
+        <p className="text-sm text-warm-600 dark:text-warm-400 mb-6">{classItem.title}</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* パスコード */}
           <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">パスコード (4桁)</label>
+            <label className="label uppercase">パスコード (4桁)</label>
             <input
               type="tel"
               value={passcode}
               onChange={(e) => setPasscode(e.target.value.replace(/\D/g, ''))}
               maxLength={4}
-              className="w-full p-3 text-center text-2xl font-mono tracking-widest border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md focus:ring-2 focus:ring-blue-500 outline-none dark:text-white"
+              className="input w-full p-3 text-center text-2xl font-mono tracking-widest"
               placeholder="----"
               autoFocus
               required
@@ -337,7 +337,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 
           {/* 科目選択 */}
           <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">当日やる科目</label>
+            <label className="label uppercase">当日やる科目</label>
             <select
               value={selectedSubjectId}
               onChange={(e) => {
@@ -345,7 +345,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
                 setSelectedBookId('');
                 setBookSearchQuery('');
               }}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-sm dark:text-white"
+              className="input w-full p-2 text-sm"
               required
             >
               <option value="">-- 科目を選択 --</option>
@@ -357,7 +357,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 
           {/* 教材名（リッチ選択） */}
           <div className="relative">
-            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase">教材名</label>
+            <label className="label uppercase">教材名</label>
             <input
               ref={bookInputRef}
               type="text"
@@ -368,7 +368,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
                 setShowBookDropdown(true);
               }}
               onFocus={() => setShowBookDropdown(true)}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-sm dark:text-white"
+              className="input w-full p-2 text-sm"
               placeholder={selectedSubjectId ? '教材名を入力して検索...' : '先に科目を選択してください'}
               disabled={!selectedSubjectId}
               required
@@ -376,18 +376,18 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
             {showBookDropdown && selectedSubjectId && (
               <div
                 ref={dropdownRef}
-                className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-48 overflow-y-auto"
+                className="absolute z-10 w-full mt-1 bg-white dark:bg-primary-800 border border-warm-300 dark:border-primary-700 rounded-input shadow-lg max-h-48 overflow-y-auto"
               >
                 {filteredBooks.length === 0 ? (
-                  <div className="p-3 text-sm text-gray-400">該当する教材がありません</div>
+                  <div className="p-3 text-sm text-warm-400">該当する教材がありません</div>
                 ) : (
                   filteredBooks.map(book => (
                     <button
                       key={book.id}
                       type="button"
                       onClick={() => handleBookSelect(book)}
-                      className={`w-full text-left px-3 py-2 text-sm hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors ${
-                        selectedBookId === book.id ? 'bg-blue-100 dark:bg-blue-900/30 font-bold' : 'text-gray-800 dark:text-gray-200'
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-primary-50 dark:hover:bg-primary-700 transition-colors ${
+                        selectedBookId === book.id ? 'bg-primary-100 dark:bg-primary-900/30 font-bold' : 'text-primary-800 dark:text-warm-200'
                       }`}
                     >
                       {book.name}
@@ -399,27 +399,27 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
           </div>
 
           {/* 体験チェックボックス */}
-          <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-md border border-yellow-200 dark:border-yellow-800">
+          <div className="flex items-center gap-2 p-3 bg-warning-50 dark:bg-warning-900/20 rounded-input border border-warning-200 dark:border-warning-800">
             <input
               type="checkbox"
               id="is-trial"
               checked={isTrial}
               onChange={(e) => setIsTrial(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+              className="h-4 w-4 rounded border-warm-300 text-warning-600 focus:ring-warning-500"
             />
-            <label htmlFor="is-trial" className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+            <label htmlFor="is-trial" className="text-sm text-warning-800 dark:text-warning-200 font-medium">
               体験参加です
             </label>
           </div>
 
-          {error && <p className="text-sm text-red-500 text-center mt-3">{error}</p>}
+          {error && <p className="text-sm text-danger-500 text-center mt-3">{error}</p>}
 
-          <div className="flex justify-end gap-2 pt-4 border-t dark:border-gray-700 mt-2">
-            <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm">キャンセル</button>
+          <div className="flex justify-end gap-2 pt-4 border-t dark:border-primary-800 mt-2">
+            <button type="button" onClick={onClose} disabled={isSubmitting} className="btn-secondary px-4 py-2 text-sm">キャンセル</button>
             <button
               type="submit"
               disabled={isSubmitting || passcode.length !== 4 || !selectedSubjectId || !selectedBookId}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:bg-gray-400 font-bold"
+              className="btn-primary px-4 py-2 text-sm disabled:bg-warm-400"
             >
               {isSubmitting ? '送信中...' : '出席する'}
             </button>
@@ -448,36 +448,36 @@ const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem
   const roomTypeLabel = roomDetail?.room_type === 'science' ? '理系' : roomDetail?.room_type === 'humanities' ? '文系' : '';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
-        <h3 className="text-lg font-bold mb-2 text-gray-800 dark:text-white">出席情報</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{classItem.title}</p>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold mb-2 text-primary-800 dark:text-warm-100">出席情報</h3>
+        <p className="text-sm text-warm-600 dark:text-warm-400 mb-4">{classItem.title}</p>
         {roomDetail ? (
           <div className="space-y-3">
             {/* 教室 */}
-            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">あなたの教室</p>
-              <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="bg-primary-50 dark:bg-primary-900/30 rounded-btn p-4 text-center">
+              <p className="text-xs text-warm-500 dark:text-warm-400 mb-1">あなたの教室</p>
+              <p className="text-4xl font-bold text-primary-600 dark:text-primary-400">
                 教室{roomDetail.label}
               </p>
               {roomTypeLabel && (
-                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${
-                  roomDetail.room_type === 'science' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-badge ${
+                  roomDetail.room_type === 'science' ? 'bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300' : 'bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300'
                 }`}>{roomTypeLabel}</span>
               )}
             </div>
 
             {/* 担当講師 */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
-              <span className="text-xs text-gray-500 dark:text-gray-400">担当講師</span>
-              <span className="text-sm font-bold text-gray-800 dark:text-white">
+            <div className="bg-warm-50 dark:bg-primary-800/50 rounded-btn p-3 flex items-center justify-between">
+              <span className="text-xs text-warm-500 dark:text-warm-400">担当講師</span>
+              <span className="text-sm font-bold text-primary-800 dark:text-warm-100">
                 {isZRoom ? '未定' : (roomDetail.instructor_name || '未定')}
               </span>
             </div>
 
             {isZRoom && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-                <p className="text-xs text-yellow-700 dark:text-yellow-300">
+              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3">
+                <p className="text-xs text-warning-700 dark:text-warning-300">
                   出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
                 </p>
               </div>
@@ -485,11 +485,11 @@ const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem
           </div>
         ) : (
           <div className="text-center py-6">
-            <p className="text-green-600 dark:text-green-400 font-bold">出席登録済みです</p>
+            <p className="text-success-600 dark:text-success-400 font-bold">出席登録済みです</p>
           </div>
         )}
-        <div className="flex justify-end pt-4 border-t dark:border-gray-700 mt-4">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm">閉じる</button>
+        <div className="flex justify-end pt-4 border-t dark:border-primary-800 mt-4">
+          <button onClick={onClose} className="btn-secondary px-4 py-2 text-sm">閉じる</button>
         </div>
       </div>
     </div>
@@ -592,16 +592,16 @@ export default function ClassesPage() {
     if (loading) {
       return (
         <div className="text-center py-12">
-          <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400">読み込み中...</p>
+          <div className="spinner mx-auto mb-4"></div>
+          <p className="text-warm-500 dark:text-warm-400">読み込み中...</p>
         </div>
       );
     }
     if (error) {
-      return <div className="text-center text-red-500 py-12">{error}</div>;
+      return <div className="text-center text-danger-500 py-12">{error}</div>;
     }
     if (classes.length === 0) {
-      return <div className="text-center text-gray-500 dark:text-gray-400 py-12">現在参加できる講義はありません。</div>;
+      return <div className="text-center text-warm-500 dark:text-warm-400 py-12">現在参加できる講義はありません。</div>;
     }
     return (
       <div className="space-y-4">
@@ -615,11 +615,11 @@ export default function ClassesPage() {
           if (isAttended) {
             const roomDetail = attendanceRoomDetails.get(cls.id);
             const roomText = roomDetail ? (roomDetail.label === 'Z' ? '待機中' : `教室${roomDetail.label}`) : '';
-            statusInfo = { text: `出席中${roomText ? ` (${roomText})` : ''}`, style: 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' };
+            statusInfo = { text: `出席中${roomText ? ` (${roomText})` : ''}`, style: 'bg-success-200 text-success-800 dark:bg-success-700 dark:text-success-100' };
           } else if (isOngoing) {
-            statusInfo = { text: '開講中', style: 'bg-rose-200 text-rose-800 dark:bg-rose-700 dark:text-rose-100 animate-pulse' };
+            statusInfo = { text: '開講中', style: 'bg-danger-200 text-danger-800 dark:bg-danger-700 dark:text-danger-100 animate-pulse' };
           } else {
-            statusInfo = { text: '開講予定', style: 'bg-sky-200 text-sky-800 dark:bg-sky-700 dark:text-sky-100' };
+            statusInfo = { text: '開講予定', style: 'bg-info-200 text-info-800 dark:bg-info-700 dark:text-info-100' };
           }
 
           const isClickable = isOngoing || isAttended;
@@ -628,24 +628,24 @@ export default function ClassesPage() {
             <div
               key={cls.id}
               onClick={() => handleClassClick(cls)}
-              className={`bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg flex justify-between items-center transition-all duration-200 ${
-                isClickable ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-md' : 'opacity-70 cursor-not-allowed'
+              className={`bg-warm-50 dark:bg-primary-800/50 p-4 rounded-btn flex justify-between items-center transition-all duration-200 ${
+                isClickable ? 'cursor-pointer hover:bg-warm-50 dark:hover:bg-primary-800 hover:shadow-md' : 'opacity-70 cursor-not-allowed'
               }`}
               aria-disabled={!isClickable}
             >
               <div>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-white">{cls.title}</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">講師: {cls.instructor_name}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100">{cls.title}</h2>
+                <p className="text-sm text-warm-600 dark:text-warm-400 mt-1">講師: {cls.instructor_name}</p>
+                <p className="text-sm text-warm-500 dark:text-warm-400">
                   {startTime.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - {new Date(cls.end_time).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
               <div className="flex-shrink-0 ml-4 flex flex-col items-end gap-1">
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${statusInfo.style}`}>
+                <span className={`text-xs font-semibold px-3 py-1 rounded-badge ${statusInfo.style}`}>
                   {statusInfo.text}
                 </span>
                 {isAttended && (
-                  <span className="text-[10px] text-blue-500 dark:text-blue-400">タップで詳細</span>
+                  <span className="text-[10px] text-primary-500 dark:text-primary-400">タップで詳細</span>
                 )}
               </div>
             </div>
@@ -657,10 +657,10 @@ export default function ClassesPage() {
 
   return (
     <>
-      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
-        <div className="border-b dark:border-gray-700 pb-4 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">講義に出席する</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">出席したい講義を選択して、4桁のパスコードと科目・教材を入力してください。</p>
+      <div className="w-full max-w-4xl card p-8 animate-fade-in mt-8">
+        <div className="border-b dark:border-primary-800 pb-4 mb-6">
+          <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">講義に出席する</h1>
+          <p className="mt-2 text-sm text-warm-600 dark:text-warm-400">出席したい講義を選択して、4桁のパスコードと科目・教材を入力してください。</p>
         </div>
         {renderContent()}
       </div>

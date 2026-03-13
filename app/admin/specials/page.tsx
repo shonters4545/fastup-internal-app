@@ -79,28 +79,28 @@ function ContractedStudentsModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+      className="modal-overlay"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] flex flex-col"
+        className="modal-content w-full max-w-lg max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white border-b dark:border-gray-700 pb-3">
+        <h3 className="text-xl font-bold mb-4 text-primary-800 dark:text-warm-100 border-b dark:border-primary-800 pb-3">
           契約者一覧
         </h3>
         <div className="flex-grow overflow-y-auto">
           {loading ? (
-            <p className="text-center text-gray-500 dark:text-gray-400">読み込み中...</p>
+            <p className="text-center text-warm-500 dark:text-warm-400">読み込み中...</p>
           ) : students.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400">契約者はいません。</p>
+            <p className="text-center text-warm-500 dark:text-warm-400">契約者はいません。</p>
           ) : (
-            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+            <ul className="divide-y divide-warm-200 dark:divide-primary-800">
               {students.map((student) => (
                 <li key={student.userId} className="py-3">
                   <Link
                     href={`/admin/student/${student.userId}`}
-                    className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    className="font-medium text-primary-600 dark:text-primary-400 hover:underline"
                   >
                     {student.nickname}
                   </Link>
@@ -109,11 +109,11 @@ function ContractedStudentsModal({
             </ul>
           )}
         </div>
-        <div className="flex justify-end pt-4 mt-4 border-t dark:border-gray-700">
+        <div className="flex justify-end pt-4 mt-4 border-t dark:border-primary-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm"
+            className="btn-ghost"
           >
             閉じる
           </button>
@@ -270,7 +270,7 @@ export default function AdminSpecialsPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-6xl mx-auto text-center p-8">
-        <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto"></div>
+        <div className="spinner mx-auto"></div>
       </div>
     );
   }
@@ -282,12 +282,12 @@ export default function AdminSpecialsPage() {
 
   return (
     <>
-      <div className="w-full max-w-6xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mx-auto mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">特別講座管理</h1>
+      <div className="w-full max-w-6xl card p-8 mx-auto mt-8">
+        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
+          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">特別講座管理</h1>
           <button
             onClick={handleOpenCreateModal}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
+            className="btn-primary"
           >
             特別講座を追加する
           </button>
@@ -295,27 +295,27 @@ export default function AdminSpecialsPage() {
 
         {error && !isModalOpen ? (
           <div className="text-center py-10">
-            <p className="text-red-500">{error}</p>
+            <p className="text-danger-500">{error}</p>
           </div>
         ) : specials.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-gray-500 dark:text-gray-400">登録されている特別講座はありません。</p>
+            <p className="text-warm-500 dark:text-warm-400">登録されている特別講座はありません。</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+            <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
+              <thead className="bg-warm-50 dark:bg-primary-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                     講座名
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                     エントリー期間
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                     定員
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                     管理
                   </th>
                   <th className="relative px-6 py-3">
@@ -323,26 +323,26 @@ export default function AdminSpecialsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
                 {specials.map((special) => (
                   <tr key={special.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div className="text-sm font-medium text-primary-800 dark:text-warm-100">
                         {special.title}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
                       {new Date(special.start_date).toLocaleDateString('ja-JP')} ~{' '}
                       {new Date(special.end_date).toLocaleDateString('ja-JP')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-warm-500 dark:text-warm-400">
                       {special.capacity != null ? `${special.capacity}名` : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex justify-center items-center gap-2">
                         <Link
                           href={`/admin/specials/${special.id}/entries`}
-                          className="px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                          className="px-3 py-1 text-sm bg-primary-500 text-white rounded-btn hover:bg-primary-600"
                         >
                           申込一覧
                         </Link>
@@ -351,7 +351,7 @@ export default function AdminSpecialsPage() {
                             setSelectedSpecialId(special.id);
                             setIsContractModalOpen(true);
                           }}
-                          className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600"
+                          className="px-3 py-1 text-sm bg-success-500 text-white rounded-btn hover:bg-success-600"
                         >
                           契約者一覧
                         </button>
@@ -360,13 +360,13 @@ export default function AdminSpecialsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleOpenEditModal(special)}
-                        className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
+                        className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-200"
                       >
                         編集
                       </button>
                       <button
                         onClick={() => handleDelete(special.id)}
-                        className="ml-4 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200"
+                        className="ml-4 text-danger-600 hover:text-danger-900 dark:text-danger-400 dark:hover:text-danger-200"
                       >
                         削除
                       </button>
@@ -387,21 +387,21 @@ export default function AdminSpecialsPage() {
 
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+          className="modal-overlay"
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+            className="modal-content w-full max-w-3xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-white">
+            <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">
               {editingSpecial ? '特別講座を編集する' : '特別講座を追加する'}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="title"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  className="label"
                 >
                   名前
                 </label>
@@ -410,14 +410,14 @@ export default function AdminSpecialsPage() {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                  className="input mt-1"
                   required
                 />
               </div>
               <div>
                 <label
                   htmlFor="description"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  className="label"
                 >
                   概要文
                 </label>
@@ -426,14 +426,14 @@ export default function AdminSpecialsPage() {
                   rows={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                  className="input mt-1"
                 />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="start-date"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="label"
                   >
                     エントリー開始日時
                   </label>
@@ -442,14 +442,14 @@ export default function AdminSpecialsPage() {
                     id="start-date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                    className="input mt-1"
                     required
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="end-date"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="label"
                   >
                     エントリー終了日時
                   </label>
@@ -458,7 +458,7 @@ export default function AdminSpecialsPage() {
                     id="end-date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                    className="input mt-1"
                     required
                   />
                 </div>
@@ -466,7 +466,7 @@ export default function AdminSpecialsPage() {
               <div>
                 <label
                   htmlFor="capacity"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  className="label"
                 >
                   定員（任意）
                 </label>
@@ -475,37 +475,37 @@ export default function AdminSpecialsPage() {
                   id="capacity"
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
-                  className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                  className="input mt-1"
                   min="0"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="label">
                   サムネイル画像（任意）
                 </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setThumbnailFile(e.target.files?.[0] || null)}
-                  className="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white text-sm"
+                  className="input mt-1 text-sm"
                 />
               </div>
 
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && <p className="text-sm text-danger-500">{error}</p>}
               <div className="flex justify-end gap-2 pt-4">
                 <button
                   type="button"
                   onClick={handleCloseModal}
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm"
+                  className="btn-ghost"
                 >
                   キャンセル
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:bg-gray-400"
+                  className="btn-primary disabled:opacity-50"
                 >
                   {isSubmitting
                     ? editingSpecial

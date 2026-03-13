@@ -15,8 +15,8 @@ type SpecialCourse = {
 };
 
 const statusMap: { [key: string]: { text: string; style: string } } = {
-  applied: { text: '申込完了', style: 'bg-blue-200 text-blue-800 dark:bg-blue-700 dark:text-blue-100' },
-  contracted: { text: '契約完了', style: 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' },
+  applied: { text: '申込完了', style: 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' },
+  contracted: { text: '契約完了', style: 'bg-success-200 text-success-800 dark:bg-success-700 dark:text-success-100' },
 };
 
 export default function SpecialsPage() {
@@ -73,16 +73,16 @@ export default function SpecialsPage() {
     if (loading) {
       return (
         <div className="text-center py-12">
-          <div className="w-8 h-8 border-4 border-pink-500 border-dashed rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500 dark:text-gray-400">講座を検索中...</p>
+          <div className="spinner mx-auto mb-4"></div>
+          <p className="text-warm-500 dark:text-warm-400">講座を検索中...</p>
         </div>
       );
     }
     if (error) {
-      return <div className="text-center text-red-500 py-12">{error}</div>;
+      return <div className="text-center text-danger-500 py-12">{error}</div>;
     }
     if (specials.length === 0) {
-      return <div className="text-center text-gray-500 dark:text-gray-400 py-12">現在、申し込み可能な特別講座はありません。</div>;
+      return <div className="text-center text-warm-500 dark:text-warm-400 py-12">現在、申し込み可能な特別講座はありません。</div>;
     }
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -91,7 +91,7 @@ export default function SpecialsPage() {
           const statusInfo = statusKey ? statusMap[statusKey] : null;
 
           const cardContent = (
-            <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden h-full flex flex-col transition-all duration-300 ${statusInfo ? 'opacity-70' : 'transform group-hover:-translate-y-1 group-hover:shadow-xl'}`}>
+            <div className={`bg-white dark:bg-primary-900 rounded-card shadow-card overflow-hidden h-full flex flex-col transition-all duration-300 ${statusInfo ? 'opacity-70' : 'transform group-hover:-translate-y-1 group-hover:shadow-card-hover'}`}>
               <div className="relative">
                 <img
                   src={special.thumbnail_url || `https://picsum.photos/seed/${special.id}/400/200`}
@@ -99,23 +99,23 @@ export default function SpecialsPage() {
                   className="w-full h-48 object-cover"
                 />
                 {statusInfo && (
-                  <div className={`absolute top-2 right-2 text-xs font-semibold px-3 py-1 rounded-full ${statusInfo.style}`}>
+                  <div className={`absolute top-2 right-2 text-xs font-semibold px-3 py-1 rounded-badge ${statusInfo.style}`}>
                     {statusInfo.text}
                   </div>
                 )}
               </div>
               <div className="p-6 flex flex-col flex-grow">
-                <h2 className={`text-xl font-bold text-gray-900 dark:text-white line-clamp-2 ${!statusInfo && 'group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors duration-300'}`}>
+                <h2 className={`text-xl font-bold text-primary-800 dark:text-warm-100 line-clamp-2 ${!statusInfo && 'group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors duration-300'}`}>
                   {special.title}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4">
+                <p className="text-sm text-warm-500 dark:text-warm-400 mt-2 mb-4">
                   申込期間: {new Date(special.start_date).toLocaleDateString('ja-JP')} ~ {new Date(special.end_date).toLocaleDateString('ja-JP')}
                 </p>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed flex-grow line-clamp-3">
+                <p className="text-warm-600 dark:text-warm-300 leading-relaxed flex-grow line-clamp-3">
                   {special.description}
                 </p>
                 {!statusInfo && (
-                  <div className="text-right mt-4 text-pink-600 dark:text-pink-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="text-right mt-4 text-accent-600 dark:text-accent-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     詳細を見る &rarr;
                   </div>
                 )}
@@ -140,8 +140,8 @@ export default function SpecialsPage() {
   return (
     <div className="w-full max-w-6xl animate-fade-in mt-8 space-y-8 mx-auto px-4">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">特別講座一覧</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">現在お申し込み可能な特別講座の一覧です。</p>
+        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">特別講座一覧</h1>
+        <p className="mt-2 text-warm-600 dark:text-warm-400">現在お申し込み可能な特別講座の一覧です。</p>
       </div>
       {renderContent()}
     </div>

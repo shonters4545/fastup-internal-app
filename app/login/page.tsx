@@ -22,26 +22,44 @@ export default function LoginPage() {
     : null;
 
   return (
-    <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center animate-fade-in mt-8">
-      <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Welcome!</h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-8">Sign in with your Google account to continue.</p>
+    <div className="w-full max-w-md animate-fade-in mt-8">
+      {/* Main card */}
+      <div className="card text-center">
+        {/* Decorative top bar */}
+        <div className="h-1 w-16 bg-primary-500 rounded-badge mx-auto mb-8" />
 
-      {errorMessage && (
-        <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/50 rounded-lg">
-          <p className="text-red-700 dark:text-red-300 text-sm font-medium">{errorMessage}</p>
-          {errorDetail && (
-            <p className="text-red-500 dark:text-red-400 text-xs mt-1">{errorDetail}</p>
-          )}
-        </div>
-      )}
+        <h1 className="text-3xl font-bold text-primary-700 dark:text-warm-100 mb-2 tracking-wider">
+          FAST-UP
+        </h1>
+        <p className="text-warm-500 dark:text-warm-400 mb-8 text-sm">
+          アカウントにログインして始めましょう
+        </p>
 
-      <button
-        onClick={signInWithGoogle}
-        className="w-full inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold py-3 px-6 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-300 ease-in-out"
-      >
-        <GoogleLogo />
-        <span>Sign in with Google</span>
-      </button>
+        {errorMessage && (
+          <div className="mb-6 p-4 bg-danger-50 dark:bg-danger-500/10 rounded-btn border border-danger-100 dark:border-danger-700">
+            <p className="text-danger-600 dark:text-danger-500 text-sm font-medium">{errorMessage}</p>
+            {errorDetail && (
+              <p className="text-danger-500 dark:text-danger-500 text-xs mt-1 opacity-75">{errorDetail}</p>
+            )}
+          </div>
+        )}
+
+        <button
+          onClick={signInWithGoogle}
+          className="w-full inline-flex items-center justify-center
+                     bg-white dark:bg-primary-800 text-primary-700 dark:text-warm-200
+                     font-semibold py-3 px-6
+                     border border-warm-300 dark:border-primary-700
+                     rounded-btn shadow-card
+                     hover:shadow-card-hover hover:border-primary-300
+                     dark:hover:border-primary-600
+                     focus-visible:ring-2 focus-visible:ring-primary-400
+                     transition-all duration-300 ease-out"
+        >
+          <GoogleLogo />
+          <span>Googleアカウントでログイン</span>
+        </button>
+      </div>
     </div>
   );
 }

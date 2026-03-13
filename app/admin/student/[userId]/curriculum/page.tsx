@@ -280,7 +280,7 @@ export default function AdminStudentCurriculumPage() {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
+        <div className="spinner" />
       </div>
     );
   }
@@ -292,46 +292,46 @@ export default function AdminStudentCurriculumPage() {
   return (
     <div className="max-w-4xl mx-auto p-4 pb-20">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
-        <Link href="/admin/students" className="hover:text-blue-600 dark:hover:text-blue-400">生徒一覧</Link>
+      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+        <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
-        <Link href={`/admin/student/${userId}`} className="hover:text-blue-600 dark:hover:text-blue-400">{studentName}</Link>
+        <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-gray-800 dark:text-white font-medium">カリキュラム</span>
+        <span className="text-primary-800 dark:text-warm-100 font-medium">カリキュラム</span>
       </nav>
 
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">{studentName} のカリキュラム進捗</h1>
+      <h1 className="text-2xl font-bold mb-6 dark:text-warm-100">{studentName} のカリキュラム進捗</h1>
 
       {/* Subject Progress Bar */}
       {activeSubjectId && (
-        <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="mb-6 bg-white dark:bg-primary-900 p-4 rounded-btn shadow-sm border border-warm-200 dark:border-primary-800">
           <div className="flex justify-between items-end mb-2">
             <div>
-              <span className="text-sm font-bold text-gray-700 dark:text-gray-300">科目全体の進捗</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+              <span className="text-sm font-bold text-primary-700 dark:text-warm-300">科目全体の進捗</span>
+              <span className="text-xs text-warm-500 dark:text-warm-400 ml-2">
                 ({subjectProgress.completed} / {subjectProgress.total} タスク完了)
               </span>
             </div>
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
               {subjectProgress.percentage}%
             </span>
           </div>
-          <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${subjectProgress.percentage}%` }} />
+          <div className="w-full h-3 bg-warm-200 dark:bg-primary-800 rounded-full overflow-hidden">
+            <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${subjectProgress.percentage}%` }} />
           </div>
         </div>
       )}
 
       {/* Subject Tabs */}
-      <div className="flex overflow-x-auto border-b border-gray-200 dark:border-gray-700 mb-6">
+      <div className="flex overflow-x-auto border-b border-warm-200 dark:border-primary-800 mb-6">
         {subjects.map(subject => (
           <button
             key={subject.id}
             onClick={() => setActiveSubjectId(subject.id)}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeSubjectId === subject.id
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                : 'border-transparent text-warm-500 hover:text-primary-700 dark:text-warm-400 dark:hover:text-warm-300'
             }`}
           >
             {subject.name}
@@ -340,25 +340,25 @@ export default function AdminStudentCurriculumPage() {
       </div>
 
       {filteredDivisions.length === 0 ? (
-        <div className="text-center text-gray-500 py-8">この科目のカリキュラムはありません</div>
+        <div className="text-center text-warm-500 py-8">この科目のカリキュラムはありません</div>
       ) : (
         filteredDivisions.map(division => {
           const divisionBooks = processedData.booksByDivision.get(division.id) || [];
 
           return (
             <div key={division.id} className="mb-8">
-              <div className="flex justify-between items-center mb-4 border-b pb-2 border-gray-300 dark:border-gray-600">
-                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">{division.name}</h2>
+              <div className="flex justify-between items-center mb-4 border-b pb-2 border-warm-300 dark:border-primary-700">
+                <h2 className="text-xl font-bold text-primary-800 dark:text-warm-200">{division.name}</h2>
                 <button
                   onClick={() => { setTargetDivisionId(division.id); setIsAddCustomBookModalOpen(true); }}
-                  className="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow-sm transition-colors"
+                  className="btn-primary text-sm px-3 py-1"
                 >
                   + カスタム参考書を追加
                 </button>
               </div>
 
               {divisionBooks.length === 0 ? (
-                <div className="text-gray-500 text-sm mb-4">参考書がありません</div>
+                <div className="text-warm-500 text-sm mb-4">参考書がありません</div>
               ) : (
                 <div className="space-y-4">
                   {divisionBooks.map(book => {
@@ -369,27 +369,27 @@ export default function AdminStudentCurriculumPage() {
                     const maxLaps = book.max_laps || 1;
 
                     return (
-                      <div key={book.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                      <div key={book.id} className="bg-white dark:bg-primary-900 rounded-btn shadow-card overflow-hidden border border-warm-200 dark:border-primary-800">
                         {/* Accordion Header */}
-                        <div className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors" onClick={() => toggleBookExpansion(book.id)}>
+                        <div className="p-4 cursor-pointer hover:bg-warm-50 dark:hover:bg-primary-800 transition-colors" onClick={() => toggleBookExpansion(book.id)}>
                           <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-3">
                               {book.image_url ? (
-                                <img src={book.image_url} alt={book.name} className="w-12 h-16 object-cover rounded shadow-sm bg-gray-100" referrerPolicy="no-referrer" />
+                                <img src={book.image_url} alt={book.name} className="w-12 h-16 object-cover rounded shadow-sm bg-warm-50" referrerPolicy="no-referrer" />
                               ) : (
-                                <div className="w-12 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">No Img</div>
+                                <div className="w-12 h-16 bg-warm-200 rounded flex items-center justify-center text-warm-400 text-xs">No Img</div>
                               )}
                               <div>
                                 <div className="flex items-center gap-2 mb-1">
                                   {book.is_custom && (
-                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-bold">カスタム</span>
+                                    <span className="badge-warning text-xs px-2 py-0.5 font-bold">カスタム</span>
                                   )}
                                   {book.drive_url ? (
-                                    <a href={book.drive_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="font-bold text-lg text-blue-600 dark:text-blue-400 hover:underline">
+                                    <a href={book.drive_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="font-bold text-lg text-primary-600 dark:text-primary-400 hover:underline">
                                       {book.name}
                                     </a>
                                   ) : (
-                                    <h3 className="font-bold text-lg text-gray-900 dark:text-white">{book.name}</h3>
+                                    <h3 className="font-bold text-lg text-primary-800 dark:text-warm-100">{book.name}</h3>
                                   )}
                                 </div>
                               </div>
@@ -398,7 +398,7 @@ export default function AdminStudentCurriculumPage() {
                               {book.is_custom && (
                                 <button
                                   onClick={e => { e.stopPropagation(); handleDeleteCustomBook(book.id); }}
-                                  className="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                                  className="text-danger-500 hover:text-danger-700 p-1 rounded hover:bg-danger-50 dark:hover:bg-danger-900/20"
                                   title="削除"
                                 >
                                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -406,7 +406,7 @@ export default function AdminStudentCurriculumPage() {
                                   </svg>
                                 </button>
                               )}
-                              <svg className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <svg className={`h-5 w-5 text-warm-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                               </svg>
                             </div>
@@ -414,33 +414,33 @@ export default function AdminStudentCurriculumPage() {
 
                           {/* Progress Bar */}
                           <div className="flex items-center gap-3 mt-2">
-                            <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                              <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${progress}%` }} />
+                            <div className="flex-1 h-2 bg-warm-200 dark:bg-primary-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${progress}%` }} />
                             </div>
-                            <span className="text-sm font-medium text-gray-600 dark:text-gray-400 w-10 text-right">{progress}%</span>
+                            <span className="text-sm font-medium text-warm-600 dark:text-warm-400 w-10 text-right">{progress}%</span>
                           </div>
                           {averageScore !== null && (
-                            <div className="mt-1 text-right text-xs text-gray-500 dark:text-gray-400">
-                              平均点: <span className="font-bold text-gray-800 dark:text-gray-200">{averageScore}点</span>
+                            <div className="mt-1 text-right text-xs text-warm-500 dark:text-warm-400">
+                              平均点: <span className="font-bold text-primary-800 dark:text-warm-200">{averageScore}点</span>
                             </div>
                           )}
                         </div>
 
                         {/* Accordion Content */}
                         {isExpanded && (
-                          <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                          <div className="border-t border-warm-200 dark:border-primary-800 bg-warm-50 dark:bg-primary-950/50">
                             {book.remarks && (
-                              <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-b border-gray-200 dark:border-gray-700">
-                                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">備考・指示</h4>
-                                <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{book.remarks}</p>
+                              <div className="p-4 bg-warning-50 dark:bg-warning-900/20 border-b border-warm-200 dark:border-primary-800">
+                                <h4 className="text-xs font-bold text-warm-500 dark:text-warm-400 mb-1">備考・指示</h4>
+                                <p className="text-sm text-primary-800 dark:text-warm-200 whitespace-pre-wrap">{book.remarks}</p>
                               </div>
                             )}
                             {bookTasks.length === 0 ? (
-                              <div className="p-4 text-center text-gray-500 text-sm">タスクが登録されていません</div>
+                              <div className="p-4 text-center text-warm-500 text-sm">タスクが登録されていません</div>
                             ) : (
-                              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                              <div className="divide-y divide-warm-200 dark:divide-primary-800">
                                 {/* Header Row */}
-                                <div className="flex items-center p-3 bg-gray-100 dark:bg-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                <div className="flex items-center p-3 bg-warm-50 dark:bg-primary-900 text-xs font-semibold text-warm-500 dark:text-warm-400">
                                   <div className="flex-1">タスク名</div>
                                   <div className="flex gap-2 mr-2">
                                     {Array.from({ length: maxLaps }).map((_, i) => (
@@ -451,8 +451,8 @@ export default function AdminStudentCurriculumPage() {
 
                                 {/* Task Rows */}
                                 {bookTasks.map(task => (
-                                  <div key={task.id} className="flex items-center p-3 hover:bg-white dark:hover:bg-gray-800 transition-colors">
-                                    <div className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 pr-4">{task.name}</div>
+                                  <div key={task.id} className="flex items-center p-3 hover:bg-white dark:hover:bg-primary-900 transition-colors">
+                                    <div className="flex-1 text-sm font-medium text-primary-800 dark:text-warm-200 pr-4">{task.name}</div>
                                     <div className="flex gap-2 mr-2">
                                       {Array.from({ length: maxLaps }).map((_, i) => {
                                         const lap = i + 1;
@@ -467,12 +467,12 @@ export default function AdminStudentCurriculumPage() {
                                             <button
                                               onClick={e => { e.stopPropagation(); if (!isLocked) handleCheckboxClick(task, book, lap, isChecked); }}
                                               disabled={isLocked}
-                                              className={`w-8 h-8 rounded-md flex items-center justify-center border transition-all ${
+                                              className={`w-8 h-8 rounded-input flex items-center justify-center border transition-all ${
                                                 isChecked
-                                                  ? 'bg-green-500 border-green-500 text-white shadow-sm'
+                                                  ? 'bg-success-500 border-success-500 text-white shadow-sm'
                                                   : isLocked
-                                                    ? 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
-                                                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:border-blue-400'
+                                                    ? 'bg-warm-50 dark:bg-primary-900 border-warm-200 dark:border-primary-800 cursor-not-allowed opacity-50'
+                                                    : 'bg-white dark:bg-primary-800 border-warm-300 dark:border-primary-700 hover:border-primary-400'
                                               }`}
                                             >
                                               {isChecked && (
@@ -482,7 +482,7 @@ export default function AdminStudentCurriculumPage() {
                                               )}
                                             </button>
                                             {isChecked && score !== undefined && score !== null && (
-                                              <span className="text-[10px] font-bold text-gray-600 dark:text-gray-400">{score}点</span>
+                                              <span className="text-[10px] font-bold text-warm-600 dark:text-warm-400">{score}点</span>
                                             )}
                                           </div>
                                         );

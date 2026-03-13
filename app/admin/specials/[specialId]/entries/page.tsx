@@ -104,19 +104,19 @@ export default function AdminSpecialEntriesPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 mx-auto mt-8">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto"></div>
+        <div className="spinner mx-auto"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg mx-auto mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-card mx-auto mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
         <Link
           href="/admin/specials"
-          className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg"
+          className="mt-6 inline-block btn-danger"
         >
           特別講座一覧に戻る
         </Link>
@@ -125,51 +125,51 @@ export default function AdminSpecialEntriesPage() {
   }
 
   return (
-    <div className="w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mx-auto mt-8">
-      <div className="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+    <div className="w-full max-w-5xl card p-8 mx-auto mt-8">
+      <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
+        <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">
           {specialTitle} - 申込者一覧
         </h1>
         <Link
           href="/admin/specials"
-          className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+          className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
         >
           &larr; 講座一覧に戻る
         </Link>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-700">
+        <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
+          <thead className="bg-warm-50 dark:bg-primary-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                 生徒名
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                 申込日時
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
                 ステータス
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
             {entries.length === 0 ? (
               <tr>
                 <td
                   colSpan={3}
-                  className="text-center py-10 text-gray-500 dark:text-gray-400"
+                  className="text-center py-10 text-warm-500 dark:text-warm-400"
                 >
                   申込者はいません。
                 </td>
               </tr>
             ) : (
               entries.map((entry) => (
-                <tr key={entry.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                <tr key={entry.id} className="hover:bg-warm-50 dark:hover:bg-primary-800/50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-800 dark:text-warm-100">
                     {entry.nickname}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
                     {new Date(entry.created_at).toLocaleString('ja-JP')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -178,10 +178,10 @@ export default function AdminSpecialEntriesPage() {
                       onChange={(e) =>
                         handleStatusChange(entry.id, e.target.value as 'applied' | 'contracted')
                       }
-                      className={`p-1 rounded-md text-xs border ${
+                      className={`p-1 rounded-input text-xs border ${
                         entry.status === 'applied'
-                          ? 'bg-blue-100 dark:bg-blue-900/50 border-blue-300 dark:border-blue-700 text-blue-800 dark:text-blue-200'
-                          : 'bg-green-100 dark:bg-green-900/50 border-green-300 dark:border-green-700 text-green-800 dark:text-green-200'
+                          ? 'bg-primary-100 dark:bg-primary-900/50 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
+                          : 'bg-success-100 dark:bg-success-900/50 border-success-300 dark:border-success-700 text-success-800 dark:text-success-200'
                       }`}
                     >
                       <option value="applied">申込完了</option>

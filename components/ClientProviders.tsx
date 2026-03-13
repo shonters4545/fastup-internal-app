@@ -10,7 +10,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const isStudent = currentUser && !['admin', 'super'].includes(currentUser.role);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen w-full flex flex-col items-center bg-warm-50 dark:bg-primary-950 transition-colors duration-300">
       <Header />
       <main className={`w-full flex flex-col items-center justify-center p-4 ${isStudent ? 'pb-24 md:pb-4' : 'pb-4'}`}>
         {children}

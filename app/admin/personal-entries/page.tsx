@@ -29,20 +29,20 @@ const formatStatus = (
     case 'pending':
       return {
         text: '申込完了',
-        style: 'bg-blue-200 text-blue-800 dark:bg-blue-700 dark:text-blue-100',
+        style: 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100',
       };
     case 'approved':
       return {
         text: '承認済み',
-        style: 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100',
+        style: 'bg-success-200 text-success-800 dark:bg-success-700 dark:text-success-100',
       };
     case 'rejected':
       return {
         text: '却下',
-        style: 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100',
+        style: 'bg-danger-200 text-danger-800 dark:bg-danger-700 dark:text-danger-100',
       };
     default:
-      return { text: status, style: 'bg-gray-200 text-gray-800' };
+      return { text: status, style: 'bg-warm-200 text-primary-800' };
   }
 };
 
@@ -173,16 +173,16 @@ export default function AdminPersonalEntriesPage() {
   });
 
   const filterButtonStyle = (buttonFilter: FilterStatus) =>
-    `px-4 py-2 text-sm font-medium rounded-md transition ${
+    `px-4 py-2 text-sm font-medium rounded-btn transition ${
       filter === buttonFilter
-        ? 'bg-lime-600 text-white'
-        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+        ? 'bg-success-600 text-white'
+        : 'bg-warm-200 dark:bg-primary-800 text-primary-800 dark:text-warm-200 hover:bg-warm-300 dark:hover:bg-primary-700'
     }`;
 
   if (authLoading || loading) {
     return (
       <div className="w-full text-center p-8">
-        <div className="w-12 h-12 border-4 border-lime-500 border-dashed rounded-full animate-spin mx-auto"></div>
+        <div className="spinner mx-auto"></div>
       </div>
     );
   }
@@ -194,18 +194,18 @@ export default function AdminPersonalEntriesPage() {
 
   if (error) {
     return (
-      <div className="w-full text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg max-w-lg mx-auto mt-8">
-        <h2 className="text-xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
+      <div className="w-full text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-card max-w-lg mx-auto mt-8">
+        <h2 className="text-xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="w-full max-w-5xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mx-auto mt-8">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b dark:border-gray-700 pb-4 gap-4">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">個別講義管理</h1>
+      <div className="w-full max-w-5xl card p-8 mx-auto mt-8">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b dark:border-primary-800 pb-4 gap-4">
+          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">個別講義管理</h1>
           <div className="flex items-center gap-2 self-end sm:self-center flex-wrap">
             <button onClick={() => setFilter('all')} className={filterButtonStyle('all')}>
               すべて
@@ -221,27 +221,27 @@ export default function AdminPersonalEntriesPage() {
             </button>
           </div>
         </div>
-        <div className="overflow-hidden rounded-md border border-gray-200 dark:border-gray-700">
+        <div className="overflow-hidden rounded-input border border-warm-200 dark:border-primary-800">
           {filteredEntries.length === 0 ? (
-            <div className="text-center py-10 text-gray-500 dark:text-gray-400">
+            <div className="text-center py-10 text-warm-500 dark:text-warm-400">
               {filter === 'all' ? '申込者はまだいません。' : '該当する申込者はいません。'}
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="divide-y divide-warm-200 dark:divide-primary-800">
               {filteredEntries.map((entry) => (
                 <div key={entry.id}>
                   <div
                     onClick={() =>
                       setExpandedEntryId(expandedEntryId === entry.id ? null : entry.id)
                     }
-                    className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 flex flex-col sm:flex-row justify-between sm:items-center gap-3 transition-colors"
+                    className="p-4 cursor-pointer hover:bg-warm-50 dark:hover:bg-primary-800/50 flex flex-col sm:flex-row justify-between sm:items-center gap-3 transition-colors"
                   >
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-primary-800 dark:text-warm-100">
                       {entry.nickname}
                     </span>
                     <div className="flex items-center gap-4 self-end sm:self-center">
                       <span
-                        className={`px-3 py-1 text-xs font-semibold rounded-full ${formatStatus(entry.status).style}`}
+                        className={`px-3 py-1 text-xs font-semibold rounded-badge ${formatStatus(entry.status).style}`}
                       >
                         {formatStatus(entry.status).text}
                       </span>
@@ -251,7 +251,7 @@ export default function AdminPersonalEntriesPage() {
                             e.stopPropagation();
                             handleOpenModal(entry);
                           }}
-                          className="px-3 py-1 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                          className="px-3 py-1 text-sm bg-primary-500 text-white rounded-btn hover:bg-primary-600"
                         >
                           承認へ
                         </button>
@@ -262,13 +262,13 @@ export default function AdminPersonalEntriesPage() {
                             e.stopPropagation();
                             handleOpenModal(entry);
                           }}
-                          className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                          className="px-3 py-1 text-sm bg-warm-500 text-white rounded-btn hover:bg-warm-600"
                         >
                           編集
                         </button>
                       )}
                       <svg
-                        className={`w-5 h-5 text-gray-500 transform transition-transform ${expandedEntryId === entry.id ? 'rotate-180' : ''}`}
+                        className={`w-5 h-5 text-warm-500 transform transition-transform ${expandedEntryId === entry.id ? 'rotate-180' : ''}`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -283,39 +283,39 @@ export default function AdminPersonalEntriesPage() {
                     </div>
                   </div>
                   {expandedEntryId === entry.id && (
-                    <div className="bg-gray-100 dark:bg-gray-900 p-4">
+                    <div className="bg-warm-50 dark:bg-primary-950 p-4">
                       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                        <div className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm">
-                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
+                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
                             希望科目
                           </dt>
-                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
+                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
                             {formatSubject(entry.subject)}
                           </dd>
                         </div>
-                        <div className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm">
-                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
+                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
                             希望日時
                           </dt>
-                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
+                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
                             {new Date(entry.preferred_date).toLocaleString('ja-JP')}
                           </dd>
                         </div>
                         {entry.notes && (
-                          <div className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm">
-                            <dt className="font-semibold text-gray-600 dark:text-gray-300">
+                          <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
+                            <dt className="font-semibold text-warm-600 dark:text-warm-300">
                               備考
                             </dt>
-                            <dd className="text-gray-800 dark:text-gray-100 mt-1">
+                            <dd className="text-primary-800 dark:text-warm-100 mt-1">
                               {entry.notes}
                             </dd>
                           </div>
                         )}
-                        <div className="bg-white dark:bg-gray-800 p-3 rounded-md shadow-sm">
-                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
+                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
                             申込日時
                           </dt>
-                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
+                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
                             {new Date(entry.created_at).toLocaleString('ja-JP')}
                           </dd>
                         </div>
@@ -331,28 +331,28 @@ export default function AdminPersonalEntriesPage() {
 
       {isModalOpen && editingEntry && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+          className="modal-overlay"
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md"
+            className="modal-content w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+            <h3 className="text-xl font-bold mb-4 text-primary-800 dark:text-warm-100">
               ステータスの変更
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-sm text-warm-600 dark:text-warm-400 mb-6">
               生徒: {editingEntry.nickname}
             </p>
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="label">
                 ステータス
               </label>
               <select
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md text-gray-900 dark:text-white"
+                className="input w-full"
               >
                 <option value="pending">申込完了</option>
                 <option value="approved">承認済み</option>
@@ -364,7 +364,7 @@ export default function AdminPersonalEntriesPage() {
               <button
                 onClick={() => handleDeleteEntry(editingEntry.id)}
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200 rounded-md text-sm hover:bg-red-200"
+                className="px-4 py-2 bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-200 rounded-btn text-sm hover:bg-danger-200"
               >
                 削除
               </button>
@@ -372,14 +372,14 @@ export default function AdminPersonalEntriesPage() {
                 <button
                   onClick={() => setIsModalOpen(false)}
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm"
+                  className="btn-ghost"
                 >
                   キャンセル
                 </button>
                 <button
                   onClick={handleUpdateStatus}
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm disabled:bg-gray-400"
+                  className="btn-primary disabled:opacity-50"
                 >
                   {isSubmitting ? '保存中...' : '保存'}
                 </button>

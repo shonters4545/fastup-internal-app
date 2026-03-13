@@ -27,7 +27,7 @@ export function BottomNavBar() {
   if (!currentUser || ['admin', 'super'].includes(currentUser.role)) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-around items-center shadow-top z-40 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white dark:bg-primary-900 border-t border-warm-200 dark:border-primary-800 flex justify-around items-center z-40 md:hidden">
       {TABS.map((tab, index) => {
         const isActive = pathname.startsWith(tab.path);
         const isCenter = index === 2;
@@ -37,12 +37,14 @@ export function BottomNavBar() {
             <Link
               key={tab.path}
               href={tab.path}
-              className="relative flex-1 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 -mt-8"
+              className="relative flex-1 flex flex-col items-center justify-center -mt-8"
               aria-current={isActive ? 'page' : undefined}
             >
               <div
                 className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 transform ${
-                  isActive ? 'bg-blue-600 shadow-lg' : 'bg-blue-500 shadow-md'
+                  isActive
+                    ? 'bg-primary-500 shadow-lg shadow-primary-500/30 scale-105'
+                    : 'bg-primary-400 shadow-md hover:bg-primary-500'
                 }`}
               >
                 <tab.icon className="h-8 w-8 text-white" />
@@ -50,8 +52,8 @@ export function BottomNavBar() {
               <span
                 className={`text-xs mt-2 font-semibold transition-colors ${
                   isActive
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-500 dark:text-gray-400'
+                    ? 'text-primary-600 dark:text-accent-400'
+                    : 'text-warm-500 dark:text-warm-500'
                 }`}
               >
                 {tab.label}
@@ -66,8 +68,8 @@ export function BottomNavBar() {
             href={tab.path}
             className={`flex-1 flex flex-col items-center justify-center h-full transition-colors ${
               isActive
-                ? 'text-blue-600 dark:text-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-blue-500'
+                ? 'text-primary-600 dark:text-accent-400'
+                : 'text-warm-500 dark:text-warm-500 hover:text-primary-500'
             }`}
             aria-current={isActive ? 'page' : undefined}
           >

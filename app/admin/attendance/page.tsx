@@ -66,25 +66,25 @@ function StudentListModal({
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+        className="bg-white dark:bg-primary-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-emerald-600 p-6 text-white text-center">
+        <div className="bg-success-600 p-6 text-white text-center">
           <h3 className="text-xl font-black">{date}</h3>
-          <p className="text-emerald-100 text-sm font-bold mt-1">出席予定の生徒一覧</p>
+          <p className="text-success-100 text-sm font-bold mt-1">出席予定の生徒一覧</p>
         </div>
 
         {/* シフトサポート情報 */}
         {students.length > 0 && (
-          <div className="mx-6 mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-200 dark:border-indigo-800">
-            <h4 className="text-xs font-black text-indigo-600 dark:text-indigo-400 mb-2 uppercase">シフトサポート</h4>
+          <div className="mx-6 mt-4 p-4 bg-primary-50 dark:bg-primary-900/30 rounded-xl border border-primary-200 dark:border-primary-800">
+            <h4 className="text-xs font-black text-primary-600 dark:text-primary-400 mb-2 uppercase">シフトサポート</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="text-gray-600 dark:text-gray-300">出席予定者:</div>
-              <div className="font-bold text-gray-800 dark:text-white">{shift.total}名 (理系: {shift.scienceCount}名)</div>
-              <div className="text-gray-600 dark:text-gray-300">想定ルーム数:</div>
-              <div className="font-bold text-gray-800 dark:text-white">{shift.totalRooms} (文系: {shift.humanitiesRooms} / 理系: {shift.scienceRooms})</div>
-              <div className="text-gray-600 dark:text-gray-300">必要講師数:</div>
-              <div className="font-bold text-gray-800 dark:text-white">{shift.totalRooms}名</div>
+              <div className="text-warm-600 dark:text-warm-300">出席予定者:</div>
+              <div className="font-bold text-primary-800 dark:text-warm-100">{shift.total}名 (理系: {shift.scienceCount}名)</div>
+              <div className="text-warm-600 dark:text-warm-300">想定ルーム数:</div>
+              <div className="font-bold text-primary-800 dark:text-warm-100">{shift.totalRooms} (文系: {shift.humanitiesRooms} / 理系: {shift.scienceRooms})</div>
+              <div className="text-warm-600 dark:text-warm-300">必要講師数:</div>
+              <div className="font-bold text-primary-800 dark:text-warm-100">{shift.totalRooms}名</div>
             </div>
           </div>
         )}
@@ -96,15 +96,15 @@ function StudentListModal({
                 <Link
                   key={s.userId}
                   href={`/admin/student/${s.userId}`}
-                  className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors border border-gray-100 dark:border-gray-600 group"
+                  className="flex items-center justify-between p-3 rounded-xl bg-warm-50 dark:bg-primary-800/50 hover:bg-success-50 dark:hover:bg-success-900/30 transition-colors border border-warm-50 dark:border-primary-700 group"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-gray-800 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                    <span className="font-bold text-primary-800 dark:text-warm-100 group-hover:text-success-600 dark:group-hover:text-success-400">
                       {s.nickname}
                     </span>
                     {s.stream && (
                       <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
-                        s.stream === 'science' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300'
+                        s.stream === 'science' ? 'bg-info-100 text-info-700 dark:bg-info-900/40 dark:text-info-300' : 'bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300'
                       }`}>
                         {s.stream === 'science' ? '理系' : '文系'}
                       </span>
@@ -112,7 +112,7 @@ function StudentListModal({
                   </div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-gray-400 group-hover:text-emerald-500"
+                    className="h-4 w-4 text-warm-400 group-hover:text-success-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -128,13 +128,13 @@ function StudentListModal({
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-400 py-8 italic font-bold">
+            <p className="text-center text-warm-400 py-8 italic font-bold">
               予定されている生徒はいません
             </p>
           )}
           <button
             onClick={onClose}
-            className="w-full mt-2 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-black rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="w-full mt-2 py-3 bg-warm-50 dark:bg-primary-800 text-warm-600 dark:text-warm-300 font-black rounded-xl hover:bg-warm-200 dark:hover:bg-primary-700 transition-colors"
           >
             閉じる
           </button>
@@ -357,9 +357,9 @@ export default function AdminAttendancePage() {
           className={`h-14 w-14 flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all relative ${
             count > 0
               ? isConfirmed
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'bg-blue-400 text-white'
-              : 'bg-gray-50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-500'
+                ? 'bg-success-500 text-white shadow-sm'
+                : 'bg-primary-400 text-white'
+              : 'bg-warm-50 dark:bg-primary-800/50 text-warm-400 dark:text-warm-500'
           } hover:scale-110 active:scale-95`}
         >
           <span>{i}</span>
@@ -377,14 +377,14 @@ export default function AdminAttendancePage() {
 
     return (
       <div
-        className={`bg-gray-50 dark:bg-gray-900/40 p-5 rounded-2xl border ${isConfirmed ? 'border-emerald-100 dark:border-emerald-900/30' : 'border-blue-100 dark:border-blue-900/30'}`}
+        className={`bg-warm-50 dark:bg-primary-950/40 p-5 rounded-2xl border ${isConfirmed ? 'border-success-100 dark:border-success-900/30' : 'border-primary-100 dark:border-primary-900/30'}`}
       >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-black text-gray-800 dark:text-white">
+          <h3 className="font-black text-primary-800 dark:text-warm-100">
             {year}年 {month + 1}月
           </h3>
           <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-black ${isConfirmed ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}
+            className={`text-[10px] px-2 py-0.5 rounded-badge font-black ${isConfirmed ? 'bg-success-100 text-success-700' : 'bg-primary-100 text-primary-700'}`}
           >
             {isConfirmed ? '確定済み' : '未確定'}
           </span>
@@ -393,7 +393,7 @@ export default function AdminAttendancePage() {
           {DAYS_OF_WEEK.map((d, idx) => (
             <div
               key={d}
-              className={`text-center text-[10px] font-black ${idx === 0 ? 'text-red-500' : idx === 6 ? 'text-blue-500' : 'text-gray-400'}`}
+              className={`text-center text-[10px] font-black ${idx === 0 ? 'text-danger-500' : idx === 6 ? 'text-primary-500' : 'text-warm-400'}`}
             >
               {d}
             </div>
@@ -401,7 +401,7 @@ export default function AdminAttendancePage() {
         </div>
         <div className="grid grid-cols-7 gap-1.5 justify-items-center">{days}</div>
         {!isConfirmed && (
-          <p className="text-right text-[9px] text-blue-500 font-bold mt-3">
+          <p className="text-right text-[9px] text-primary-500 font-bold mt-3">
             ※{deadlineMessage}
           </p>
         )}
@@ -412,8 +412,8 @@ export default function AdminAttendancePage() {
   if (loading) {
     return (
       <div className="w-full max-w-6xl text-center p-20 mx-auto mt-8">
-        <div className="w-16 h-16 border-4 border-emerald-500 border-dashed rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-500 font-black">出席データを読み込み中...</p>
+        <div className="spinner mx-auto mb-4"></div>
+        <p className="text-warm-500 font-black">出席データを読み込み中...</p>
       </div>
     );
   }
@@ -421,11 +421,11 @@ export default function AdminAttendancePage() {
   return (
     <div className="w-full max-w-5xl mt-8 mx-auto px-4 pb-40 relative">
       <div>
-        <div className="flex justify-between items-center mb-8 border-b dark:border-gray-700 pb-4">
-          <h1 className="text-3xl font-black text-gray-800 dark:text-white flex items-center gap-2">
+        <div className="flex justify-between items-center mb-8 border-b dark:border-primary-800 pb-4">
+          <h1 className="text-3xl font-black text-primary-800 dark:text-warm-100 flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-emerald-600"
+              className="h-8 w-8 text-success-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -441,7 +441,7 @@ export default function AdminAttendancePage() {
           </h1>
           <Link
             href="/"
-            className="text-sm font-black text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-sm font-black text-primary-600 dark:text-primary-400 hover:underline"
           >
             ダッシュボードへ &rarr;
           </Link>
@@ -451,13 +451,13 @@ export default function AdminAttendancePage() {
         <section className="mb-12">
           <button
             onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-            className="w-full bg-white dark:bg-gray-800 hover:shadow-md p-5 rounded-2xl flex justify-between items-center transition-all border border-gray-100 dark:border-gray-700 shadow-sm"
+            className="w-full bg-white dark:bg-primary-900 hover:shadow-card p-5 rounded-card flex justify-between items-center transition-all border border-warm-50 dark:border-primary-800 shadow-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="bg-emerald-100 dark:bg-emerald-900/30 p-2 rounded-xl">
+              <div className="bg-success-100 dark:bg-success-900/30 p-2 rounded-xl">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 text-emerald-600 transition-transform ${isHistoryOpen ? 'rotate-180' : ''}`}
+                  className={`h-5 w-5 text-success-600 transition-transform ${isHistoryOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -470,12 +470,12 @@ export default function AdminAttendancePage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-black text-gray-800 dark:text-white">
+              <h2 className="text-xl font-black text-primary-800 dark:text-warm-100">
                 出席実績 (直近7日間)
               </h2>
             </div>
             {students.some((s) => s.is3DayAbsent) && !isHistoryOpen && (
-              <span className="bg-red-500 text-white text-[10px] px-3 py-1 rounded-full font-black animate-bounce">
+              <span className="bg-danger-500 text-white text-[10px] px-3 py-1 rounded-badge font-black animate-bounce">
                 アラートあり
               </span>
             )}
@@ -484,15 +484,15 @@ export default function AdminAttendancePage() {
           {isHistoryOpen && (
             <div className="mt-4 space-y-4">
               {/* Filters */}
-              <div className="flex flex-wrap gap-4 bg-gray-50 dark:bg-gray-900/40 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+              <div className="flex flex-wrap gap-4 bg-warm-50 dark:bg-primary-950/40 p-4 rounded-card border border-warm-50 dark:border-primary-800">
                 <label className="flex items-center gap-2 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={filterPlannedAbsence}
                     onChange={(e) => setFilterPlannedAbsence(e.target.checked)}
-                    className="w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500"
+                    className="w-4 h-4 text-danger-600 rounded border-warm-300 focus:ring-danger-500"
                   />
-                  <span className="text-sm font-bold text-gray-600 dark:text-gray-300 group-hover:text-red-600 transition-colors">
+                  <span className="text-sm font-bold text-warm-600 dark:text-warm-300 group-hover:text-danger-600 transition-colors">
                     申請済みの欠席を目立たせる
                   </span>
                 </label>
@@ -501,26 +501,26 @@ export default function AdminAttendancePage() {
                     type="checkbox"
                     checked={filterUnplannedAttendance}
                     onChange={(e) => setFilterUnplannedAttendance(e.target.checked)}
-                    className="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500"
+                    className="w-4 h-4 text-warning-600 rounded border-warm-300 focus:ring-warning-500"
                   />
-                  <span className="text-sm font-bold text-gray-600 dark:text-gray-300 group-hover:text-orange-600 transition-colors">
+                  <span className="text-sm font-bold text-warm-600 dark:text-warm-300 group-hover:text-warning-600 transition-colors">
                     未申請の出席を目立たせる
                   </span>
                 </label>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+              <div className="bg-white dark:bg-primary-900 rounded-3xl shadow-card overflow-hidden border border-warm-50 dark:border-primary-800">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead className="bg-gray-50 dark:bg-gray-700">
+                  <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
+                    <thead className="bg-warm-50 dark:bg-primary-800">
                       <tr>
-                        <th className="sticky left-0 z-10 bg-gray-50 dark:bg-gray-700 px-6 py-4 text-left text-xs font-black text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[160px]">
+                        <th className="sticky left-0 z-10 bg-warm-50 dark:bg-primary-800 px-6 py-4 text-left text-xs font-black text-warm-500 dark:text-warm-300 uppercase tracking-wider min-w-[160px]">
                           生徒名
                         </th>
                         {historyDates.map((date, index) => (
                           <th
                             key={date}
-                            className="px-3 py-4 text-center text-xs font-black text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                            className="px-3 py-4 text-center text-xs font-black text-warm-500 dark:text-warm-300 uppercase tracking-wider"
                           >
                             <div className="flex flex-col items-center">
                               <span>
@@ -530,31 +530,31 @@ export default function AdminAttendancePage() {
                                 })}
                               </span>
                               {index === 0 && (
-                                <span className="text-[9px] text-blue-500 font-bold">本日</span>
+                                <span className="text-[9px] text-primary-500 font-bold">本日</span>
                               )}
                             </div>
                           </th>
                         ))}
-                        <th className="px-4 py-4 text-center text-xs font-black text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        <th className="px-4 py-4 text-center text-xs font-black text-warm-500 dark:text-warm-300 uppercase tracking-wider">
                           状態
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 font-mono">
+                    <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800 font-mono">
                       {sortedStudents.map((student) => {
                         const nameStyle =
                           filterPlannedAbsence && student.hasPlannedAbsence
-                            ? 'text-red-600 font-black'
+                            ? 'text-danger-600 font-black'
                             : filterUnplannedAttendance && student.hasUnplannedAttendance
-                            ? 'text-orange-500 font-black'
-                            : 'text-gray-900 dark:text-white font-bold';
+                            ? 'text-warning-500 font-black'
+                            : 'text-primary-800 dark:text-warm-100 font-bold';
 
                         return (
                           <tr
                             key={student.id}
-                            className={`transition-colors ${student.is3DayAbsent ? 'bg-red-50 dark:bg-red-900/10' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}`}
+                            className={`transition-colors ${student.is3DayAbsent ? 'bg-danger-50 dark:bg-danger-900/10' : 'hover:bg-warm-50 dark:hover:bg-primary-800/50'}`}
                           >
-                            <td className="sticky left-0 z-10 px-6 py-4 whitespace-nowrap text-sm bg-inherit border-r dark:border-gray-700">
+                            <td className="sticky left-0 z-10 px-6 py-4 whitespace-nowrap text-sm bg-inherit border-r dark:border-primary-800">
                               <Link
                                 href={`/admin/student/${student.id}`}
                                 className={`${nameStyle} hover:underline`}
@@ -566,20 +566,20 @@ export default function AdminAttendancePage() {
                               const isPlanned = student.plannedDates.has(date);
                               const isActual = student.actualDates.has(date);
                               const cellBg = isPlanned
-                                ? 'bg-emerald-200 dark:bg-emerald-900/60'
-                                : 'bg-slate-100 dark:bg-slate-800/40';
+                                ? 'bg-success-200 dark:bg-success-900/60'
+                                : 'bg-warm-50 dark:bg-warm-800/40';
 
                               return (
                                 <td
                                   key={date}
-                                  className={`px-3 py-4 whitespace-nowrap text-center ${cellBg} border-r border-white dark:border-gray-700/50 last:border-r-0`}
+                                  className={`px-3 py-4 whitespace-nowrap text-center ${cellBg} border-r border-white dark:border-primary-800/50 last:border-r-0`}
                                 >
                                   {isActual ? (
-                                    <span className="text-emerald-800 dark:text-emerald-400 font-black text-lg">
+                                    <span className="text-success-800 dark:text-success-400 font-black text-lg">
                                       ○
                                     </span>
                                   ) : (
-                                    <span className="text-slate-400 dark:text-slate-500 font-medium text-lg">
+                                    <span className="text-warm-400 dark:text-warm-500 font-medium text-lg">
                                       ×
                                     </span>
                                   )}
@@ -588,7 +588,7 @@ export default function AdminAttendancePage() {
                             })}
                             <td className="px-4 py-4 whitespace-nowrap text-center">
                               {student.is3DayAbsent && (
-                                <span className="text-[10px] font-black text-red-600 bg-red-100 px-2.5 py-1 rounded-full border border-red-200 animate-pulse">
+                                <span className="text-[10px] font-black text-danger-600 bg-danger-100 px-2.5 py-1 rounded-badge border border-danger-200 animate-pulse">
                                   3日連続欠席アラート
                                 </span>
                               )}
@@ -599,20 +599,20 @@ export default function AdminAttendancePage() {
                     </tbody>
                   </table>
                 </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 border-t dark:border-gray-700 flex flex-wrap gap-6 items-center text-[10px] font-bold text-gray-500">
+                <div className="p-4 bg-warm-50 dark:bg-primary-800/50 border-t dark:border-primary-800 flex flex-wrap gap-6 items-center text-[10px] font-bold text-warm-500">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 bg-emerald-200 dark:bg-emerald-900/60 rounded border border-emerald-300"></span>{' '}
+                    <span className="w-3 h-3 bg-success-200 dark:bg-success-900/60 rounded border border-success-300"></span>{' '}
                     出席予定あり
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 bg-slate-100 dark:bg-slate-800/40 rounded border border-slate-200"></span>{' '}
+                    <span className="w-3 h-3 bg-warm-50 dark:bg-warm-800/40 rounded border border-warm-200"></span>{' '}
                     出席予定なし
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-emerald-800 font-black">○</span> 実際に出席
+                    <span className="text-success-800 font-black">○</span> 実際に出席
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-slate-400">×</span> 欠席
+                    <span className="text-warm-400">×</span> 欠席
                   </div>
                 </div>
               </div>
@@ -624,13 +624,13 @@ export default function AdminAttendancePage() {
         <section>
           <button
             onClick={() => setIsForecastOpen(!isForecastOpen)}
-            className="w-full bg-white dark:bg-gray-800 hover:shadow-md p-5 rounded-2xl flex justify-between items-center transition-all border border-gray-100 dark:border-gray-700 shadow-sm"
+            className="w-full bg-white dark:bg-primary-900 hover:shadow-card p-5 rounded-card flex justify-between items-center transition-all border border-warm-50 dark:border-primary-800 shadow-sm"
           >
             <div className="flex items-center gap-3">
-              <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl">
+              <div className="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-xl">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 text-blue-600 transition-transform ${isForecastOpen ? 'rotate-180' : ''}`}
+                  className={`h-5 w-5 text-primary-600 transition-transform ${isForecastOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -643,23 +643,23 @@ export default function AdminAttendancePage() {
                   />
                 </svg>
               </div>
-              <h2 className="text-xl font-black text-gray-800 dark:text-white">
+              <h2 className="text-xl font-black text-primary-800 dark:text-warm-100">
                 今後の出席予想
               </h2>
             </div>
           </button>
 
           {isForecastOpen && (
-            <div className="mt-4 bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
+            <div className="mt-4 bg-white dark:bg-primary-900 rounded-3xl shadow-card p-6 border border-warm-50 dark:border-primary-800">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {visibleMonths.map((m, idx) => (
                   <div key={`${m.year}-${m.month}-${idx}`}>{renderCalendar(m)}</div>
                 ))}
               </div>
-              <div className="mt-8 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-800 flex items-start gap-3">
+              <div className="mt-8 p-4 bg-success-50 dark:bg-success-900/20 rounded-card border border-success-100 dark:border-success-800 flex items-start gap-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5"
+                  className="h-5 w-5 text-success-600 flex-shrink-0 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -671,7 +671,7 @@ export default function AdminAttendancePage() {
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <p className="text-xs text-emerald-800 dark:text-emerald-300 font-bold leading-relaxed">
+                <p className="text-xs text-success-800 dark:text-success-300 font-bold leading-relaxed">
                   カレンダーの日付をタップすると、その日に出席予定の生徒名を確認できます。緑色の日付は確定済み、青色の日付はまだ生徒が変更可能な期間です。
                 </p>
               </div>

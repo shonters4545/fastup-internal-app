@@ -142,7 +142,7 @@ export default function AdminStudentProfilePage() {
   if (authLoading || loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin" />
+        <div className="spinner" />
       </div>
     );
   }
@@ -155,75 +155,75 @@ export default function AdminStudentProfilePage() {
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
-        <Link href="/admin/students" className="hover:text-blue-600 dark:hover:text-blue-400">生徒一覧</Link>
+      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+        <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
-        <Link href={`/admin/student/${userId}`} className="hover:text-blue-600 dark:hover:text-blue-400">{studentName}</Link>
+        <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-gray-800 dark:text-white font-medium">プロフィール</span>
+        <span className="text-primary-800 dark:text-warm-100 font-medium">プロフィール</span>
       </nav>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">プロフィール編集</h1>
+      <div className="card">
+        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6">プロフィール編集</h1>
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ニックネーム</label>
-              <input type="text" value={nickname} onChange={e => setNickname(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">ニックネーム</label>
+              <input type="text" value={nickname} onChange={e => setNickname(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">学年</label>
-              <select value={grade} onChange={e => setGrade(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md">
+              <label className="label">学年</label>
+              <select value={grade} onChange={e => setGrade(e.target.value)} className="input">
                 <option value="">未設定</option>
                 {Object.entries(gradeOptions).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">志望校</label>
-              <input type="text" value={targetCollege} onChange={e => setTargetCollege(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">志望校</label>
+              <input type="text" value={targetCollege} onChange={e => setTargetCollege(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">高校名</label>
-              <input type="text" value={highSchool} onChange={e => setHighSchool(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">高校名</label>
+              <input type="text" value={highSchool} onChange={e => setHighSchool(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">電話番号</label>
-              <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">電話番号</label>
+              <input type="tel" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">保護者メール</label>
-              <input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">保護者メール</label>
+              <input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)} className="input" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">1日の目標勉強時間 (時間)</label>
-              <input type="number" min={0} step={0.5} value={targetTime} onChange={e => setTargetTime(parseFloat(e.target.value) || 0)} className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md" />
+              <label className="label">1日の目標勉強時間 (時間)</label>
+              <input type="number" min={0} step={0.5} value={targetTime} onChange={e => setTargetTime(parseFloat(e.target.value) || 0)} className="input" />
             </div>
           </div>
 
           {/* Learning Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">受講場所</label>
+            <label className="label mb-2">受講場所</label>
             <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="location" value="classroom" checked={learningLocation === 'classroom'} onChange={() => setLearningLocation('classroom')} className="h-4 w-4 text-blue-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">教室</span>
+                <input type="radio" name="location" value="classroom" checked={learningLocation === 'classroom'} onChange={() => setLearningLocation('classroom')} className="h-4 w-4 text-primary-600" />
+                <span className="text-sm text-primary-700 dark:text-warm-300">教室</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="location" value="online" checked={learningLocation === 'online'} onChange={() => setLearningLocation('online')} className="h-4 w-4 text-blue-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">オンライン</span>
+                <input type="radio" name="location" value="online" checked={learningLocation === 'online'} onChange={() => setLearningLocation('online')} className="h-4 w-4 text-primary-600" />
+                <span className="text-sm text-primary-700 dark:text-warm-300">オンライン</span>
               </label>
             </div>
           </div>
 
           {/* Subjects */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">受験科目</label>
+            <label className="label mb-2">受験科目</label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {allSubjects.map(subject => (
                 <label key={subject.id} className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={selectedSubjects.includes(subject.id)} onChange={e => handleSubjectToggle(subject.id, e.target.checked)} className="h-4 w-4 text-blue-600 rounded" />
-                  <span className="text-sm text-gray-700 dark:text-gray-200">{subject.name}</span>
+                  <input type="checkbox" checked={selectedSubjects.includes(subject.id)} onChange={e => handleSubjectToggle(subject.id, e.target.checked)} className="h-4 w-4 text-primary-600 rounded" />
+                  <span className="text-sm text-primary-700 dark:text-warm-200">{subject.name}</span>
                 </label>
               ))}
             </div>
@@ -232,19 +232,19 @@ export default function AdminStudentProfilePage() {
           {/* Skill Levels */}
           {selectedSubjects.length > 0 && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">各科目のレベル</label>
+              <label className="label mb-2">各科目のレベル</label>
               <div className="space-y-3">
                 {selectedSubjects.map(subjectId => {
                   const subject = allSubjects.find(s => s.id === subjectId);
                   if (!subject) return null;
                   return (
                     <div key={subjectId} className="flex items-center gap-4">
-                      <span className="text-sm font-medium text-gray-800 dark:text-gray-200 w-24">{subject.name}</span>
+                      <span className="text-sm font-medium text-primary-800 dark:text-warm-200 w-24">{subject.name}</span>
                       <div className="flex gap-4">
                         {[1, 2, 3].map(level => (
                           <label key={level} className="flex items-center gap-1 cursor-pointer">
-                            <input type="radio" name={`level-${subjectId}`} checked={levels[subjectId] === level} onChange={() => setLevels(prev => ({ ...prev, [subjectId]: level }))} className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">Lv.{level}</span>
+                            <input type="radio" name={`level-${subjectId}`} checked={levels[subjectId] === level} onChange={() => setLevels(prev => ({ ...prev, [subjectId]: level }))} className="h-4 w-4 text-primary-600" />
+                            <span className="text-sm text-primary-700 dark:text-warm-300">Lv.{level}</span>
                           </label>
                         ))}
                       </div>
@@ -256,8 +256,8 @@ export default function AdminStudentProfilePage() {
           )}
 
           {/* Save Button */}
-          <div className="flex justify-end pt-4 border-t dark:border-gray-700">
-            <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors disabled:bg-gray-400">
+          <div className="flex justify-end pt-4 border-t dark:border-primary-800">
+            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-warm-400">
               {saving ? '保存中...' : '保存する'}
             </button>
           </div>

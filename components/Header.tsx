@@ -17,38 +17,35 @@ export function Header() {
   const showBackButton = pathname !== '/' && pathname !== '/login';
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-md w-full">
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="bg-white dark:bg-primary-900 shadow-header w-full border-b border-warm-200 dark:border-primary-800">
+      <nav className="container mx-auto px-6 py-3.5 flex justify-between items-center">
         <div className="flex items-center gap-4">
           {showBackButton && (
             <button
               onClick={() => router.back()}
-              className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors duration-200 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="btn-ghost !px-2.5 !py-1.5 text-sm"
               aria-label="前のページに戻る"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="text-sm font-medium">戻る</span>
+              戻る
             </button>
           )}
-          <Link href="/" className="text-xl font-bold text-gray-800 dark:text-white hover:text-gray-700 dark:hover:text-gray-300">
-            Home
+          <Link href="/" className="text-xl font-bold text-primary-600 dark:text-accent-400 tracking-wider hover:text-primary-500 dark:hover:text-accent-300 transition-colors">
+            FAST-UP
           </Link>
         </div>
         <div>
           {currentUser ? (
             <button
               onClick={handleSignOut}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 transition-colors duration-300"
+              className="btn-ghost !text-danger-500 hover:!bg-danger-50 dark:hover:!bg-danger-500/10 text-sm"
             >
               ログアウト
             </button>
           ) : (
-            <Link
-              href="/login"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors duration-300"
-            >
+            <Link href="/login" className="btn-primary text-sm">
               ログイン
             </Link>
           )}

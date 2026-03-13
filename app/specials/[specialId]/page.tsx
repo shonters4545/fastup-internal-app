@@ -150,18 +150,18 @@ export default function SpecialEntryPage() {
   if (loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
-        <div className="w-12 h-12 border-4 border-pink-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 mt-4">講座情報を読み込み中...</p>
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-600 dark:text-warm-300 mt-4">講座情報を読み込み中...</p>
       </div>
     );
   }
 
   if (error && !special) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
-        <Link href="/specials" className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-btn animate-fade-in mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
+        <Link href="/specials" className="btn-danger mt-6 inline-block">
           講座一覧に戻る
         </Link>
       </div>
@@ -177,21 +177,21 @@ export default function SpecialEntryPage() {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
+    <div className="w-full max-w-2xl card p-8 animate-fade-in mt-8">
       <div className="mb-8">
-        <Link href="/specials" className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-4 block">
+        <Link href="/specials" className="text-sm text-primary-600 dark:text-primary-400 hover:underline mb-4 block">
           &larr; 講座一覧に戻る
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{special.title}</h1>
-        <p className="mt-3 text-gray-600 dark:text-gray-400">{special.description}</p>
+        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">{special.title}</h1>
+        <p className="mt-3 text-warm-600 dark:text-warm-400">{special.description}</p>
       </div>
 
       {existingEntry ? (
-        <div className="text-center p-8 bg-green-100 dark:bg-green-900/50 rounded-lg">
-          <h2 className="text-2xl font-bold text-green-800 dark:text-green-200">
+        <div className="text-center p-8 bg-success-100 dark:bg-success-900/50 rounded-btn">
+          <h2 className="text-2xl font-bold text-success-800 dark:text-success-200">
             この講座には申し込み済みです
           </h2>
-          <p className="mt-2 text-green-600 dark:text-green-300">
+          <p className="mt-2 text-success-600 dark:text-success-300">
             現在のステータス: {getStatusText()}
           </p>
         </div>
@@ -199,13 +199,13 @@ export default function SpecialEntryPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {special.form_fields && special.form_fields.map((field: any, index: number) => (
             <div key={index}>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{field.label}</label>
+              <label className="label">{field.label}</label>
               {field.type === 'text' ? (
                 <input
                   type="text"
                   value={formValues[field.label] || ''}
                   onChange={e => handleInputChange(field.label, e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md disabled:bg-gray-200 dark:disabled:bg-gray-700/50"
+                  className="input w-full disabled:bg-warm-200 dark:disabled:bg-primary-800/50"
                   required
                   disabled={isFormDisabled}
                 />
@@ -213,7 +213,7 @@ export default function SpecialEntryPage() {
                 <select
                   value={formValues[field.label] || ''}
                   onChange={e => handleInputChange(field.label, e.target.value)}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md disabled:bg-gray-200 dark:disabled:bg-gray-700/50"
+                  className="input w-full disabled:bg-warm-200 dark:disabled:bg-primary-800/50"
                   required
                   disabled={isFormDisabled}
                 >
@@ -226,12 +226,12 @@ export default function SpecialEntryPage() {
             </div>
           ))}
 
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+          {error && <p className="text-sm text-danger-500 text-center">{error}</p>}
 
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="btn-accent w-full py-3 disabled:bg-warm-400 disabled:cursor-not-allowed"
               disabled={isFormDisabled}
             >
               {isSubmitting ? '送信中...' : '申し込む'}

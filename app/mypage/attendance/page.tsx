@@ -160,8 +160,8 @@ export default function AttendancePlanPage() {
   };
 
   const renderBatchSelector = () => (
-    <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-2xl mb-6 border border-blue-100 dark:border-blue-800 animate-fade-in">
-      <h3 className="text-sm font-bold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2">
+    <div className="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-card mb-6 border border-primary-100 dark:border-primary-800 animate-fade-in">
+      <h3 className="text-sm font-bold text-primary-800 dark:text-primary-300 mb-3 flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
@@ -174,15 +174,15 @@ export default function AttendancePlanPage() {
             onClick={() => handleDayOfWeekSelect(idx)}
             className={`flex-1 min-w-[50px] py-2 rounded-xl text-xs font-bold transition-all border-2 ${
               activeDayOfWeek === idx
-                ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400'
+                ? 'bg-primary-600 border-primary-600 text-white shadow-md'
+                : 'bg-white dark:bg-primary-900 border-warm-200 dark:border-primary-800 text-warm-600 dark:text-warm-300 hover:border-primary-400'
             }`}
           >
             {day}曜
           </button>
         ))}
       </div>
-      <p className="text-[10px] text-blue-500 mt-2 font-medium">※未確定のカレンダーにのみ適用されます</p>
+      <p className="text-[10px] text-primary-500 mt-2 font-medium">※未確定のカレンダーにのみ適用されます</p>
     </div>
   );
 
@@ -208,32 +208,32 @@ export default function AttendancePlanPage() {
           onClick={() => toggleDate(dateStr, isConfirmed)}
           className={`h-11 w-11 flex items-center justify-center rounded-full text-sm font-medium transition-all relative ${
             isSelected
-              ? isConfirmed ? 'bg-gray-400 text-white' : 'bg-blue-600 text-white shadow-md scale-110 z-10'
-              : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'
-          } ${isToday ? 'border-2 border-orange-400' : ''} ${isConfirmed ? 'cursor-not-allowed opacity-60' : ''}`}
+              ? isConfirmed ? 'bg-warm-400 text-white' : 'bg-primary-600 text-white shadow-md scale-110 z-10'
+              : 'bg-white dark:bg-primary-800 text-primary-700 dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-primary-700'
+          } ${isToday ? 'border-2 border-warning-400' : ''} ${isConfirmed ? 'cursor-not-allowed opacity-60' : ''}`}
         >
           {i}
-          {isToday && <span className="absolute -top-1 text-[8px] text-orange-500 font-bold">TODAY</span>}
-          {isConfirmed && isSelected && <span className="absolute -bottom-1 text-[6px] text-white font-bold bg-gray-600 px-1 rounded-full">FIX</span>}
+          {isToday && <span className="absolute -top-1 text-[8px] text-warning-500 font-bold">TODAY</span>}
+          {isConfirmed && isSelected && <span className="absolute -bottom-1 text-[6px] text-white font-bold bg-warm-600 px-1 rounded-badge">FIX</span>}
         </button>
       );
     }
 
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-5 mb-8 border transition-all ${isConfirmed ? 'border-gray-100 dark:border-gray-700 opacity-95 bg-gray-50/50' : 'border-blue-200 dark:border-blue-900 ring-2 ring-blue-500/10'}`}>
+      <div className={`bg-white dark:bg-primary-900 rounded-card shadow-card p-5 mb-8 border transition-all ${isConfirmed ? 'border-warm-50 dark:border-primary-800 opacity-95 bg-warm-50/50' : 'border-primary-200 dark:border-primary-900 ring-2 ring-primary-500/10'}`}>
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+            <h2 className="text-xl font-bold text-primary-800 dark:text-warm-100">
               {year}年 {month + 1}月
             </h2>
             {isConfirmed && (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-warm-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
             )}
           </div>
           <div>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold inline-block ${isConfirmed ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+            <span className={`text-[10px] px-2 py-0.5 rounded-badge font-bold inline-block ${isConfirmed ? 'bg-success-100 text-success-700' : 'bg-warning-100 text-warning-700'}`}>
               {isConfirmed ? '確定済み' : '未確定'}
             </span>
           </div>
@@ -241,7 +241,7 @@ export default function AttendancePlanPage() {
 
         <div className="grid grid-cols-7 gap-1 mb-2">
           {DAYS_OF_WEEK.map((d, idx) => (
-            <div key={d} className={`text-center text-[10px] font-black py-1 ${idx === 0 ? 'text-red-500' : idx === 6 ? 'text-blue-500' : 'text-gray-400'}`}>
+            <div key={d} className={`text-center text-[10px] font-black py-1 ${idx === 0 ? 'text-danger-500' : idx === 6 ? 'text-primary-500' : 'text-warm-400'}`}>
               {d}
             </div>
           ))}
@@ -249,7 +249,7 @@ export default function AttendancePlanPage() {
         <div className="grid grid-cols-7 gap-1 justify-items-center">
           {days}
         </div>
-        <p className="text-right text-[10px] text-gray-500 dark:text-gray-400 font-bold mt-3 italic">
+        <p className="text-right text-[10px] text-warm-500 dark:text-warm-400 font-bold mt-3 italic">
           {deadlineMessage}
         </p>
       </div>
@@ -259,8 +259,8 @@ export default function AttendancePlanPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-lg mx-auto text-center p-12">
-        <div className="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-500 font-bold">予定を読み込み中...</p>
+        <div className="spinner mx-auto mb-4"></div>
+        <p className="text-warm-500 font-bold">予定を読み込み中...</p>
       </div>
     );
   }
@@ -285,15 +285,15 @@ export default function AttendancePlanPage() {
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-8 animate-fade-in pb-40">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-800 dark:text-white flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <h1 className="text-3xl font-black text-primary-800 dark:text-warm-100 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           出席申請
         </h1>
-        <p className="text-sm text-gray-500 mt-2 font-medium leading-relaxed">
+        <p className="text-sm text-warm-500 mt-2 font-medium leading-relaxed">
           毎日個別特訓に参加する日程をタップして選択してください。<br />
-          <span className="text-blue-600 dark:text-blue-400 font-bold">※毎月末日</span>に翌月分が確定されます。
+          <span className="text-primary-600 dark:text-primary-400 font-bold">※毎月末日</span>に翌月分が確定されます。
         </p>
       </div>
 
@@ -317,24 +317,24 @@ export default function AttendancePlanPage() {
       )}
 
       {/* Fixed save button area */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t dark:border-gray-800 z-40 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-primary-950/90 backdrop-blur-lg border-t dark:border-primary-900 z-40 shadow-2xl">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-3 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-danger-500 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-            <p className="text-xs font-black text-red-600 dark:text-red-400">※選択しただけでは反映されません。必ず保存してください。</p>
+            <p className="text-xs font-black text-danger-600 dark:text-danger-400">※選択しただけでは反映されません。必ず保存してください。</p>
           </div>
 
           <div className="flex items-center justify-between gap-4">
-            <div className="text-left bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-xl border border-gray-100 dark:border-gray-700">
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">合計選択日数</p>
-              <p className="text-xl font-black text-blue-600 dark:text-blue-400">{unconfirmedSelectedCount}<span className="text-xs ml-1 font-normal text-gray-400">日</span></p>
+            <div className="text-left bg-warm-50 dark:bg-primary-900 px-4 py-2 rounded-xl border border-warm-50 dark:border-primary-800">
+              <p className="text-[10px] text-warm-500 dark:text-warm-400 font-bold uppercase tracking-wider">合計選択日数</p>
+              <p className="text-xl font-black text-primary-600 dark:text-primary-400">{unconfirmedSelectedCount}<span className="text-xs ml-1 font-normal text-warm-400">日</span></p>
             </div>
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-black py-4 px-8 rounded-2xl shadow-xl shadow-blue-500/30 transition-all active:scale-95 disabled:bg-gray-400 flex items-center justify-center gap-2 group"
+              className="btn-primary flex-1 py-4 px-8 rounded-card shadow-xl shadow-primary-500/30 transition-all active:scale-95 disabled:bg-warm-400 flex items-center justify-center gap-2 group font-black"
             >
               {isSaving ? (
                 <>

@@ -22,8 +22,8 @@ type PersonalEntry = {
 };
 
 const specialStatusMap: { [key: string]: { text: string; style: string } } = {
-  applied: { text: '申込完了', style: 'bg-blue-200 text-blue-800 dark:bg-blue-700 dark:text-blue-100' },
-  contracted: { text: '契約中', style: 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' },
+  applied: { text: '申込完了', style: 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100' },
+  contracted: { text: '契約中', style: 'bg-success-200 text-success-800 dark:bg-success-700 dark:text-success-100' },
 };
 
 const personalStatusMap: { [key: string]: string } = {
@@ -111,18 +111,18 @@ export default function ApplicationsPage() {
   if (authLoading || loading) {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
-        <div className="w-12 h-12 border-4 border-pink-500 border-dashed rounded-full animate-spin mx-auto"></div>
-        <p className="text-gray-600 dark:text-gray-300 mt-4">申込状況を読み込み中...</p>
+        <div className="spinner mx-auto"></div>
+        <p className="text-warm-600 dark:text-warm-300 mt-4">申込状況を読み込み中...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-full max-w-lg text-center p-8 bg-red-100 dark:bg-red-900/50 rounded-lg animate-fade-in mt-8">
-        <h2 className="text-2xl font-bold text-red-800 dark:text-red-200">エラー</h2>
-        <p className="mt-2 text-red-600 dark:text-red-300">{error}</p>
-        <Link href="/mypage" className="mt-6 inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg">
+      <div className="w-full max-w-lg text-center p-8 bg-danger-100 dark:bg-danger-900/50 rounded-btn animate-fade-in mt-8">
+        <h2 className="text-2xl font-bold text-danger-800 dark:text-danger-200">エラー</h2>
+        <p className="mt-2 text-danger-600 dark:text-danger-300">{error}</p>
+        <Link href="/mypage" className="btn-danger mt-6 inline-block">
           マイページに戻る
         </Link>
       </div>
@@ -133,29 +133,29 @@ export default function ApplicationsPage() {
   const personalEntry = personalEntries.length > 0 ? personalEntries[0] : null;
 
   return (
-    <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 animate-fade-in mt-8">
-      <div className="flex justify-between items-center mb-8 border-b dark:border-gray-700 pb-4">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">申込状況</h1>
-        <Link href="/mypage" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">&larr; マイページに戻る</Link>
+    <div className="w-full max-w-4xl card p-8 animate-fade-in mt-8">
+      <div className="flex justify-between items-center mb-8 border-b dark:border-primary-800 pb-4">
+        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">申込状況</h1>
+        <Link href="/mypage" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">&larr; マイページに戻る</Link>
       </div>
 
       <div className="space-y-10">
         {/* Special Courses Section */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">特別講習</h2>
-          <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4">特別講習</h2>
+          <div className="bg-warm-50 dark:bg-primary-800/50 p-6 rounded-btn shadow-md">
             {specialEntries.length > 0 ? (
-              <ul className="divide-y divide-gray-200 dark:divide-gray-600">
+              <ul className="divide-y divide-warm-200 dark:divide-primary-700">
                 {specialEntries.map(entry => {
-                  const statusInfo = specialStatusMap[entry.status] || { text: entry.status, style: 'bg-gray-200 text-gray-800' };
+                  const statusInfo = specialStatusMap[entry.status] || { text: entry.status, style: 'bg-warm-200 text-primary-800' };
                   return (
                     <li key={entry.id} className="py-4 flex flex-col sm:flex-row justify-between sm:items-center">
                       <div>
-                        <Link href={`/specials/${entry.special_id}`} className="text-lg font-semibold text-blue-600 hover:underline dark:text-blue-400">{entry.title}</Link>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">申込日: {new Date(entry.created_at).toLocaleDateString('ja-JP')}</p>
+                        <Link href={`/specials/${entry.special_id}`} className="text-lg font-semibold text-primary-600 hover:underline dark:text-primary-400">{entry.title}</Link>
+                        <p className="text-sm text-warm-500 dark:text-warm-400 mt-1">申込日: {new Date(entry.created_at).toLocaleDateString('ja-JP')}</p>
                       </div>
                       <div className="mt-2 sm:mt-0">
-                        <span className={`text-xs font-semibold px-3 py-1 rounded-full ${statusInfo.style}`}>
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-badge ${statusInfo.style}`}>
                           {statusInfo.text}
                         </span>
                       </div>
@@ -164,9 +164,9 @@ export default function ApplicationsPage() {
                 })}
               </ul>
             ) : (
-              <p className="text-gray-600 dark:text-gray-400">現在、申し込み済みの特別講習はありません。</p>
+              <p className="text-warm-600 dark:text-warm-400">現在、申し込み済みの特別講習はありません。</p>
             )}
-            <Link href="/specials" className="inline-block mt-6 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+            <Link href="/specials" className="inline-block mt-6 text-sm font-semibold text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
               特別講習一覧へ &rarr;
             </Link>
           </div>
@@ -174,35 +174,35 @@ export default function ApplicationsPage() {
 
         {/* Personal Lectures Section */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">個別講義</h2>
-          <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4">個別講義</h2>
+          <div className="bg-warm-50 dark:bg-primary-800/50 p-6 rounded-btn shadow-md">
             {personalEntry ? (
               <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">現在のステータス</p>
-                <p className="mt-1 text-xl font-bold text-gray-900 dark:text-white">{personalStatusMap[personalEntry.status] || personalEntry.status}</p>
+                <p className="text-sm font-medium text-warm-500 dark:text-warm-400">現在のステータス</p>
+                <p className="mt-1 text-xl font-bold text-primary-800 dark:text-warm-100">{personalStatusMap[personalEntry.status] || personalEntry.status}</p>
 
                 {personalEntry.status === 'contracted' && (
                   <div className="mt-4">
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">契約中の科目</p>
-                    <p className="mt-1 text-gray-800 dark:text-gray-200">{formatSubject(personalEntry.subject)}</p>
+                    <p className="text-sm font-medium text-warm-500 dark:text-warm-400">契約中の科目</p>
+                    <p className="mt-1 text-primary-800 dark:text-warm-200">{formatSubject(personalEntry.subject)}</p>
                   </div>
                 )}
 
                 {personalEntry.status === 'applied' && (
                   <div className="mt-4">
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">初回希望科目</p>
-                    <p className="mt-1 text-gray-800 dark:text-gray-200">{formatSubject(personalEntry.subject)}</p>
+                    <p className="text-sm font-medium text-warm-500 dark:text-warm-400">初回希望科目</p>
+                    <p className="mt-1 text-primary-800 dark:text-warm-200">{formatSubject(personalEntry.subject)}</p>
                   </div>
                 )}
 
-                <Link href="/personal-entry" className="inline-block mt-6 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                <Link href="/personal-entry" className="inline-block mt-6 text-sm font-semibold text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
                   申請内容の確認・追加申請へ &rarr;
                 </Link>
               </div>
             ) : (
               <div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">個別講義はまだ申し込んでいません。</p>
-                <Link href="/personal-entry" className="inline-block text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                <p className="text-warm-600 dark:text-warm-400 mb-4">個別講義はまだ申し込んでいません。</p>
+                <Link href="/personal-entry" className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
                   個別講義を申し込む &rarr;
                 </Link>
               </div>
