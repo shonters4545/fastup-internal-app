@@ -28,6 +28,7 @@ type RoomInfo = {
   id: string;
   label: string;
   room_type: string;
+  instructor_name: string | null;
 };
 
 // --- PasscodeModal (改修版) ---
@@ -38,6 +39,13 @@ interface PasscodeModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
+
+type RegistrationResult = {
+  roomLabel: string;
+  roomType: string;
+  instructorName: string | null;
+  bookName: string;
+};
 
 const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userName, onClose, onSuccess }) => {
   const [passcode, setPasscode] = useState('');
@@ -50,6 +58,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [showBookDropdown, setShowBookDropdown] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState<RegistrationResult | null>(null);
   const bookInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -142,10 +151,12 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
       // ルーム振り分け
       let assignedRoomId: string | null = null;
       let assignedRoomLabel = '';
+      let assignedRoomType = '';
+      let assignedInstructorName: string | null = null;
 
       // この特訓のルームを取得
       const { data: rooms } = await (supabase.from('class_rooms') as any)
-        .select('id, label, room_type')
+        .select('id, label, room_type, instructor_name')
         .eq('class_id', classItem.id)
         .order('label');
 
@@ -156,6 +167,8 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
           if (zRoom) {
             assignedRoomId = zRoom.id;
             assignedRoomLabel = 'Z';
+            assignedRoomType = 'unplanned';
+            assignedInstructorName = zRoom.instructor_name;
           }
         } else {
           // 科目の文理で振り分け
@@ -182,6 +195,8 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
               if (count < 10) {
                 assignedRoomId = room.id;
                 assignedRoomLabel = room.label;
+                assignedRoomType = room.room_type;
+                assignedInstructorName = room.instructor_name;
                 break;
               }
             }
@@ -189,6 +204,8 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
             if (!assignedRoomId && targetRooms.length > 0) {
               assignedRoomId = targetRooms[0].id;
               assignedRoomLabel = targetRooms[0].label;
+              assignedRoomType = targetRooms[0].room_type;
+              assignedInstructorName = targetRooms[0].instructor_name;
             }
           }
         }
@@ -210,13 +227,16 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
       if (insertError) throw insertError;
 
       // 振り分け結果を表示
-      if (assignedRoomLabel === 'Z') {
-        alert('出席予定が未提出のため、グループには振り分けられませんでした。教室Zでお待ちください。（他の生徒の欠席があった場合のみグループに入れます）');
-      } else if (assignedRoomLabel) {
-        alert(`教室${assignedRoomLabel}にて学習を始めてください。`);
+      if (assignedRoomLabel) {
+        setRegistrationResult({
+          roomLabel: assignedRoomLabel,
+          roomType: assignedRoomType,
+          instructorName: assignedInstructorName,
+          bookName: selectedBookName,
+        });
+      } else {
+        onSuccess();
       }
-
-      onSuccess();
     } catch (err) {
       console.error('Error recording attendance:', err);
       setError('出席の記録中にエラーが発生しました。');
@@ -224,6 +244,75 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
       setIsSubmitting(false);
     }
   };
+
+  const handleResultClose = () => {
+    setRegistrationResult(null);
+    onSuccess();
+  };
+
+  // 登録完了・振り分け結果画面
+  if (registrationResult) {
+    const { roomLabel, roomType, instructorName, bookName } = registrationResult;
+    const isZRoom = roomLabel === 'Z';
+    const roomTypeLabel = roomType === 'science' ? '理系' : roomType === 'humanities' ? '文系' : '';
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={handleResultClose}>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
+          <div className="text-center">
+            <div className="text-4xl mb-3">{isZRoom ? '⏳' : '✅'}</div>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+              {isZRoom ? '出席登録完了' : '出席登録完了'}
+            </h3>
+          </div>
+
+          <div className="space-y-3 mb-6">
+            {/* 教室 */}
+            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">あなたの教室</p>
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                教室{roomLabel}
+              </p>
+              {roomTypeLabel && (
+                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${
+                  roomType === 'science' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                }`}>{roomTypeLabel}</span>
+              )}
+            </div>
+
+            {/* 担当講師 */}
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400">担当講師</span>
+              <span className="text-sm font-bold text-gray-800 dark:text-white">
+                {isZRoom ? '未定' : (instructorName || '未定')}
+              </span>
+            </div>
+
+            {/* 教材 */}
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400">教材</span>
+              <span className="text-sm font-bold text-gray-800 dark:text-white truncate ml-2">{bookName}</span>
+            </div>
+
+            {isZRoom && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                  出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
+                </p>
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handleResultClose}
+            className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -342,24 +431,56 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 };
 
 // --- 出席済み詳細モーダル ---
+type AttendanceRoomDetail = {
+  label: string;
+  room_type: string;
+  instructor_name: string | null;
+};
+
 interface AttendanceDetailModalProps {
   classItem: ClassItem;
-  roomLabel: string | null;
+  roomDetail: AttendanceRoomDetail | null;
   onClose: () => void;
 }
 
-const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem, roomLabel, onClose }) => {
+const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem, roomDetail, onClose }) => {
+  const isZRoom = roomDetail?.label === 'Z';
+  const roomTypeLabel = roomDetail?.room_type === 'science' ? '理系' : roomDetail?.room_type === 'humanities' ? '文系' : '';
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-sm animate-fade-in" onClick={e => e.stopPropagation()}>
         <h3 className="text-lg font-bold mb-2 text-gray-800 dark:text-white">出席情報</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{classItem.title}</p>
-        {roomLabel ? (
-          <div className="text-center py-6">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">あなたの教室</p>
-            <p className="text-5xl font-bold text-blue-600 dark:text-blue-400">{roomLabel === 'Z' ? 'Z (待機)' : `教室${roomLabel}`}</p>
-            {roomLabel === 'Z' && (
-              <p className="mt-3 text-xs text-yellow-600 dark:text-yellow-400">出席予定がなかったため、グループに入れません。他の生徒の欠席があった場合のみ入れます。</p>
+        {roomDetail ? (
+          <div className="space-y-3">
+            {/* 教室 */}
+            <div className="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">あなたの教室</p>
+              <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+                教室{roomDetail.label}
+              </p>
+              {roomTypeLabel && (
+                <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${
+                  roomDetail.room_type === 'science' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                }`}>{roomTypeLabel}</span>
+              )}
+            </div>
+
+            {/* 担当講師 */}
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400">担当講師</span>
+              <span className="text-sm font-bold text-gray-800 dark:text-white">
+                {isZRoom ? '未定' : (roomDetail.instructor_name || '未定')}
+              </span>
+            </div>
+
+            {isZRoom && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                  出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
+                </p>
+              </div>
             )}
           </div>
         ) : (
@@ -367,7 +488,7 @@ const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem
             <p className="text-green-600 dark:text-green-400 font-bold">出席登録済みです</p>
           </div>
         )}
-        <div className="flex justify-end pt-4 border-t dark:border-gray-700">
+        <div className="flex justify-end pt-4 border-t dark:border-gray-700 mt-4">
           <button onClick={onClose} className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm">閉じる</button>
         </div>
       </div>
@@ -380,7 +501,7 @@ export default function ClassesPage() {
   const { currentUser } = useAuth();
   const [classes, setClasses] = useState<ClassItem[]>([]);
   const [attendedClassIds, setAttendedClassIds] = useState<Set<string>>(new Set());
-  const [attendanceRoomLabels, setAttendanceRoomLabels] = useState<Map<string, string | null>>(new Map());
+  const [attendanceRoomDetails, setAttendanceRoomDetails] = useState<Map<string, AttendanceRoomDetail | null>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -413,20 +534,20 @@ export default function ClassesPage() {
       const attendedIds = new Set<string>((attendanceData || []).map((r: any) => r.class_id));
       setAttendedClassIds(attendedIds);
 
-      // ルームラベルを取得
+      // ルーム詳細を取得
       const roomIds = (attendanceData || []).filter((r: any) => r.room_id).map((r: any) => r.room_id);
+      const detailMap = new Map<string, AttendanceRoomDetail | null>();
       if (roomIds.length > 0) {
         const { data: roomsData } = await (supabase.from('class_rooms') as any)
-          .select('id, label')
+          .select('id, label, room_type, instructor_name')
           .in('id', roomIds);
-        const roomMap = new Map<string, string>();
-        (roomsData || []).forEach((r: any) => roomMap.set(r.id, r.label));
-        const labelMap = new Map<string, string | null>();
+        const roomMap = new Map<string, AttendanceRoomDetail>();
+        (roomsData || []).forEach((r: any) => roomMap.set(r.id, { label: r.label, room_type: r.room_type, instructor_name: r.instructor_name }));
         (attendanceData || []).forEach((r: any) => {
-          labelMap.set(r.class_id, r.room_id ? (roomMap.get(r.room_id) || null) : null);
+          detailMap.set(r.class_id, r.room_id ? (roomMap.get(r.room_id) || null) : null);
         });
-        setAttendanceRoomLabels(labelMap);
       }
+      setAttendanceRoomDetails(detailMap);
     } catch (err) {
       console.error('Failed to fetch data:', err);
       setError('データの取得中にエラーが発生しました。');
@@ -492,8 +613,8 @@ export default function ClassesPage() {
 
           let statusInfo;
           if (isAttended) {
-            const roomLabel = attendanceRoomLabels.get(cls.id);
-            const roomText = roomLabel ? (roomLabel === 'Z' ? '待機中' : `教室${roomLabel}`) : '';
+            const roomDetail = attendanceRoomDetails.get(cls.id);
+            const roomText = roomDetail ? (roomDetail.label === 'Z' ? '待機中' : `教室${roomDetail.label}`) : '';
             statusInfo = { text: `出席中${roomText ? ` (${roomText})` : ''}`, style: 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' };
           } else if (isOngoing) {
             statusInfo = { text: '開講中', style: 'bg-rose-200 text-rose-800 dark:bg-rose-700 dark:text-rose-100 animate-pulse' };
@@ -555,7 +676,7 @@ export default function ClassesPage() {
       {isDetailModalOpen && selectedClass && (
         <AttendanceDetailModal
           classItem={selectedClass}
-          roomLabel={attendanceRoomLabels.get(selectedClass.id) || null}
+          roomDetail={attendanceRoomDetails.get(selectedClass.id) || null}
           onClose={handleModalClose}
         />
       )}
