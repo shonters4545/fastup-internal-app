@@ -73,16 +73,14 @@ export default function AdminStudentStatusPage() {
 
         // === Fetch all data in parallel ===
         const [
-          curriculumResult,
           progressResult,
           userSubjectsResult,
+          divisionsResult,
+          booksResult,
+          tasksResult,
           plansResult,
           recordsResult,
         ] = await Promise.all([
-          // User curriculum items
-          (supabase.from('user_curriculum') as any)
-            .select('task_id, book_id, subject_id, status')
-            .eq('user_id', userId),
           // Progress with scores and laps
           (supabase.from('progress') as any)
             .select('task_id, status, score, lap, updated_at, book_id')
@@ -91,30 +89,99 @@ export default function AdminStudentStatusPage() {
           (supabase.from('user_subjects') as any)
             .select('subject_id, subjects(name)')
             .eq('user_id', userId),
+          // All divisions
+          (supabase.from('divisions') as any)
+            .select('id, subject_id'),
+          // All books (master + custom for this user)
+          (supabase.from('books') as any)
+            .select('id, division_id, is_custom, user_id'),
+          // All tasks
+          (supabase.from('tasks') as any)
+            .select('id, name, book_id'),
           // Attendance plans (last 30 days)
           (supabase.from('attendance_plans') as any)
             .select('date, planned')
             .eq('user_id', userId)
             .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
             .lte('date', new Date().toISOString().split('T')[0]),
-          // Attendance records (last 30 days) with class info
+          // Attendance records with class info
           (supabase.from('attendance_records') as any)
             .select('class_id, status, attended_at, study_material, classes(start_time)')
             .eq('user_id', userId)
             .order('attended_at', { ascending: false }),
         ]);
 
-        const curriculum = (curriculumResult.data || []) as any[];
         const progress = (progressResult.data || []) as any[];
         const userSubjects = (userSubjectsResult.data || []) as any[];
+        const allDivisions = (divisionsResult.data || []) as any[];
+        const allBooks = (booksResult.data || []) as any[];
+        const allTasks = (tasksResult.data || []) as any[];
         const plans = (plansResult.data || []) as any[];
         const records = (recordsResult.data || []) as any[];
 
+        // === Build subject→task hierarchy ===
+        const subjectMap = new Map<string, string>();
+        const userSubjectIds = new Set<string>();
+        userSubjects.forEach((us: any) => {
+          subjectMap.set(us.subject_id, us.subjects?.name || '不明');
+          userSubjectIds.add(us.subject_id);
+        });
+
+        // division→subject mapping
+        const divSubjectMap = new Map<string, string>();
+        allDivisions.forEach((d: any) => {
+          if (userSubjectIds.has(d.subject_id)) {
+            divSubjectMap.set(d.id, d.subject_id);
+          }
+        });
+
+        // Filter books: master books in user's subjects + custom books for this user
+        const relevantBooks = allBooks.filter((b: any) => {
+          if (b.is_custom && b.user_id === userId) return divSubjectMap.has(b.division_id);
+          if (!b.is_custom) return divSubjectMap.has(b.division_id);
+          return false;
+        });
+        const bookIdSet = new Set(relevantBooks.map((b: any) => b.id));
+
+        // book→subject mapping
+        const bookSubjectMap = new Map<string, string>();
+        relevantBooks.forEach((b: any) => {
+          const sid = divSubjectMap.get(b.division_id);
+          if (sid) bookSubjectMap.set(b.id, sid);
+        });
+
+        // Filter tasks in relevant books
+        const relevantTasks = allTasks.filter((t: any) => bookIdSet.has(t.book_id));
+
+        // task→subject mapping
+        const taskSubjectMap = new Map<string, string>();
+        relevantTasks.forEach((t: any) => {
+          const sid = bookSubjectMap.get(t.book_id);
+          if (sid) taskSubjectMap.set(t.id, sid);
+        });
+
+        // task name map
+        const taskNameMap = new Map<string, string>();
+        relevantTasks.forEach((t: any) => {
+          taskNameMap.set(t.id, t.name);
+        });
+
+        // Progress lookup by task_id
+        const progressMap = new Map<string, any[]>();
+        progress.forEach((p: any) => {
+          const arr = progressMap.get(p.task_id) || [];
+          arr.push(p);
+          progressMap.set(p.task_id, arr);
+        });
+
         // === Section 1: Summary Cards ===
 
-        // Curriculum progress rate
-        const totalT = curriculum.length;
-        const completedT = curriculum.filter((c: any) => c.status === 'completed').length;
+        // Curriculum progress rate (completed tasks / total tasks across all subjects)
+        const totalT = relevantTasks.length;
+        const completedTaskIds = new Set(
+          progress.filter((p: any) => p.status === 'completed').map((p: any) => p.task_id)
+        );
+        const completedT = relevantTasks.filter((t: any) => completedTaskIds.has(t.id)).length;
         setTotalTasks(totalT);
         setCompletedTasks(completedT);
 
@@ -152,32 +219,20 @@ export default function AdminStudentStatusPage() {
         }
 
         // === Section 2: Subject Progress ===
-        // Build subject→tasks mapping via divisions→books→tasks
-        const subjectMap = new Map<string, string>();
-        userSubjects.forEach((us: any) => {
-          subjectMap.set(us.subject_id, us.subjects?.name || '不明');
-        });
-
-        // Group curriculum by subject
+        // Group tasks by subject, count completions and max lap
         const subjectGroups = new Map<string, { total: number; completed: number; maxLap: number }>();
-        curriculum.forEach((c: any) => {
-          const sid = c.subject_id;
+        relevantTasks.forEach((t: any) => {
+          const sid = taskSubjectMap.get(t.id);
           if (!sid) return;
           const group = subjectGroups.get(sid) || { total: 0, completed: 0, maxLap: 1 };
           group.total++;
-          if (c.status === 'completed') group.completed++;
+          if (completedTaskIds.has(t.id)) group.completed++;
+          // Check max lap from progress
+          const progs = progressMap.get(t.id) || [];
+          progs.forEach((p: any) => {
+            if (p.lap > group.maxLap) group.maxLap = p.lap;
+          });
           subjectGroups.set(sid, group);
-        });
-
-        // Get max lap per subject from progress
-        progress.forEach((p: any) => {
-          const currItem = curriculum.find((c: any) => c.task_id === p.task_id);
-          if (currItem?.subject_id) {
-            const group = subjectGroups.get(currItem.subject_id);
-            if (group && p.lap > group.maxLap) {
-              group.maxLap = p.lap;
-            }
-          }
         });
 
         const spArr: SubjectProgress[] = [];
@@ -193,33 +248,13 @@ export default function AdminStudentStatusPage() {
         setSubjectProgress(spArr);
 
         // === Section 3: Test Scores ===
-        // Fetch task names for scored progress
-        const scoredTaskIds = scoredProgress.map((p: any) => p.task_id).filter(Boolean);
-        let taskNameMap = new Map<string, { name: string; book_id: string }>();
-        if (scoredTaskIds.length > 0) {
-          const { data: tasks } = await (supabase.from('tasks') as any)
-            .select('id, name, book_id')
-            .in('id', scoredTaskIds);
-          (tasks || []).forEach((t: any) => {
-            taskNameMap.set(t.id, { name: t.name, book_id: t.book_id });
-          });
-        }
-
-        // Map task→subject via curriculum
-        const taskSubjectMap = new Map<string, string>();
-        curriculum.forEach((c: any) => {
-          if (c.task_id && c.subject_id) {
-            taskSubjectMap.set(c.task_id, subjectMap.get(c.subject_id) || '不明');
-          }
-        });
-
         const scores: TestScore[] = scoredProgress
           .sort((a: any, b: any) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
           .slice(0, 10)
           .map((p: any) => ({
             id: p.task_id,
-            task_name: taskNameMap.get(p.task_id)?.name || 'タスク',
-            subject_name: taskSubjectMap.get(p.task_id) || '不明',
+            task_name: taskNameMap.get(p.task_id) || 'タスク',
+            subject_name: subjectMap.get(taskSubjectMap.get(p.task_id) || '') || '不明',
             score: p.score,
             lap: p.lap || 1,
             updated_at: p.updated_at,
@@ -229,7 +264,8 @@ export default function AdminStudentStatusPage() {
         // Subject average scores
         const subjectScoreMap = new Map<string, number[]>();
         scoredProgress.forEach((p: any) => {
-          const sname = taskSubjectMap.get(p.task_id);
+          const sid = taskSubjectMap.get(p.task_id);
+          const sname = sid ? subjectMap.get(sid) : undefined;
           if (sname) {
             const arr = subjectScoreMap.get(sname) || [];
             arr.push(p.score);
