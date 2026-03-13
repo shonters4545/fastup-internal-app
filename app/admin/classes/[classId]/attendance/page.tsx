@@ -66,6 +66,10 @@ export default function AdminClassDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [addMemberRoomId, setAddMemberRoomId] = useState<string | null>(null);
   const [selectedMoveUserId, setSelectedMoveUserId] = useState('');
+  const [showAddRoomForm, setShowAddRoomForm] = useState(false);
+  const [newRoomLabel, setNewRoomLabel] = useState('');
+  const [newRoomType, setNewRoomType] = useState<'humanities' | 'science'>('humanities');
+  const [addingRoom, setAddingRoom] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!classId) return;
@@ -270,6 +274,55 @@ export default function AdminClassDetailPage() {
     setSelectedMoveUserId('');
   };
 
+  // ルーム追加
+  const handleAddRoom = async () => {
+    if (!classId || !newRoomLabel.trim()) return;
+    setAddingRoom(true);
+    try {
+      const supabase = createClient();
+      await (supabase.from('class_rooms') as any).insert({
+        class_id: classId,
+        label: newRoomLabel.trim().toUpperCase(),
+        room_type: newRoomType,
+        capacity: 10,
+      });
+      setNewRoomLabel('');
+      setNewRoomType('humanities');
+      setShowAddRoomForm(false);
+      fetchData();
+    } catch (err) {
+      console.error('Error adding room:', err);
+      alert('ルームの追加に失敗しました。');
+    } finally {
+      setAddingRoom(false);
+    }
+  };
+
+  // ルーム削除
+  const handleDeleteRoom = async (roomId: string, roomLabel: string) => {
+    const members = roomAttendees.get(roomId) || [];
+    const msg = members.length > 0
+      ? `教室${roomLabel}を削除しますか？\n所属する${members.length}名のメンバーは「未割当」に移動します。`
+      : `教室${roomLabel}を削除しますか？`;
+    if (!window.confirm(msg)) return;
+
+    try {
+      const supabase = createClient();
+      // メンバーのroom_idをnullにする
+      if (members.length > 0) {
+        const memberIds = members.map(m => m.id);
+        await (supabase.from('attendance_records') as any)
+          .update({ room_id: null, instructor_name: null })
+          .in('id', memberIds);
+      }
+      await (supabase.from('class_rooms') as any).delete().eq('id', roomId);
+      fetchData();
+    } catch (err) {
+      console.error('Error deleting room:', err);
+      alert('ルームの削除に失敗しました。');
+    }
+  };
+
   // バッジ判定
   const getBadges = (attendee: Attendee) => {
     const badges: { text: string; color: string }[] = [];
@@ -363,11 +416,62 @@ export default function AdminClassDetailPage() {
         </div>
       </div>
 
+      {/* ルーム追加フォーム */}
+      <div className="mb-6">
+        {showAddRoomForm ? (
+          <div className="flex flex-wrap items-end gap-3 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">ルーム名</label>
+              <input
+                type="text"
+                value={newRoomLabel}
+                onChange={(e) => setNewRoomLabel(e.target.value)}
+                placeholder="例: A"
+                maxLength={5}
+                className="w-24 p-2 border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md text-sm dark:text-white font-bold text-center"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">タイプ</label>
+              <select
+                value={newRoomType}
+                onChange={(e) => setNewRoomType(e.target.value as 'humanities' | 'science')}
+                className="p-2 border border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-600 rounded-md text-sm dark:text-white"
+              >
+                <option value="humanities">文系</option>
+                <option value="science">理系</option>
+              </select>
+            </div>
+            <button
+              onClick={handleAddRoom}
+              disabled={addingRoom || !newRoomLabel.trim()}
+              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-bold disabled:bg-gray-400 hover:bg-green-700 transition-colors"
+            >
+              {addingRoom ? '追加中...' : '追加'}
+            </button>
+            <button
+              onClick={() => { setShowAddRoomForm(false); setNewRoomLabel(''); }}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-500 rounded-md text-sm text-gray-700 dark:text-white"
+            >
+              キャンセル
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowAddRoomForm(true)}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
+          >
+            + ルームを追加
+          </button>
+        )}
+      </div>
+
       {/* ルームが未作成の場合 */}
       {rooms.length === 0 && (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700 mb-8">
           <p className="text-gray-500 dark:text-gray-400 mb-2">ルームが作成されていません。</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500">出席管理カレンダーから出席予定確定時にルームが自動生成されます。</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500">上の「+ ルームを追加」ボタンから手動で作成するか、出席管理カレンダーから自動生成できます。</p>
         </div>
       )}
 
@@ -390,7 +494,7 @@ export default function AdminClassDetailPage() {
                     {members.length}名{isOverCapacity && ' (定員超過!)'}
                   </span>
                 </div>
-                {/* 担当講師プルダウン */}
+                {/* 担当講師プルダウン + 削除 */}
                 <div className="flex items-center gap-2">
                   <label className="text-xs font-bold text-gray-500 dark:text-gray-400">担当講師:</label>
                   <select
@@ -403,6 +507,15 @@ export default function AdminClassDetailPage() {
                       <option key={inst.id} value={inst.id}>{inst.display_name}</option>
                     ))}
                   </select>
+                  <button
+                    onClick={() => handleDeleteRoom(room.id, room.label)}
+                    className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-md transition-colors"
+                    title="このルームを削除"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
