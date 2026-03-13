@@ -216,7 +216,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
         class_id: classItem.id,
         user_id: userId,
         student_name: userName,
-        instructor_name: null, // 管理者が後で設定
+        instructor_name: assignedInstructorName,
         study_material: selectedBookName,
         subject_id: selectedSubjectId,
         book_id: selectedBookId,
