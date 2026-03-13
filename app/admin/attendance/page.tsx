@@ -25,33 +25,74 @@ type MonthData = {
 type PlannedStudent = {
   userId: string;
   nickname: string;
+  stream?: string | null;
+};
+
+type ShiftInfo = {
+  total: number;
+  scienceCount: number;
+  totalRooms: number;
+  scienceRooms: number;
+  humanitiesRooms: number;
 };
 
 const DAYS_OF_WEEK = ['日', '月', '火', '水', '木', '金', '土'];
+
+// シフト計算関数
+function calcShiftInfo(students: PlannedStudent[]): ShiftInfo {
+  const total = students.length;
+  const scienceCount = students.filter(s => s.stream === 'science').length;
+  const totalRooms = Math.ceil(total / 10);
+  const scienceRooms = Math.ceil((scienceCount * 0.5) / 10);
+  const humanitiesRooms = Math.max(totalRooms - scienceRooms, 0);
+  return { total, scienceCount, totalRooms, scienceRooms, humanitiesRooms };
+}
 
 // --- Student List Modal ---
 function StudentListModal({
   date,
   students,
   onClose,
+  onGenerateRooms,
+  generatingRooms,
 }: {
   date: string;
   students: PlannedStudent[];
   onClose: () => void;
+  onGenerateRooms: (date: string, shift: ShiftInfo) => void;
+  generatingRooms: boolean;
 }) {
+  const shift = calcShiftInfo(students);
+
   return (
     <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+        className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-emerald-600 p-6 text-white text-center">
           <h3 className="text-xl font-black">{date}</h3>
           <p className="text-emerald-100 text-sm font-bold mt-1">出席予定の生徒一覧</p>
         </div>
+
+        {/* シフトサポート情報 */}
+        {students.length > 0 && (
+          <div className="mx-6 mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-200 dark:border-indigo-800">
+            <h4 className="text-xs font-black text-indigo-600 dark:text-indigo-400 mb-2 uppercase">シフトサポート</h4>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="text-gray-600 dark:text-gray-300">出席予定者:</div>
+              <div className="font-bold text-gray-800 dark:text-white">{shift.total}名 (理系: {shift.scienceCount}名)</div>
+              <div className="text-gray-600 dark:text-gray-300">想定ルーム数:</div>
+              <div className="font-bold text-gray-800 dark:text-white">{shift.totalRooms} (文系: {shift.humanitiesRooms} / 理系: {shift.scienceRooms})</div>
+              <div className="text-gray-600 dark:text-gray-300">必要講師数:</div>
+              <div className="font-bold text-gray-800 dark:text-white">{shift.totalRooms}名</div>
+            </div>
+          </div>
+        )}
+
         <div className="p-6">
           {students.length > 0 ? (
             <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -61,9 +102,18 @@ function StudentListModal({
                   href={`/admin/student/${s.userId}`}
                   className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors border border-gray-100 dark:border-gray-600 group"
                 >
-                  <span className="font-bold text-gray-800 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                    {s.nickname}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-gray-800 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                      {s.nickname}
+                    </span>
+                    {s.stream && (
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
+                        s.stream === 'science' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-pink-100 text-pink-700 dark:bg-pink-900/40 dark:text-pink-300'
+                      }`}>
+                        {s.stream === 'science' ? '理系' : '文系'}
+                      </span>
+                    )}
+                  </div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 text-gray-400 group-hover:text-emerald-500"
@@ -86,9 +136,18 @@ function StudentListModal({
               予定されている生徒はいません
             </p>
           )}
+          {students.length > 0 && (
+            <button
+              onClick={() => onGenerateRooms(date, shift)}
+              disabled={generatingRooms}
+              className="w-full mt-4 py-3 bg-indigo-600 text-white font-black rounded-xl hover:bg-indigo-700 transition-colors disabled:bg-gray-400"
+            >
+              {generatingRooms ? '生成中...' : 'この日のルームを自動生成'}
+            </button>
+          )}
           <button
             onClick={onClose}
-            className="w-full mt-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-black rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="w-full mt-2 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-black rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
             閉じる
           </button>
@@ -115,6 +174,74 @@ export default function AdminAttendancePage() {
     date: string;
     students: PlannedStudent[];
   } | null>(null);
+  const [generatingRooms, setGeneratingRooms] = useState(false);
+
+  const handleGenerateRooms = async (date: string, shift: ShiftInfo) => {
+    if (!window.confirm(`${date} のルームを自動生成しますか？\n文系: ${shift.humanitiesRooms}ルーム / 理系: ${shift.scienceRooms}ルーム / Zルーム: 1`)) return;
+    setGeneratingRooms(true);
+    try {
+      const supabase = createClient();
+      // この日付の特訓を探す
+      const startOfDay = `${date}T00:00:00`;
+      const endOfDay = `${date}T23:59:59`;
+      const { data: dayClasses } = await (supabase.from('classes') as any)
+        .select('id')
+        .gte('start_time', startOfDay)
+        .lte('start_time', endOfDay);
+
+      if (!dayClasses || dayClasses.length === 0) {
+        alert('この日付の特訓がまだ作成されていません。先に特訓管理から特訓を作成してください。');
+        setGeneratingRooms(false);
+        return;
+      }
+
+      // 各特訓にルームを生成
+      for (const cls of dayClasses) {
+        // 既存ルームがあれば削除して再生成
+        await (supabase.from('class_rooms') as any).delete().eq('class_id', cls.id);
+
+        const roomsToInsert: any[] = [];
+        const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
+        let labelIndex = 0;
+
+        // 文系ルーム
+        for (let i = 0; i < shift.humanitiesRooms; i++) {
+          roomsToInsert.push({
+            class_id: cls.id,
+            label: labels[labelIndex++] || `H${i + 1}`,
+            room_type: 'humanities',
+            capacity: 10,
+          });
+        }
+        // 理系ルーム
+        for (let i = 0; i < shift.scienceRooms; i++) {
+          roomsToInsert.push({
+            class_id: cls.id,
+            label: labels[labelIndex++] || `S${i + 1}`,
+            room_type: 'science',
+            capacity: 10,
+          });
+        }
+        // Zルーム（未提出者用）
+        roomsToInsert.push({
+          class_id: cls.id,
+          label: 'Z',
+          room_type: 'unplanned',
+          capacity: 10,
+        });
+
+        if (roomsToInsert.length > 0) {
+          await (supabase.from('class_rooms') as any).insert(roomsToInsert);
+        }
+      }
+      alert('ルームを生成しました。');
+    } catch (err) {
+      console.error('Error generating rooms:', err);
+      alert('ルーム生成に失敗しました。');
+    } finally {
+      setGeneratingRooms(false);
+    }
+  };
 
   // Visible months for calendar
   const visibleMonths = useMemo((): MonthData[] => {
@@ -163,9 +290,9 @@ export default function AdminAttendancePage() {
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       sevenDaysAgo.setHours(0, 0, 0, 0);
 
-      // 1. Get student users
+      // 1. Get student users (with stream info)
       const { data: studentUsers, error: studentsError } = await (supabase.from('users') as any)
-        .select('id, nickname')
+        .select('id, nickname, stream')
         .eq('role', 'student');
 
       if (studentsError) throw studentsError;
@@ -173,6 +300,7 @@ export default function AdminAttendancePage() {
       const studentList = (studentUsers || []).map((u: any) => ({
         id: u.id,
         nickname: u.nickname || '（名前未設定）',
+        stream: u.stream || null,
       }));
 
       // 2. Get attendance records (recent classes)
@@ -221,6 +349,7 @@ export default function AdminAttendancePage() {
           globalPlannedMap.get(dateStr)!.push({
             userId: student.id,
             nickname: student.nickname,
+            stream: student.stream,
           });
         }
       });
@@ -293,19 +422,20 @@ export default function AdminAttendancePage() {
 
     const days = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className="h-10 w-10"></div>);
+      days.push(<div key={`empty-${i}`} className="h-14 w-14"></div>);
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const plannedStudents = plannedMap.get(dateStr) || [];
       const count = plannedStudents.length;
+      const shift = count > 0 ? calcShiftInfo(plannedStudents) : null;
 
       days.push(
         <button
           key={dateStr}
           onClick={() => setSelectedDateDetails({ date: dateStr, students: plannedStudents })}
-          className={`h-10 w-10 flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all relative ${
+          className={`h-14 w-14 flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all relative ${
             count > 0
               ? isConfirmed
                 ? 'bg-emerald-500 text-white shadow-sm'
@@ -315,7 +445,12 @@ export default function AdminAttendancePage() {
         >
           <span>{i}</span>
           {count > 0 && (
-            <span className="text-[8px] opacity-80 leading-none mt-0.5">{count}名</span>
+            <>
+              <span className="text-[8px] opacity-80 leading-none mt-0.5">{count}名</span>
+              {shift && shift.totalRooms > 0 && (
+                <span className="text-[7px] opacity-70 leading-none">R{shift.totalRooms}/講{shift.totalRooms}</span>
+              )}
+            </>
           )}
         </button>
       );
@@ -631,6 +766,8 @@ export default function AdminAttendancePage() {
           date={selectedDateDetails.date}
           students={selectedDateDetails.students}
           onClose={() => setSelectedDateDetails(null)}
+          onGenerateRooms={handleGenerateRooms}
+          generatingRooms={generatingRooms}
         />
       )}
     </div>

@@ -699,7 +699,7 @@ export default function AdminClassesPage() {
                         </div>
                       )}
                       <Link href={`/admin/classes/${cls.id}/attendance`} className="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-500 text-gray-800 dark:text-white">
-                        出席者一覧
+                        詳細を見る
                       </Link>
                       {currentUser?.role === 'super' && (
                         <button
