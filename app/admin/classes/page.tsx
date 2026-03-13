@@ -438,6 +438,17 @@ function CreateClassModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // ルーム生成フロー用
+  const [createdClassId, setCreatedClassId] = useState<string | null>(null);
+  const [roomPrompt, setRoomPrompt] = useState<{
+    total: number;
+    scienceCount: number;
+    totalRooms: number;
+    scienceRooms: number;
+    humanitiesRooms: number;
+  } | null>(null);
+  const [generatingRooms, setGeneratingRooms] = useState(false);
+
   const timeOptions = useMemo(() => {
     const opts: string[] = [];
     for (let h = 0; h < 24; h++) {
@@ -479,7 +490,7 @@ function CreateClassModal({
       if (!instructor) throw new Error('Selected instructor not found.');
       const passcode = Math.floor(1000 + Math.random() * 9000).toString();
       const supabase = createClient();
-      const { error: insertError } = await (supabase.from('classes') as any).insert({
+      const { data: insertData, error: insertError } = await (supabase.from('classes') as any).insert({
         title: title.trim(),
         instructor_id: instructor.id,
         instructor_name: instructor.display_name,
@@ -487,9 +498,37 @@ function CreateClassModal({
         end_time: endDateTime.toISOString(),
         passcode,
         survey_sent: false,
-      });
+      }).select('id').single();
       if (insertError) throw insertError;
-      onSuccess();
+
+      const newClassId = insertData?.id;
+      setCreatedClassId(newClassId);
+
+      // この日の出席予定者を確認してルーム生成を提案
+      const classDate = startDate;
+      const { data: plans } = await (supabase.from('attendance_plans') as any)
+        .select('user_id')
+        .eq('date', classDate)
+        .eq('planned', true);
+
+      if (plans && plans.length > 0) {
+        const userIds = plans.map((p: any) => p.user_id);
+        const { data: users } = await (supabase.from('users') as any)
+          .select('id, stream')
+          .in('id', userIds)
+          .eq('role', 'student');
+
+        const total = (users || []).length;
+        const scienceCount = (users || []).filter((u: any) => u.stream === 'science').length;
+        const totalRooms = Math.ceil(total / 10);
+        const scienceRooms = Math.ceil((scienceCount * 0.5) / 10);
+        const humanitiesRooms = Math.max(totalRooms - scienceRooms, 0);
+
+        setRoomPrompt({ total, scienceCount, totalRooms, scienceRooms, humanitiesRooms });
+      } else {
+        // 出席予定者がいない場合もプロンプト表示（0人）
+        setRoomPrompt({ total: 0, scienceCount: 0, totalRooms: 0, scienceRooms: 0, humanitiesRooms: 0 });
+      }
     } catch (err: any) {
       console.error('Error creating class:', err);
       setError('特訓の作成中にエラーが発生しました。');
@@ -497,6 +536,105 @@ function CreateClassModal({
       setIsSubmitting(false);
     }
   };
+
+  const handleGenerateRooms = async () => {
+    if (!createdClassId || !roomPrompt) return;
+    setGeneratingRooms(true);
+    try {
+      const supabase = createClient();
+      const roomsToInsert: any[] = [];
+      const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
+      let labelIndex = 0;
+
+      for (let i = 0; i < roomPrompt.humanitiesRooms; i++) {
+        roomsToInsert.push({
+          class_id: createdClassId,
+          label: labels[labelIndex++] || `H${i + 1}`,
+          room_type: 'humanities',
+          capacity: 10,
+        });
+      }
+      for (let i = 0; i < roomPrompt.scienceRooms; i++) {
+        roomsToInsert.push({
+          class_id: createdClassId,
+          label: labels[labelIndex++] || `S${i + 1}`,
+          room_type: 'science',
+          capacity: 10,
+        });
+      }
+      // Zルーム
+      roomsToInsert.push({
+        class_id: createdClassId,
+        label: 'Z',
+        room_type: 'unplanned',
+        capacity: 10,
+      });
+
+      if (roomsToInsert.length > 0) {
+        await (supabase.from('class_rooms') as any).insert(roomsToInsert);
+      }
+      onSuccess();
+    } catch (err) {
+      console.error('Error generating rooms:', err);
+      alert('ルーム生成に失敗しました。');
+    } finally {
+      setGeneratingRooms(false);
+    }
+  };
+
+  const handleSkipRooms = () => {
+    onSuccess();
+  };
+
+  // ルーム生成プロンプト画面
+  if (roomPrompt !== null && createdClassId) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="text-center mb-6">
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">特訓を開講しました</h3>
+          </div>
+
+          {/* ルーム未作成の警告 */}
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6">
+            <h4 className="font-bold text-yellow-800 dark:text-yellow-200 mb-2">ルームが作成されていません</h4>
+            {roomPrompt.total > 0 ? (
+              <div className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                <p>この日の出席予定者: <span className="font-bold">{roomPrompt.total}名</span> (理系: {roomPrompt.scienceCount}名)</p>
+                <p>想定ルーム: 文系 <span className="font-bold">{roomPrompt.humanitiesRooms}</span> / 理系 <span className="font-bold">{roomPrompt.scienceRooms}</span> / Z(未提出用) 1</p>
+                <p>必要講師数: <span className="font-bold">{roomPrompt.totalRooms}名</span></p>
+              </div>
+            ) : (
+              <p className="text-sm text-yellow-700 dark:text-yellow-300">この日の出席予定者はまだ登録されていません。後から特訓詳細画面で手動作成できます。</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {roomPrompt.total > 0 && (
+              <button
+                onClick={handleGenerateRooms}
+                disabled={generatingRooms}
+                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-colors disabled:bg-gray-400"
+              >
+                {generatingRooms ? '生成中...' : 'ルームを自動生成する'}
+              </button>
+            )}
+            <button
+              onClick={handleSkipRooms}
+              className="w-full py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              あとで作成する
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4" onClick={onClose}>
