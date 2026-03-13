@@ -48,30 +48,17 @@ function calcShiftInfo(students: PlannedStudent[]): ShiftInfo {
   return { total, scienceCount, totalRooms, scienceRooms, humanitiesRooms };
 }
 
-type ExistingRoomSummary = {
-  humanities: number;
-  science: number;
-  total: number;
-};
-
 // --- Student List Modal ---
 function StudentListModal({
   date,
   students,
   onClose,
-  onGenerateRooms,
-  generatingRooms,
-  existingRooms,
 }: {
   date: string;
   students: PlannedStudent[];
   onClose: () => void;
-  onGenerateRooms: (date: string, shift: ShiftInfo) => void;
-  generatingRooms: boolean;
-  existingRooms: ExistingRoomSummary | null;
 }) {
   const shift = calcShiftInfo(students);
-  const hasExistingRooms = existingRooms && existingRooms.total > 0;
 
   return (
     <div
@@ -145,36 +132,6 @@ function StudentListModal({
               予定されている生徒はいません
             </p>
           )}
-          {students.length > 0 && (
-            hasExistingRooms ? (
-              <div className="mt-4 space-y-2">
-                <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-center">
-                  <p className="text-sm font-bold text-green-700 dark:text-green-300">
-                    ルーム作成済み: 文系 {existingRooms.humanities} / 理系 {existingRooms.science} / Z 1
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    if (window.confirm('既存のルームを削除して再生成しますか？\n（ルーム内のメンバー割り当ては解除されます）')) {
-                      onGenerateRooms(date, shift);
-                    }
-                  }}
-                  disabled={generatingRooms}
-                  className="w-full py-2 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors text-sm disabled:bg-gray-400"
-                >
-                  {generatingRooms ? '再生成中...' : 'ルームを再生成する'}
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => onGenerateRooms(date, shift)}
-                disabled={generatingRooms}
-                className="w-full mt-4 py-3 bg-indigo-600 text-white font-black rounded-xl hover:bg-indigo-700 transition-colors disabled:bg-gray-400"
-              >
-                {generatingRooms ? '生成中...' : 'この日のルームを自動生成'}
-              </button>
-            )
-          )}
           <button
             onClick={onClose}
             className="w-full mt-2 py-3 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-black rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
@@ -204,81 +161,6 @@ export default function AdminAttendancePage() {
     date: string;
     students: PlannedStudent[];
   } | null>(null);
-  const [generatingRooms, setGeneratingRooms] = useState(false);
-  const [existingRoomsMap, setExistingRoomsMap] = useState<Map<string, ExistingRoomSummary>>(new Map());
-
-  const handleGenerateRooms = async (date: string, shift: ShiftInfo) => {
-    if (!window.confirm(`${date} のルームを自動生成しますか？\n文系: ${shift.humanitiesRooms}ルーム / 理系: ${shift.scienceRooms}ルーム / Zルーム: 1`)) return;
-    setGeneratingRooms(true);
-    try {
-      const supabase = createClient();
-      // この日付の特訓を探す
-      const startOfDay = `${date}T00:00:00`;
-      const endOfDay = `${date}T23:59:59`;
-      const { data: dayClasses } = await (supabase.from('classes') as any)
-        .select('id')
-        .gte('start_time', startOfDay)
-        .lte('start_time', endOfDay);
-
-      if (!dayClasses || dayClasses.length === 0) {
-        alert('この日付の特訓がまだ作成されていません。先に特訓管理から特訓を作成してください。');
-        setGeneratingRooms(false);
-        return;
-      }
-
-      // 各特訓にルームを生成
-      for (const cls of dayClasses) {
-        // 既存ルームがあれば削除して再生成
-        await (supabase.from('class_rooms') as any).delete().eq('class_id', cls.id);
-
-        const roomsToInsert: any[] = [];
-        const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
-        let labelIndex = 0;
-
-        // 文系ルーム
-        for (let i = 0; i < shift.humanitiesRooms; i++) {
-          roomsToInsert.push({
-            class_id: cls.id,
-            label: labels[labelIndex++] || `H${i + 1}`,
-            room_type: 'humanities',
-            capacity: 10,
-          });
-        }
-        // 理系ルーム
-        for (let i = 0; i < shift.scienceRooms; i++) {
-          roomsToInsert.push({
-            class_id: cls.id,
-            label: labels[labelIndex++] || `S${i + 1}`,
-            room_type: 'science',
-            capacity: 10,
-          });
-        }
-        // Zルーム（未提出者用）
-        roomsToInsert.push({
-          class_id: cls.id,
-          label: 'Z',
-          room_type: 'unplanned',
-          capacity: 10,
-        });
-
-        if (roomsToInsert.length > 0) {
-          await (supabase.from('class_rooms') as any).insert(roomsToInsert);
-        }
-      }
-      // 生成後にマップを更新
-      setExistingRoomsMap(prev => {
-        const next = new Map(prev);
-        next.set(date, { humanities: shift.humanitiesRooms, science: shift.scienceRooms, total: shift.humanitiesRooms + shift.scienceRooms });
-        return next;
-      });
-      alert('ルームを生成しました。');
-    } catch (err) {
-      console.error('Error generating rooms:', err);
-      alert('ルーム生成に失敗しました。');
-    } finally {
-      setGeneratingRooms(false);
-    }
-  };
 
   // Visible months for calendar
   const visibleMonths = useMemo((): MonthData[] => {
@@ -391,31 +273,6 @@ export default function AdminAttendancePage() {
         }
       });
       setPlannedMap(globalPlannedMap);
-
-      // 3.5 既存ルーム情報を取得（日付ごと）
-      const { data: allClasses } = await (supabase.from('classes') as any)
-        .select('id, start_time');
-      const { data: allRooms } = await (supabase.from('class_rooms') as any)
-        .select('class_id, room_type, label');
-
-      const roomsByDate = new Map<string, ExistingRoomSummary>();
-      if (allClasses && allRooms) {
-        const classDateMap2 = new Map<string, string>();
-        allClasses.forEach((c: any) => {
-          classDateMap2.set(c.id, new Date(c.start_time).toISOString().split('T')[0]);
-        });
-        allRooms.forEach((r: any) => {
-          if (r.label === 'Z') return; // Zルームはカウントしない
-          const dateKey = classDateMap2.get(r.class_id);
-          if (!dateKey) return;
-          if (!roomsByDate.has(dateKey)) roomsByDate.set(dateKey, { humanities: 0, science: 0, total: 0 });
-          const summary = roomsByDate.get(dateKey)!;
-          summary.total++;
-          if (r.room_type === 'science') summary.science++;
-          else summary.humanities++;
-        });
-      }
-      setExistingRoomsMap(roomsByDate);
 
       // 4. Process history for each student
       const processedHistory: StudentHistory[] = studentList.map((student: any) => {
@@ -828,9 +685,6 @@ export default function AdminAttendancePage() {
           date={selectedDateDetails.date}
           students={selectedDateDetails.students}
           onClose={() => setSelectedDateDetails(null)}
-          onGenerateRooms={handleGenerateRooms}
-          generatingRooms={generatingRooms}
-          existingRooms={existingRoomsMap.get(selectedDateDetails.date) || null}
         />
       )}
     </div>

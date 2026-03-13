@@ -542,6 +542,8 @@ function CreateClassModal({
     setGeneratingRooms(true);
     try {
       const supabase = createClient();
+      // 既存ルームがあれば削除（重複防止）
+      await (supabase.from('class_rooms') as any).delete().eq('class_id', createdClassId);
       const roomsToInsert: any[] = [];
       const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
       let labelIndex = 0;
