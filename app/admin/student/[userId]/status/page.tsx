@@ -376,39 +376,39 @@ export default function AdminStudentStatusPage() {
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
         <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
         <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-primary-800 dark:text-warm-100 font-medium">学習ステータス</span>
+        <span className="text-gray-800 dark:text-gray-100 font-medium">学習ステータス</span>
       </nav>
 
       <div className="card">
-        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6">学習ステータス</h1>
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider mb-6">学習ステータス</h1>
 
         {/* === Section 1: Summary Cards === */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {/* Curriculum Progress */}
-          <div className="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-xl">
-            <p className="text-xs text-primary-600 dark:text-primary-400 font-medium mb-1">カリキュラム進捗率</p>
-            <p className="text-3xl font-bold text-primary-700 dark:text-primary-300">{progressPct}%</p>
-            <div className="w-full h-2 bg-primary-200 dark:bg-primary-800 rounded-full mt-2 overflow-hidden">
+          <div className="bg-primary-50 dark:bg-gray-900/20 p-5 rounded-xl">
+            <p className="text-xs text-primary-600 dark:text-gray-400 font-medium mb-1">カリキュラム進捗率</p>
+            <p className="text-3xl font-bold text-gray-700 dark:text-gray-300">{progressPct}%</p>
+            <div className="w-full h-2 bg-primary-200 dark:bg-gray-800 rounded-full mt-2 overflow-hidden">
               <div className="h-full bg-primary-500 rounded-full transition-all duration-500" style={{ width: `${progressPct}%` }} />
             </div>
-            <p className="text-xs text-primary-500 dark:text-primary-400 mt-1">{completedTasks} / {totalTasks} タスク完了</p>
+            <p className="text-xs text-primary-500 dark:text-gray-400 mt-1">{completedTasks} / {totalTasks} タスク完了</p>
           </div>
 
           {/* Average Test Score */}
-          <div className="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-xl">
-            <p className="text-xs text-primary-600 dark:text-primary-400 font-medium mb-1">平均テストスコア</p>
+          <div className="bg-primary-50 dark:bg-gray-900/20 p-5 rounded-xl">
+            <p className="text-xs text-primary-600 dark:text-gray-400 font-medium mb-1">平均テストスコア</p>
             {avgScore !== null ? (
               <>
                 <p className={`text-3xl font-bold ${getScoreColor(avgScore)}`}>{avgScore}<span className="text-lg">点</span></p>
-                <p className="text-xs text-primary-500 dark:text-primary-400 mt-2">{testScores.length > 0 ? `直近${testScores.length}件のテスト` : ''}</p>
+                <p className="text-xs text-primary-500 dark:text-gray-400 mt-2">{testScores.length > 0 ? `直近${testScores.length}件のテスト` : ''}</p>
               </>
             ) : (
-              <p className="text-lg text-warm-400 dark:text-warm-500 mt-2">データなし</p>
+              <p className="text-lg text-gray-400 dark:text-gray-500 mt-2">データなし</p>
             )}
           </div>
 
@@ -421,14 +421,14 @@ export default function AdminStudentStatusPage() {
                 <p className="text-xs text-success-500 dark:text-success-400 mt-2">{attendedCount} / {plannedCount} 回出席</p>
               </>
             ) : (
-              <p className="text-lg text-warm-400 dark:text-warm-500 mt-2">予定なし</p>
+              <p className="text-lg text-gray-400 dark:text-gray-500 mt-2">予定なし</p>
             )}
           </div>
         </div>
 
         {/* === Section 2: Subject Progress === */}
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">科目別カリキュラム進捗</h2>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">科目別カリキュラム進捗</h2>
           {subjectProgress.length > 0 ? (
             <div className="space-y-3">
               {subjectProgress.map((sp) => {
@@ -437,20 +437,20 @@ export default function AdminStudentStatusPage() {
                   <Link
                     key={sp.subject_id}
                     href={`/admin/student/${userId}/curriculum`}
-                    className="block p-3 rounded-btn hover:bg-warm-50 dark:hover:bg-primary-800/50 transition-colors"
+                    className="block p-3 rounded-btn hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                   >
                     <div className="flex justify-between items-center mb-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-primary-700 dark:text-warm-300">{sp.subject_name}</span>
-                        <span className="text-xs px-2 py-0.5 bg-warm-200 dark:bg-primary-700 rounded-badge text-warm-600 dark:text-warm-300">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{sp.subject_name}</span>
+                        <span className="text-xs px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded-badge text-gray-600 dark:text-gray-300">
                           {sp.current_lap}周目
                         </span>
                       </div>
-                      <span className="text-sm text-warm-500 dark:text-warm-400">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {sp.completed_tasks}/{sp.total_tasks} ({pct}%)
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-warm-200 dark:bg-primary-700 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div className="h-full bg-primary-500 transition-all duration-500 rounded-full" style={{ width: `${pct}%` }} />
                     </div>
                   </Link>
@@ -458,13 +458,13 @@ export default function AdminStudentStatusPage() {
               })}
             </div>
           ) : (
-            <p className="text-warm-500 dark:text-warm-400 text-center py-4">カリキュラムが設定されていません。</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">カリキュラムが設定されていません。</p>
           )}
         </div>
 
         {/* === Section 3: Test Scores === */}
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">テストスコア推移</h2>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">テストスコア推移</h2>
 
           {/* Subject average badges */}
           {subjectAvgScores.length > 0 && (
@@ -482,26 +482,26 @@ export default function AdminStudentStatusPage() {
 
           {testScores.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-                <thead className="bg-warm-50 dark:bg-primary-800">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">タスク名</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">科目</th>
-                    <th className="px-4 py-2 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">スコア</th>
-                    <th className="px-4 py-2 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">周回</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">日付</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">タスク名</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">科目</th>
+                    <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">スコア</th>
+                    <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">周回</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">日付</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-warm-200 dark:divide-primary-800">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {testScores.map((ts, i) => (
-                    <tr key={`${ts.id}-${i}`} className="hover:bg-warm-50 dark:hover:bg-primary-800/50">
-                      <td className="px-4 py-2 text-sm text-warm-600 dark:text-warm-300">{ts.task_name}</td>
-                      <td className="px-4 py-2 text-sm text-warm-600 dark:text-warm-300">{ts.subject_name}</td>
+                    <tr key={`${ts.id}-${i}`} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                      <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{ts.task_name}</td>
+                      <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{ts.subject_name}</td>
                       <td className="px-4 py-2 text-center">
                         <span className={`text-sm font-bold ${getScoreColor(ts.score)}`}>{ts.score}点</span>
                       </td>
-                      <td className="px-4 py-2 text-center text-sm text-warm-500 dark:text-warm-400">{ts.lap}周目</td>
-                      <td className="px-4 py-2 text-sm text-warm-500 dark:text-warm-400">
+                      <td className="px-4 py-2 text-center text-sm text-gray-500 dark:text-gray-400">{ts.lap}周目</td>
+                      <td className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
                         {new Date(ts.updated_at).toLocaleDateString('ja-JP')}
                       </td>
                     </tr>
@@ -510,13 +510,13 @@ export default function AdminStudentStatusPage() {
               </table>
             </div>
           ) : (
-            <p className="text-warm-500 dark:text-warm-400 text-center py-4">テストスコアのデータがありません。</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">テストスコアのデータがありません。</p>
           )}
         </div>
 
         {/* === Section 4: Attendance === */}
         <div>
-          <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100 mb-4">出席状況</h2>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">出席状況</h2>
 
           {/* Consecutive absence alert */}
           {consecutiveAbsences >= 3 && (
@@ -531,10 +531,10 @@ export default function AdminStudentStatusPage() {
           <div className="grid grid-cols-7 gap-2 mb-4">
             {attendanceDays.map((day) => (
               <div key={day.date} className="text-center">
-                <p className="text-xs text-warm-500 dark:text-warm-400 mb-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                   {formatDate(day.date)}
                 </p>
-                <p className="text-xs text-warm-400 dark:text-warm-500 mb-2">
+                <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
                   ({getDayOfWeek(day.date)})
                 </p>
                 <div className={`w-10 h-10 mx-auto rounded-btn flex items-center justify-center text-lg ${
@@ -543,13 +543,13 @@ export default function AdminStudentStatusPage() {
                     : day.planned && !day.attended
                     ? 'bg-danger-100 dark:bg-danger-900/30'
                     : day.attended
-                    ? 'bg-warm-50 dark:bg-primary-800'
-                    : 'bg-warm-50 dark:bg-primary-900'
+                    ? 'bg-gray-50 dark:bg-gray-800'
+                    : 'bg-gray-50 dark:bg-gray-900'
                 }`}>
                   {day.planned && day.attended && <span className="text-success-600">&#x2713;</span>}
                   {day.planned && !day.attended && <span className="text-danger-500">&#x2717;</span>}
-                  {!day.planned && day.attended && <span className="text-warm-400">&#x2713;</span>}
-                  {!day.planned && !day.attended && <span className="text-warm-300 dark:text-warm-600">-</span>}
+                  {!day.planned && day.attended && <span className="text-gray-400">&#x2713;</span>}
+                  {!day.planned && !day.attended && <span className="text-gray-300 dark:text-gray-600">-</span>}
                 </div>
               </div>
             ))}
@@ -557,15 +557,15 @@ export default function AdminStudentStatusPage() {
 
           {/* Recent study materials */}
           {attendanceDays.some(d => d.study_material) && (
-            <div className="mt-4 p-4 bg-warm-50 dark:bg-primary-800/50 rounded-btn">
-              <p className="text-sm font-medium text-primary-700 dark:text-warm-300 mb-2">直近の取り組み教材</p>
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-btn">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">直近の取り組み教材</p>
               <div className="space-y-1">
                 {attendanceDays
                   .filter(d => d.study_material)
                   .map(d => (
                     <div key={d.date} className="flex gap-2 text-sm">
-                      <span className="text-warm-500 dark:text-warm-400 whitespace-nowrap">{formatDate(d.date)}</span>
-                      <span className="text-primary-700 dark:text-warm-300">{d.study_material}</span>
+                      <span className="text-gray-500 dark:text-gray-400 whitespace-nowrap">{formatDate(d.date)}</span>
+                      <span className="text-gray-700 dark:text-gray-300">{d.study_material}</span>
                     </div>
                   ))}
               </div>

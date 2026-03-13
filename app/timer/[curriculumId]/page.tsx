@@ -174,7 +174,7 @@ export default function TimerPage() {
     return (
       <div className="w-full max-w-lg mx-auto text-center p-8">
         <div className="spinner mx-auto" />
-        <p className="text-warm-600 dark:text-warm-300 mt-4">学習データを準備中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">学習データを準備中...</p>
       </div>
     );
   }
@@ -198,16 +198,16 @@ export default function TimerPage() {
           {taskInfo?.bookImageUrl && (
             <img src={taskInfo.bookImageUrl} alt={taskInfo.name} className="w-24 h-32 object-contain rounded-input mx-auto mb-4" />
           )}
-          <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider">
+          <p className="text-sm font-semibold text-primary-600 dark:text-gray-400 uppercase tracking-wider">
             {taskInfo?.subjectName} &gt; {taskInfo?.divisionName}
           </p>
-          <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mt-2">{taskInfo?.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider mt-2">{taskInfo?.name}</h1>
         </div>
 
         <div className="my-12">
-          <p className="text-warm-500 dark:text-warm-400">今回の学習時間</p>
-          <p className="text-7xl font-bold font-mono text-primary-800 dark:text-warm-100 tracking-widest">{formatTime(currentSessionSeconds)}</p>
-          <p className="text-sm text-warm-500 dark:text-warm-400 mt-4">これまでの学習時間: {formatTime(totalElapsedSeconds)}</p>
+          <p className="text-gray-500 dark:text-gray-400">今回の学習時間</p>
+          <p className="text-7xl font-bold font-mono text-gray-800 dark:text-gray-100 tracking-widest">{formatTime(currentSessionSeconds)}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">これまでの学習時間: {formatTime(totalElapsedSeconds)}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -224,7 +224,7 @@ export default function TimerPage() {
           <button
             onClick={() => handleStopTimer('completed')}
             disabled={isSubmitting || !isActive}
-            className="btn-primary w-full sm:w-auto py-3 px-6 text-lg disabled:bg-warm-400 disabled:cursor-not-allowed"
+            className="btn-primary w-full sm:w-auto py-3 px-6 text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? '保存中...' : 'タスク完了'}
           </button>
@@ -234,7 +234,7 @@ export default function TimerPage() {
           <button
             onClick={() => handleStopTimer('paused')}
             disabled={isSubmitting}
-            className="text-sm text-warm-500 dark:text-warm-400 hover:underline disabled:opacity-50"
+            className="text-sm text-gray-500 dark:text-gray-400 hover:underline disabled:opacity-50"
           >
             一旦やめる
           </button>

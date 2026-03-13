@@ -86,21 +86,21 @@ function ContractedStudentsModal({
         className="modal-content w-full max-w-lg max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-4 text-primary-800 dark:text-warm-100 border-b dark:border-primary-800 pb-3">
+        <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100 border-b dark:border-gray-800 pb-3">
           契約者一覧
         </h3>
         <div className="flex-grow overflow-y-auto">
           {loading ? (
-            <p className="text-center text-warm-500 dark:text-warm-400">読み込み中...</p>
+            <p className="text-center text-gray-500 dark:text-gray-400">読み込み中...</p>
           ) : students.length === 0 ? (
-            <p className="text-center text-warm-500 dark:text-warm-400">契約者はいません。</p>
+            <p className="text-center text-gray-500 dark:text-gray-400">契約者はいません。</p>
           ) : (
-            <ul className="divide-y divide-warm-200 dark:divide-primary-800">
+            <ul className="divide-y divide-gray-200 dark:divide-gray-800">
               {students.map((student) => (
                 <li key={student.userId} className="py-3">
                   <Link
                     href={`/admin/student/${student.userId}`}
-                    className="font-medium text-primary-600 dark:text-primary-400 hover:underline"
+                    className="font-medium text-primary-600 dark:text-gray-400 hover:underline"
                   >
                     {student.nickname}
                   </Link>
@@ -109,7 +109,7 @@ function ContractedStudentsModal({
             </ul>
           )}
         </div>
-        <div className="flex justify-end pt-4 mt-4 border-t dark:border-primary-800">
+        <div className="flex justify-end pt-4 mt-4 border-t dark:border-gray-800">
           <button
             type="button"
             onClick={onClose}
@@ -283,8 +283,8 @@ export default function AdminSpecialsPage() {
   return (
     <>
       <div className="w-full max-w-6xl card p-8 mx-auto mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">特別講座管理</h1>
+        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">特別講座管理</h1>
           <button
             onClick={handleOpenCreateModal}
             className="btn-primary"
@@ -299,23 +299,23 @@ export default function AdminSpecialsPage() {
           </div>
         ) : specials.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-warm-500 dark:text-warm-400">登録されている特別講座はありません。</p>
+            <p className="text-gray-500 dark:text-gray-400">登録されている特別講座はありません。</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-              <thead className="bg-warm-50 dark:bg-primary-800">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     講座名
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     エントリー期間
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     定員
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                     管理
                   </th>
                   <th className="relative px-6 py-3">
@@ -323,19 +323,19 @@ export default function AdminSpecialsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+              <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                 {specials.map((special) => (
                   <tr key={special.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-primary-800 dark:text-warm-100">
+                      <div className="text-sm font-medium text-gray-800 dark:text-gray-100">
                         {special.title}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(special.start_date).toLocaleDateString('ja-JP')} ~{' '}
                       {new Date(special.end_date).toLocaleDateString('ja-JP')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-warm-500 dark:text-warm-400">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
                       {special.capacity != null ? `${special.capacity}名` : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -360,7 +360,7 @@ export default function AdminSpecialsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleOpenEditModal(special)}
-                        className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-200"
+                        className="text-primary-600 hover:text-primary-900 dark:text-gray-400 dark:hover:text-gray-200"
                       >
                         編集
                       </button>
@@ -394,7 +394,7 @@ export default function AdminSpecialsPage() {
             className="modal-content w-full max-w-3xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">
+            <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">
               {editingSpecial ? '特別講座を編集する' : '特別講座を追加する'}
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">

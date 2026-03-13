@@ -151,7 +151,7 @@ export default function SpecialEntryPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">講座情報を読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">講座情報を読み込み中...</p>
       </div>
     );
   }
@@ -179,11 +179,11 @@ export default function SpecialEntryPage() {
   return (
     <div className="w-full max-w-2xl card p-8 animate-fade-in mt-8">
       <div className="mb-8">
-        <Link href="/specials" className="text-sm text-primary-600 dark:text-primary-400 hover:underline mb-4 block">
+        <Link href="/specials" className="text-sm text-primary-600 dark:text-gray-400 hover:underline mb-4 block">
           &larr; 講座一覧に戻る
         </Link>
-        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">{special.title}</h1>
-        <p className="mt-3 text-warm-600 dark:text-warm-400">{special.description}</p>
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider">{special.title}</h1>
+        <p className="mt-3 text-gray-600 dark:text-gray-400">{special.description}</p>
       </div>
 
       {existingEntry ? (
@@ -205,7 +205,7 @@ export default function SpecialEntryPage() {
                   type="text"
                   value={formValues[field.label] || ''}
                   onChange={e => handleInputChange(field.label, e.target.value)}
-                  className="input w-full disabled:bg-warm-200 dark:disabled:bg-primary-800/50"
+                  className="input w-full disabled:bg-gray-200 dark:disabled:bg-gray-800/50"
                   required
                   disabled={isFormDisabled}
                 />
@@ -213,7 +213,7 @@ export default function SpecialEntryPage() {
                 <select
                   value={formValues[field.label] || ''}
                   onChange={e => handleInputChange(field.label, e.target.value)}
-                  className="input w-full disabled:bg-warm-200 dark:disabled:bg-primary-800/50"
+                  className="input w-full disabled:bg-gray-200 dark:disabled:bg-gray-800/50"
                   required
                   disabled={isFormDisabled}
                 >
@@ -231,7 +231,7 @@ export default function SpecialEntryPage() {
           <div className="pt-4">
             <button
               type="submit"
-              className="btn-accent w-full py-3 disabled:bg-warm-400 disabled:cursor-not-allowed"
+              className="btn-accent w-full py-3 disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={isFormDisabled}
             >
               {isSubmitting ? '送信中...' : '申し込む'}

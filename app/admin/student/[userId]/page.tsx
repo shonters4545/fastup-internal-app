@@ -92,16 +92,16 @@ export default function StudentDetailPage() {
   ];
 
   const colorMap: Record<string, string> = {
-    blue: 'bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 text-primary-700 dark:text-primary-300',
+    blue: 'bg-primary-50 dark:bg-gray-900/20 hover:bg-primary-100 dark:hover:bg-gray-800/40 text-gray-700 dark:text-gray-300',
     green: 'bg-success-50 dark:bg-success-900/20 hover:bg-success-100 dark:hover:bg-success-900/40 text-success-700 dark:text-success-300',
-    purple: 'bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 text-primary-700 dark:text-primary-300',
+    purple: 'bg-primary-50 dark:bg-gray-900/20 hover:bg-primary-100 dark:hover:bg-gray-800/40 text-gray-700 dark:text-gray-300',
     orange: 'bg-warning-50 dark:bg-warning-900/20 hover:bg-warning-100 dark:hover:bg-warning-900/40 text-warning-700 dark:text-warning-300',
   };
 
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
       {/* Back Link */}
-      <Link href="/admin/students" className="inline-flex items-center text-sm text-primary-600 dark:text-primary-400 hover:underline mb-4">
+      <Link href="/admin/students" className="inline-flex items-center text-sm text-primary-600 dark:text-gray-400 hover:underline mb-4">
         <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
         生徒一覧に戻る
       </Link>
@@ -112,40 +112,40 @@ export default function StudentDetailPage() {
           {student.photo_url ? (
             <img src={student.photo_url} alt={student.nickname || ''} className="w-20 h-20 rounded-full object-cover shadow-md" referrerPolicy="no-referrer" />
           ) : (
-            <div className="w-20 h-20 rounded-full bg-warm-200 dark:bg-primary-800 flex items-center justify-center text-warm-400 text-2xl font-bold">
+            <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-400 text-2xl font-bold">
               {(student.nickname || '?')[0]}
             </div>
           )}
           <div>
-            <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">{student.nickname || '名前未設定'}</h1>
-            <p className="text-warm-500 dark:text-warm-400">{student.email || 'メール未設定'}</p>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">{student.nickname || '名前未設定'}</h1>
+            <p className="text-gray-500 dark:text-gray-400">{student.email || 'メール未設定'}</p>
           </div>
         </div>
 
         {/* Quick Info */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn">
-            <p className="text-xs text-warm-500 dark:text-warm-400">学年</p>
-            <p className="font-semibold text-primary-800 dark:text-warm-100">{student.grade ? gradeOptions[student.grade] || student.grade : '未設定'}</p>
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn">
+            <p className="text-xs text-gray-500 dark:text-gray-400">学年</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100">{student.grade ? gradeOptions[student.grade] || student.grade : '未設定'}</p>
           </div>
-          <div className="bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn">
-            <p className="text-xs text-warm-500 dark:text-warm-400">受講場所</p>
-            <p className="font-semibold text-primary-800 dark:text-warm-100">{student.learning_location === 'classroom' ? '教室' : student.learning_location === 'online' ? 'オンライン' : '未設定'}</p>
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn">
+            <p className="text-xs text-gray-500 dark:text-gray-400">受講場所</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100">{student.learning_location === 'classroom' ? '教室' : student.learning_location === 'online' ? 'オンライン' : '未設定'}</p>
           </div>
-          <div className="bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn">
-            <p className="text-xs text-warm-500 dark:text-warm-400">志望校</p>
-            <p className="font-semibold text-primary-800 dark:text-warm-100 truncate">{student.target_college || '未設定'}</p>
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn">
+            <p className="text-xs text-gray-500 dark:text-gray-400">志望校</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100 truncate">{student.target_college || '未設定'}</p>
           </div>
-          <div className="bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn">
-            <p className="text-xs text-warm-500 dark:text-warm-400">高校名</p>
-            <p className="font-semibold text-primary-800 dark:text-warm-100 truncate">{student.high_school || '未設定'}</p>
+          <div className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn">
+            <p className="text-xs text-gray-500 dark:text-gray-400">高校名</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100 truncate">{student.high_school || '未設定'}</p>
           </div>
         </div>
 
         {/* Subject Badges */}
         {subjectNames.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-2">
-            <span className="text-xs text-warm-500 dark:text-warm-400 self-center mr-2">科目:</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 self-center mr-2">科目:</span>
             {subjectNames.map((name, i) => (
               <span key={i} className="text-xs font-semibold px-3 py-1 badge-danger">{name}</span>
             ))}

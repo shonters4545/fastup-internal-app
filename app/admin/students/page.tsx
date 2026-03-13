@@ -156,7 +156,7 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">生徒の新規登録と招待</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">生徒の新規登録と招待</h3>
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label className="label">生徒名</label>
@@ -167,8 +167,8 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="input" required />
           </div>
 
-          <div className="pt-4 border-t dark:border-primary-800">
-            <h4 className="text-lg font-semibold mb-3 text-primary-800 dark:text-warm-100">基本情報</h4>
+          <div className="pt-4 border-t dark:border-gray-800">
+            <h4 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">基本情報</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="label">電話番号</label>
@@ -193,8 +193,8 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
               <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2">
                 {subjects.map(subject => (
                   <div className="flex items-center" key={subject.id}>
-                    <input type="checkbox" value={subject.id} className="h-4 w-4 text-primary-600 border-warm-300 rounded" onChange={e => handleSubjectChange(subject.id, e.target.checked)} />
-                    <label className="ml-3 block text-sm font-medium text-primary-700 dark:text-warm-200">{subject.name}</label>
+                    <input type="checkbox" value={subject.id} className="h-4 w-4 text-primary-600 border-gray-300 rounded" onChange={e => handleSubjectChange(subject.id, e.target.checked)} />
+                    <label className="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-200">{subject.name}</label>
                   </div>
                 ))}
               </div>
@@ -214,12 +214,12 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
                     if (!subject) return null;
                     return (
                       <fieldset key={subject.id}>
-                        <legend className="text-sm font-medium text-primary-800 dark:text-warm-200 mb-1">{subject.name}</legend>
+                        <legend className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{subject.name}</legend>
                         <div className="flex items-center space-x-6">
                           {[1, 2, 3].map(level => (
                             <div className="flex items-center" key={level}>
-                              <input type="radio" name={`${subject.id}-level`} checked={levels[subject.id] === level} onChange={() => setLevels(prev => ({ ...prev, [subject.id]: level }))} className="h-4 w-4 text-primary-600 border-warm-300" />
-                              <label className="ml-2 block text-sm font-medium text-primary-700 dark:text-warm-300">レベル{level}</label>
+                              <input type="radio" name={`${subject.id}-level`} checked={levels[subject.id] === level} onChange={() => setLevels(prev => ({ ...prev, [subject.id]: level }))} className="h-4 w-4 text-primary-600 border-gray-300" />
+                              <label className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">レベル{level}</label>
                             </div>
                           ))}
                         </div>
@@ -234,19 +234,19 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
               <label className="label">受講場所</label>
               <div className="mt-2 flex gap-4">
                 <div className="flex items-center">
-                  <input type="radio" name="learningLocation" value="classroom" checked={learningLocation === 'classroom'} onChange={() => setLearningLocation('classroom')} className="h-4 w-4 text-primary-600 border-warm-300" />
-                  <label className="ml-2 block text-sm font-medium text-primary-700 dark:text-warm-300">教室</label>
+                  <input type="radio" name="learningLocation" value="classroom" checked={learningLocation === 'classroom'} onChange={() => setLearningLocation('classroom')} className="h-4 w-4 text-primary-600 border-gray-300" />
+                  <label className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">教室</label>
                 </div>
                 <div className="flex items-center">
-                  <input type="radio" name="learningLocation" value="online" checked={learningLocation === 'online'} onChange={() => setLearningLocation('online')} className="h-4 w-4 text-primary-600 border-warm-300" />
-                  <label className="ml-2 block text-sm font-medium text-primary-700 dark:text-warm-300">オンライン</label>
+                  <input type="radio" name="learningLocation" value="online" checked={learningLocation === 'online'} onChange={() => setLearningLocation('online')} className="h-4 w-4 text-primary-600 border-gray-300" />
+                  <label className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300">オンライン</label>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t dark:border-primary-800">
-            <h4 className="text-lg font-semibold mb-3 text-primary-800 dark:text-warm-100">契約情報</h4>
+          <div className="pt-4 border-t dark:border-gray-800">
+            <h4 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">契約情報</h4>
             <div>
               <label className="label">保護者Gmailアドレス</label>
               <input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)} className="input" placeholder="example@gmail.com" />
@@ -271,7 +271,7 @@ function RegistrationModal({ onClose, onSuccess }: { onClose: () => void; onSucc
           {error && <p className="text-sm text-danger-500">{error}</p>}
           <div className="flex justify-end gap-2 pt-4">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="btn-secondary">キャンセル</button>
-            <button type="submit" disabled={isSubmitting} className="btn-primary disabled:bg-warm-400">
+            <button type="submit" disabled={isSubmitting} className="btn-primary disabled:bg-gray-400">
               {isSubmitting ? '登録中...' : '登録して招待'}
             </button>
           </div>
@@ -308,18 +308,18 @@ function InvitedStudentsModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content w-full max-w-lg" onClick={e => e.stopPropagation()}>
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">招待中の生徒</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">招待中の生徒</h3>
         {loading ? (
-          <p className="text-center text-warm-500 dark:text-warm-400">読み込み中...</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">読み込み中...</p>
         ) : invites.length === 0 ? (
-          <p className="text-center text-warm-500 dark:text-warm-400">現在、招待中の生徒はいません。</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">現在、招待中の生徒はいません。</p>
         ) : (
-          <ul className="divide-y divide-warm-200 dark:divide-primary-800 max-h-80 overflow-y-auto">
+          <ul className="divide-y divide-gray-200 dark:divide-gray-800 max-h-80 overflow-y-auto">
             {invites.map(invite => (
               <li key={invite.id} className="py-3 flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-primary-800 dark:text-warm-100">{invite.name}</p>
-                  <p className="text-sm text-warm-500 dark:text-warm-400">{invite.email}</p>
+                  <p className="font-medium text-gray-800 dark:text-gray-100">{invite.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{invite.email}</p>
                 </div>
                 <button onClick={() => handleDelete(invite.id)} disabled={isDeleting === invite.id} className="px-3 py-1 text-sm bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-200 rounded-badge hover:bg-danger-200 dark:hover:bg-danger-900/60 transition-colors disabled:opacity-50">
                   {isDeleting === invite.id ? '取消中...' : '招待を取り消し'}
@@ -328,7 +328,7 @@ function InvitedStudentsModal({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         )}
-        <div className="flex justify-end pt-4 mt-4 border-t dark:border-primary-800">
+        <div className="flex justify-end pt-4 mt-4 border-t dark:border-gray-800">
           <button type="button" onClick={onClose} className="btn-secondary">閉じる</button>
         </div>
       </div>
@@ -359,7 +359,7 @@ function FilterModal({ isOpen, onClose, onApply, subjects, currentFilters }: {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">絞り込み条件</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">絞り込み条件</h3>
         <div className="space-y-4">
           <div>
             <label className="label">受講場所</label>
@@ -384,14 +384,14 @@ function FilterModal({ isOpen, onClose, onApply, subjects, currentFilters }: {
                   <input type="checkbox" checked={filters.subjects.includes(subject.id)} onChange={e => {
                     const newSubs = e.target.checked ? [...filters.subjects, subject.id] : filters.subjects.filter(id => id !== subject.id);
                     setFilters({ ...filters, subjects: newSubs });
-                  }} className="h-4 w-4 text-primary-600 border-warm-300 rounded" />
-                  <label className="ml-3 block text-sm font-medium text-primary-700 dark:text-warm-200">{subject.name}</label>
+                  }} className="h-4 w-4 text-primary-600 border-gray-300 rounded" />
+                  <label className="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-200">{subject.name}</label>
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center gap-2 pt-6 mt-4 border-t dark:border-primary-800">
+        <div className="flex justify-between items-center gap-2 pt-6 mt-4 border-t dark:border-gray-800">
           <button type="button" onClick={handleReset} className="px-4 py-2 text-danger-600 dark:text-danger-400 hover:bg-danger-100 dark:hover:bg-danger-900/30 rounded-btn text-sm">条件をリセット</button>
           <div>
             <button type="button" onClick={onClose} className="btn-secondary mr-2">キャンセル</button>
@@ -506,7 +506,7 @@ export default function AdminStudentListPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="text-center text-warm-500 dark:text-warm-400 py-12">
+      <div className="text-center text-gray-500 dark:text-gray-400 py-12">
         <div className="spinner mx-auto mb-4" />
         <p>読み込み中...</p>
       </div>
@@ -520,8 +520,8 @@ export default function AdminStudentListPage() {
   return (
     <>
       <div className="w-full max-w-4xl card animate-fade-in mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">生徒一覧</h1>
+        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">生徒一覧</h1>
           <div className="flex items-center gap-2">
             <button onClick={() => setIsInviteModalOpen(true)} className="btn-accent">招待中の生徒</button>
             <button onClick={() => setIsRegisterModalOpen(true)} className="btn-primary">生徒を新規登録</button>
@@ -529,7 +529,7 @@ export default function AdminStudentListPage() {
         </div>
 
         {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-4 p-4 bg-warm-50 dark:bg-primary-950/50 rounded-btn">
+        <div className="flex flex-col sm:flex-row gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-950/50 rounded-btn">
           <form onSubmit={handleSearch} className="flex-grow flex gap-2">
             <input type="text" value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="生徒名で検索..." className="input flex-grow" />
             <button type="submit" className="btn-primary">検索する</button>
@@ -537,17 +537,17 @@ export default function AdminStudentListPage() {
           <button onClick={() => setIsFilterModalOpen(true)} className="btn-secondary">絞り込む</button>
         </div>
 
-        <div className="overflow-hidden rounded-input bg-white dark:bg-primary-900">
+        <div className="overflow-hidden rounded-input bg-white dark:bg-gray-900">
           {filteredStudents.length === 0 ? (
-            <div className="text-center text-warm-500 dark:text-warm-400 py-12"><p>表示する生徒がいません。</p></div>
+            <div className="text-center text-gray-500 dark:text-gray-400 py-12"><p>表示する生徒がいません。</p></div>
           ) : (
-            <ul className="divide-y divide-warm-200 dark:divide-primary-800">
+            <ul className="divide-y divide-gray-200 dark:divide-gray-800">
               {filteredStudents.map(student => (
                 <li key={student.id} className="group relative">
                   <div className="flex items-center">
-                    <Link href={`/admin/student/${student.id}`} className="flex-grow block px-4 py-4 sm:px-6 hover:bg-warm-50 dark:hover:bg-primary-800/50 transition-colors">
+                    <Link href={`/admin/student/${student.id}`} className="flex-grow block px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-primary-800 dark:text-warm-100 truncate">{student.nickname || '（ニックネーム未設定）'}</p>
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{student.nickname || '（ニックネーム未設定）'}</p>
                         <div className="flex items-center gap-2 flex-wrap justify-end">
                           <span className={`text-xs font-semibold px-2 py-1 rounded-badge whitespace-nowrap ${student.learning_location === 'classroom' ? 'badge-info' : 'badge-primary'}`}>
                             {student.learning_location === 'classroom' ? '教室' : 'オンライン'}

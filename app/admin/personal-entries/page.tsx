@@ -29,7 +29,7 @@ const formatStatus = (
     case 'pending':
       return {
         text: '申込完了',
-        style: 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-100',
+        style: 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
       };
     case 'approved':
       return {
@@ -42,7 +42,7 @@ const formatStatus = (
         style: 'bg-danger-200 text-danger-800 dark:bg-danger-700 dark:text-danger-100',
       };
     default:
-      return { text: status, style: 'bg-warm-200 text-primary-800' };
+      return { text: status, style: 'bg-gray-200 text-gray-800' };
   }
 };
 
@@ -176,7 +176,7 @@ export default function AdminPersonalEntriesPage() {
     `px-4 py-2 text-sm font-medium rounded-btn transition ${
       filter === buttonFilter
         ? 'bg-success-600 text-white'
-        : 'bg-warm-200 dark:bg-primary-800 text-primary-800 dark:text-warm-200 hover:bg-warm-300 dark:hover:bg-primary-700'
+        : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700'
     }`;
 
   if (authLoading || loading) {
@@ -204,8 +204,8 @@ export default function AdminPersonalEntriesPage() {
   return (
     <>
       <div className="w-full max-w-5xl card p-8 mx-auto mt-8">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b dark:border-primary-800 pb-4 gap-4">
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">個別講義管理</h1>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 border-b dark:border-gray-800 pb-4 gap-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">個別講義管理</h1>
           <div className="flex items-center gap-2 self-end sm:self-center flex-wrap">
             <button onClick={() => setFilter('all')} className={filterButtonStyle('all')}>
               すべて
@@ -221,22 +221,22 @@ export default function AdminPersonalEntriesPage() {
             </button>
           </div>
         </div>
-        <div className="overflow-hidden rounded-input border border-warm-200 dark:border-primary-800">
+        <div className="overflow-hidden rounded-input border border-gray-200 dark:border-gray-800">
           {filteredEntries.length === 0 ? (
-            <div className="text-center py-10 text-warm-500 dark:text-warm-400">
+            <div className="text-center py-10 text-gray-500 dark:text-gray-400">
               {filter === 'all' ? '申込者はまだいません。' : '該当する申込者はいません。'}
             </div>
           ) : (
-            <div className="divide-y divide-warm-200 dark:divide-primary-800">
+            <div className="divide-y divide-gray-200 dark:divide-gray-800">
               {filteredEntries.map((entry) => (
                 <div key={entry.id}>
                   <div
                     onClick={() =>
                       setExpandedEntryId(expandedEntryId === entry.id ? null : entry.id)
                     }
-                    className="p-4 cursor-pointer hover:bg-warm-50 dark:hover:bg-primary-800/50 flex flex-col sm:flex-row justify-between sm:items-center gap-3 transition-colors"
+                    className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 flex flex-col sm:flex-row justify-between sm:items-center gap-3 transition-colors"
                   >
-                    <span className="font-medium text-primary-800 dark:text-warm-100">
+                    <span className="font-medium text-gray-800 dark:text-gray-100">
                       {entry.nickname}
                     </span>
                     <div className="flex items-center gap-4 self-end sm:self-center">
@@ -262,13 +262,13 @@ export default function AdminPersonalEntriesPage() {
                             e.stopPropagation();
                             handleOpenModal(entry);
                           }}
-                          className="px-3 py-1 text-sm bg-warm-500 text-white rounded-btn hover:bg-warm-600"
+                          className="px-3 py-1 text-sm bg-gray-500 text-white rounded-btn hover:bg-gray-600"
                         >
                           編集
                         </button>
                       )}
                       <svg
-                        className={`w-5 h-5 text-warm-500 transform transition-transform ${expandedEntryId === entry.id ? 'rotate-180' : ''}`}
+                        className={`w-5 h-5 text-gray-500 transform transition-transform ${expandedEntryId === entry.id ? 'rotate-180' : ''}`}
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -283,39 +283,39 @@ export default function AdminPersonalEntriesPage() {
                     </div>
                   </div>
                   {expandedEntryId === entry.id && (
-                    <div className="bg-warm-50 dark:bg-primary-950 p-4">
+                    <div className="bg-gray-50 dark:bg-gray-950 p-4">
                       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
-                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
+                        <div className="bg-white dark:bg-gray-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
                             希望科目
                           </dt>
-                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
+                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
                             {formatSubject(entry.subject)}
                           </dd>
                         </div>
-                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
-                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
+                        <div className="bg-white dark:bg-gray-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
                             希望日時
                           </dt>
-                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
+                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
                             {new Date(entry.preferred_date).toLocaleString('ja-JP')}
                           </dd>
                         </div>
                         {entry.notes && (
-                          <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
-                            <dt className="font-semibold text-warm-600 dark:text-warm-300">
+                          <div className="bg-white dark:bg-gray-900 p-3 rounded-input shadow-sm">
+                            <dt className="font-semibold text-gray-600 dark:text-gray-300">
                               備考
                             </dt>
-                            <dd className="text-primary-800 dark:text-warm-100 mt-1">
+                            <dd className="text-gray-800 dark:text-gray-100 mt-1">
                               {entry.notes}
                             </dd>
                           </div>
                         )}
-                        <div className="bg-white dark:bg-primary-900 p-3 rounded-input shadow-sm">
-                          <dt className="font-semibold text-warm-600 dark:text-warm-300">
+                        <div className="bg-white dark:bg-gray-900 p-3 rounded-input shadow-sm">
+                          <dt className="font-semibold text-gray-600 dark:text-gray-300">
                             申込日時
                           </dt>
-                          <dd className="text-primary-800 dark:text-warm-100 mt-1">
+                          <dd className="text-gray-800 dark:text-gray-100 mt-1">
                             {new Date(entry.created_at).toLocaleString('ja-JP')}
                           </dd>
                         </div>
@@ -338,10 +338,10 @@ export default function AdminPersonalEntriesPage() {
             className="modal-content w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-4 text-primary-800 dark:text-warm-100">
+            <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
               ステータスの変更
             </h3>
-            <p className="text-sm text-warm-600 dark:text-warm-400 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               生徒: {editingEntry.nickname}
             </p>
 

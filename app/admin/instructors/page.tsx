@@ -72,7 +72,7 @@ function InviteModal({
         className="modal-content w-full max-w-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">講師を新規招待</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">講師を新規招待</h3>
         <form onSubmit={handleInvite} className="space-y-4">
           <div>
             <label
@@ -206,25 +206,25 @@ function InvitedInstructorsModal({ onClose }: { onClose: () => void }) {
         className="modal-content w-full max-w-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">招待中の講師</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">招待中の講師</h3>
         {loading ? (
-          <p className="text-center text-warm-500 dark:text-warm-400">読み込み中...</p>
+          <p className="text-center text-gray-500 dark:text-gray-400">読み込み中...</p>
         ) : invites.length === 0 ? (
-          <p className="text-center text-warm-500 dark:text-warm-400">
+          <p className="text-center text-gray-500 dark:text-gray-400">
             現在、招待中の講師はいません。
           </p>
         ) : (
-          <ul className="divide-y divide-warm-200 dark:divide-primary-800 max-h-80 overflow-y-auto">
+          <ul className="divide-y divide-gray-200 dark:divide-gray-800 max-h-80 overflow-y-auto">
             {invites.map((invite) => (
               <li key={invite.id} className="py-3 flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-primary-800 dark:text-warm-100">
+                  <p className="font-medium text-gray-800 dark:text-gray-100">
                     {invite.name}
-                    <span className="ml-2 text-[10px] bg-warm-50 dark:bg-primary-800 px-1.5 py-0.5 rounded-badge text-warm-500 dark:text-warm-400 uppercase font-bold">
+                    <span className="ml-2 text-[10px] bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded-badge text-gray-500 dark:text-gray-400 uppercase font-bold">
                       {invite.role}
                     </span>
                   </p>
-                  <p className="text-sm text-warm-500 dark:text-warm-400">{invite.email}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{invite.email}</p>
                 </div>
                 <button
                   onClick={() => handleDeleteInvite(invite.id)}
@@ -237,7 +237,7 @@ function InvitedInstructorsModal({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
         )}
-        <div className="flex justify-end pt-4 mt-4 border-t dark:border-primary-800">
+        <div className="flex justify-end pt-4 mt-4 border-t dark:border-gray-800">
           <button
             type="button"
             onClick={onClose}
@@ -315,7 +315,7 @@ export default function AdminInstructorListPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 mx-auto mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">読み込み中...</p>
       </div>
     );
   }
@@ -338,8 +338,8 @@ export default function AdminInstructorListPage() {
   return (
     <>
       <div className="card w-full max-w-4xl mx-auto mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-          <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">講師一覧</h1>
+        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+          <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider">講師一覧</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsInvitedModalOpen(true)}
@@ -357,16 +357,16 @@ export default function AdminInstructorListPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-            <thead className="bg-warm-50 dark:bg-primary-800">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   名前
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   メールアドレス
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                   権限
                 </th>
                 <th className="relative px-6 py-3">
@@ -374,22 +374,22 @@ export default function AdminInstructorListPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
               {instructors.map((instructor) => (
                 <tr key={instructor.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-800 dark:text-warm-100">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-100">
                     {instructor.display_name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {instructor.email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400 uppercase">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 uppercase">
                     {instructor.role}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <Link
                       href={`/admin/instructor/${instructor.id}`}
-                      className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-200"
+                      className="text-primary-600 hover:text-primary-700 dark:text-gray-400 dark:hover:text-gray-200"
                     >
                       詳細/編集
                     </Link>

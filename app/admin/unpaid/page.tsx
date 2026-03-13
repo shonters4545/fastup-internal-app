@@ -70,7 +70,7 @@ function UpdateModal({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-xl font-bold mb-4 text-primary-800 dark:text-warm-100">契約更新: {student.displayName}</h3>
+        <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">契約更新: {student.displayName}</h3>
         <div className="space-y-4">
           <div>
             <label htmlFor="end-date" className="label">新しい契約終了日</label>
@@ -202,7 +202,7 @@ export default function AdminUnpaidPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-500 dark:text-warm-400 mt-4">読み込み中...</p>
+        <p className="text-gray-500 dark:text-gray-400 mt-4">読み込み中...</p>
       </div>
     );
   }
@@ -215,9 +215,9 @@ export default function AdminUnpaidPage() {
   return (
     <>
       <div className="w-full max-w-6xl card p-8 mt-8">
-        <div className="border-b dark:border-primary-800 pb-4 mb-6">
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">未払い管理</h1>
-          <p className="mt-2 text-sm text-warm-600 dark:text-warm-400">
+        <div className="border-b dark:border-gray-800 pb-4 mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">未払い管理</h1>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             契約期間が終了した、または10日以内に終了する生徒の一覧です（解約予約済みの生徒は除外）。
           </p>
         </div>
@@ -225,42 +225,42 @@ export default function AdminUnpaidPage() {
         {error && <div className="text-center text-danger-500 py-4 mb-4">{error}</div>}
 
         {students.length === 0 ? (
-          <div className="text-center py-20 bg-warm-50 dark:bg-primary-950/30 rounded-card border-2 border-dashed border-warm-200 dark:border-primary-800">
+          <div className="text-center py-20 bg-gray-50 dark:bg-gray-950/30 rounded-card border-2 border-dashed border-gray-200 dark:border-gray-800">
             <div className="text-4xl mb-4">&#10003;</div>
-            <p className="text-warm-600 dark:text-warm-400 text-lg font-semibold">該当する生徒はいません</p>
-            <p className="text-warm-400 dark:text-warm-500 text-sm mt-2">全ての契約が有効期間内です。</p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg font-semibold">該当する生徒はいません</p>
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">全ての契約が有効期間内です。</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-              <thead className="bg-warm-50 dark:bg-primary-800">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">生徒名</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">メール</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">支払方法</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">契約終了日</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">操作</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">生徒名</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">メール</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">支払方法</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">契約終了日</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+              <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
                 {students.map((student) => {
                   const isExpired = student.daysUntilEnd < 0;
                   return (
                     <tr
                       key={student.contractId}
-                      className={`hover:bg-warm-50 dark:hover:bg-primary-800/50 transition-colors ${isExpired ? 'bg-danger-50 dark:bg-danger-900/20' : ''}`}
+                      className={`hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors ${isExpired ? 'bg-danger-50 dark:bg-danger-900/20' : ''}`}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-800 dark:text-warm-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-100">
                         <div className="flex items-center gap-2">
                           {isExpired && <WarningIcon />}
-                          <Link href={`/admin/student/${student.userId}`} className="text-primary-600 dark:text-primary-400 hover:underline">
+                          <Link href={`/admin/student/${student.userId}`} className="text-primary-600 dark:text-gray-400 hover:underline">
                             {student.displayName}
                           </Link>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">{student.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">{student.paymentMethod || '未設定'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{student.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{student.paymentMethod || '未設定'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {new Date(student.periodEnd).toLocaleDateString('ja-JP')}
                         {isExpired ? (
                           <span className="ml-2 text-xs font-semibold text-danger-600">{Math.abs(student.daysUntilEnd)}日超過</span>
@@ -286,7 +286,7 @@ export default function AdminUnpaidPage() {
                           </button>
                           <Link
                             href={`/admin/student/${student.userId}/contract`}
-                            className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-200"
+                            className="text-primary-600 hover:text-primary-900 dark:text-gray-400 dark:hover:text-gray-200"
                           >
                             詳細
                           </Link>

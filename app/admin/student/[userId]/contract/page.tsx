@@ -140,16 +140,16 @@ export default function AdminStudentContractPage() {
   return (
     <div className="w-full max-w-4xl mt-8">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
         <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
         <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-primary-800 dark:text-warm-100 font-medium">契約情報</span>
+        <span className="text-gray-800 dark:text-gray-100 font-medium">契約情報</span>
       </nav>
 
       <div className="card">
-        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6">契約情報</h1>
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider mb-6">契約情報</h1>
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -199,8 +199,8 @@ export default function AdminStudentContractPage() {
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={4} className="input" placeholder="契約に関するメモ..." />
           </div>
 
-          <div className="flex justify-end pt-4 border-t dark:border-primary-800">
-            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-warm-400">
+          <div className="flex justify-end pt-4 border-t dark:border-gray-800">
+            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-gray-400">
               {saving ? '保存中...' : '保存する'}
             </button>
           </div>

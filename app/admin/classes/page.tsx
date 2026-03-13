@@ -227,15 +227,15 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-primary-800 dark:text-warm-100">アンケート管理</h3>
-          <div className="text-xs text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 rounded-badge font-bold">
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">アンケート管理</h3>
+          <div className="text-xs text-primary-600 dark:text-gray-400 bg-primary-50 dark:bg-gray-900/30 px-3 py-1 rounded-badge font-bold">
             セレクト形式で「満足度集計」にチェック → 満足度計算に使用
           </div>
         </div>
         {loading ? (
           <div className="text-center py-12">
             <div className="spinner mx-auto mb-4" />
-            <p className="text-warm-500 dark:text-warm-400">読み込み中...</p>
+            <p className="text-gray-500 dark:text-gray-400">読み込み中...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 flex-grow overflow-y-auto pr-2">
@@ -254,18 +254,18 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
 
             <div>
               <label className="label">質問項目</label>
-              <div className="mt-2 space-y-3 p-3 border border-warm-200 dark:border-primary-700 rounded-input bg-warm-50 dark:bg-primary-950/50">
+              <div className="mt-2 space-y-3 p-3 border border-gray-200 dark:border-gray-700 rounded-input bg-gray-50 dark:bg-gray-950/50">
                 {formFields.map((field) => (
                   <div
                     key={field.id}
-                    className={`grid grid-cols-12 gap-2 items-start p-3 rounded-input shadow-sm transition-all bg-white dark:bg-primary-900 ${
+                    className={`grid grid-cols-12 gap-2 items-start p-3 rounded-input shadow-sm transition-all bg-white dark:bg-gray-900 ${
                       field.isMasterScore
                         ? 'ring-2 ring-success-400 border-l-4 border-success-400'
                         : 'border-l-4 border-transparent'
                     }`}
                   >
                     <div className="col-span-12 sm:col-span-3">
-                      <label className="text-[10px] font-bold text-warm-400 block mb-1">質問文</label>
+                      <label className="text-[10px] font-bold text-gray-400 block mb-1">質問文</label>
                       <input
                         type="text"
                         placeholder="質問文"
@@ -276,7 +276,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                       />
                     </div>
                     <div className="col-span-12 sm:col-span-2">
-                      <label className="text-[10px] font-bold text-warm-400 block mb-1">回答形式</label>
+                      <label className="text-[10px] font-bold text-gray-400 block mb-1">回答形式</label>
                       <select
                         value={field.type}
                         onChange={(e) => handleFieldChange(field.id, 'type', e.target.value)}
@@ -293,9 +293,9 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                           checked={field.required}
                           onChange={(e) => handleFieldRequiredChange(field.id, e.target.checked)}
                           id={`required-${field.id}`}
-                          className="h-4 w-4 rounded border-warm-300 text-primary-600 focus:ring-primary-500"
+                          className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <label htmlFor={`required-${field.id}`} className="ml-2 text-xs text-warm-600 dark:text-warm-300">
+                        <label htmlFor={`required-${field.id}`} className="ml-2 text-xs text-gray-600 dark:text-gray-300">
                           必須
                         </label>
                       </div>
@@ -306,7 +306,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                             checked={field.isMasterScore || false}
                             onChange={(e) => handleFieldMasterScoreChange(field.id, e.target.checked)}
                             id={`master-${field.id}`}
-                            className="h-4 w-4 rounded border-warm-300 text-success-600 focus:ring-success-500"
+                            className="h-4 w-4 rounded border-gray-300 text-success-600 focus:ring-success-500"
                           />
                           <label
                             htmlFor={`master-${field.id}`}
@@ -320,7 +320,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                     <div className="col-span-12 sm:col-span-4">
                       {field.type === 'select' && (
                         <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-warm-400 block mb-1 flex justify-between">
+                          <label className="text-[10px] font-bold text-gray-400 block mb-1 flex justify-between">
                             <span>選択肢</span>
                             {field.isMasterScore && <span>配点 (0-10)</span>}
                           </label>
@@ -342,7 +342,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                                   onChange={(e) =>
                                     handleScoreChange(field.id, optionIndex, parseInt(e.target.value) || 0)
                                   }
-                                  className="w-16 p-2 border border-success-300 dark:border-success-700 rounded-input text-sm text-center font-bold bg-success-50 dark:bg-success-900/20 text-primary-800 dark:text-warm-100"
+                                  className="w-16 p-2 border border-success-300 dark:border-success-700 rounded-input text-sm text-center font-bold bg-success-50 dark:bg-success-900/20 text-gray-800 dark:text-gray-100"
                                 />
                               )}
                               <button
@@ -361,7 +361,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                           <button
                             type="button"
                             onClick={() => handleAddOption(field.id)}
-                            className="text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-semibold"
+                            className="text-xs text-primary-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-semibold"
                           >
                             + 選択肢を追加
                           </button>
@@ -386,7 +386,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={handleAddField}
-                  className="mt-2 text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-semibold"
+                  className="mt-2 text-sm text-primary-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 font-semibold"
                 >
                   + 項目を追加する
                 </button>
@@ -395,7 +395,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
 
             {error && <p className="text-sm text-danger-500">{error}</p>}
 
-            <div className="flex justify-end gap-2 pt-4 sticky bottom-0 bg-white dark:bg-primary-900">
+            <div className="flex justify-end gap-2 pt-4 sticky bottom-0 bg-white dark:bg-gray-900">
               <button
                 type="button"
                 onClick={onClose}
@@ -407,7 +407,7 @@ function SurveyManagementModal({ onClose }: { onClose: () => void }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-primary disabled:bg-warm-400"
+                className="btn-primary disabled:bg-gray-400"
               >
                 {isSubmitting ? '保存中...' : '保存する'}
               </button>
@@ -621,14 +621,14 @@ function CreateClassModal({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-primary-800 dark:text-warm-100">特訓を開講しました</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">特訓を開講しました</h3>
           </div>
 
           {roomPrompt.total > 0 ? (
             <>
               {/* ルーム情報 */}
-              <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl p-4 mb-4">
-                <div className="text-sm text-primary-700 dark:text-primary-300 space-y-1">
+              <div className="bg-primary-50 dark:bg-gray-900/20 border border-accent-300 dark:border-gray-800 rounded-xl p-4 mb-4">
+                <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                   <p>出席予定者: <span className="font-bold">{roomPrompt.total}名</span> (理系: {roomPrompt.scienceCount}名)</p>
                   <p>想定ルーム: 文系 <span className="font-bold">{roomPrompt.humanitiesRooms}</span> / 理系 <span className="font-bold">{roomPrompt.scienceRooms}</span> / Z(未提出用) 1</p>
                 </div>
@@ -636,7 +636,7 @@ function CreateClassModal({
 
               {/* 各ルームの講師選択 */}
               <div className="mb-4 space-y-2">
-                <h4 className="text-sm font-bold text-primary-700 dark:text-warm-300">各ルームの担当講師を選択してください</h4>
+                <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">各ルームの担当講師を選択してください</h4>
                 {(() => {
                   const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXY'.split('');
                   let labelIndex = 0;
@@ -648,9 +648,9 @@ function CreateClassModal({
                     roomRows.push({ index: roomRows.length, label: labels[labelIndex++], type: 'science', typeLabel: '理系' });
                   }
                   return roomRows.map(room => (
-                    <div key={room.index} className="flex items-center gap-3 bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn">
+                    <div key={room.index} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn">
                       <div className="flex items-center gap-2 min-w-[100px]">
-                        <span className="font-bold text-primary-800 dark:text-warm-100">教室{room.label}</span>
+                        <span className="font-bold text-gray-800 dark:text-gray-100">教室{room.label}</span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                           room.type === 'science' ? 'bg-info-100 text-info-700 dark:bg-info-900/40 dark:text-info-300' : 'bg-accent-100 text-accent-700 dark:bg-accent-900/40 dark:text-accent-300'
                         }`}>{room.typeLabel}</span>
@@ -675,12 +675,12 @@ function CreateClassModal({
                     </div>
                   ));
                 })()}
-                <div className="flex items-center gap-2 bg-warm-50 dark:bg-primary-800/50 p-3 rounded-btn opacity-50">
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-btn opacity-50">
                   <div className="flex items-center gap-2 min-w-[100px]">
-                    <span className="font-bold text-primary-800 dark:text-warm-100">教室Z</span>
+                    <span className="font-bold text-gray-800 dark:text-gray-100">教室Z</span>
                     <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-warning-100 text-warning-700 dark:bg-warning-900/40 dark:text-warning-300">未提出</span>
                   </div>
-                  <span className="text-sm text-warm-400">講師なし（自動）</span>
+                  <span className="text-sm text-gray-400">講師なし（自動）</span>
                 </div>
               </div>
 
@@ -688,7 +688,7 @@ function CreateClassModal({
                 <button
                   onClick={handleGenerateRooms}
                   disabled={generatingRooms}
-                  className="btn-primary w-full py-3 disabled:bg-warm-400"
+                  className="btn-primary w-full py-3 disabled:bg-gray-400"
                 >
                   {generatingRooms ? '生成中...' : 'ルームを作成して開講する'}
                 </button>
@@ -701,7 +701,7 @@ function CreateClassModal({
               </div>
               <button
                 onClick={handleSkipRooms}
-                className="w-full py-3 bg-warm-50 dark:bg-primary-800 text-warm-600 dark:text-warm-300 font-bold rounded-btn hover:bg-warm-200 dark:hover:bg-primary-700 transition-colors"
+                className="w-full py-3 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 font-bold rounded-btn hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
                 あとで作成する
               </button>
@@ -715,7 +715,7 @@ function CreateClassModal({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-xl font-bold mb-6 text-primary-800 dark:text-warm-100">新規特訓を開講</h3>
+        <h3 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">新規特訓を開講</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="title" className="label">タイトル</label>
@@ -752,7 +752,7 @@ function CreateClassModal({
           {error && <p className="text-sm text-danger-500 text-center">{error}</p>}
           <div className="flex justify-end gap-2 pt-4">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="btn-secondary">キャンセル</button>
-            <button type="submit" disabled={isSubmitting} className="btn-primary disabled:bg-warm-400">
+            <button type="submit" disabled={isSubmitting} className="btn-primary disabled:bg-gray-400">
               {isSubmitting ? '開講中...' : '開講する'}
             </button>
           </div>
@@ -824,7 +824,7 @@ export default function AdminClassesPage() {
     return (
       <div className="text-center py-12">
         <div className="spinner mx-auto mb-4"></div>
-        <p className="text-warm-500 dark:text-warm-400">読み込み中...</p>
+        <p className="text-gray-500 dark:text-gray-400">読み込み中...</p>
       </div>
     );
   }
@@ -839,8 +839,8 @@ export default function AdminClassesPage() {
   return (
     <>
       <div className="w-full max-w-4xl card animate-fade-in mt-8">
-        <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">特訓管理</h1>
+        <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">特訓管理</h1>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsSurveyModalOpen(true)}
@@ -857,7 +857,7 @@ export default function AdminClassesPage() {
         {error ? (
           <div className="text-center text-danger-500 py-12">{error}</div>
         ) : classes.length === 0 ? (
-          <div className="text-center text-warm-500 dark:text-warm-400 py-12">登録されている特訓はありません。</div>
+          <div className="text-center text-gray-500 dark:text-gray-400 py-12">登録されている特訓はありません。</div>
         ) : (
           <div className="space-y-4">
             {classes.map((cls) => {
@@ -870,49 +870,49 @@ export default function AdminClassesPage() {
               if (endTime <= now) {
                 isFinished = true;
                 statusText = '終了済み';
-                statusStyle = 'bg-warm-200 text-primary-800 dark:bg-primary-700 dark:text-warm-300';
+                statusStyle = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
               } else if (startTime <= now && endTime > now) {
                 statusText = '実施中';
                 statusStyle = 'bg-success-200 text-success-800 dark:bg-success-700 dark:text-success-200 animate-pulse';
               } else {
                 statusText = '実施予定';
-                statusStyle = 'bg-primary-200 text-primary-800 dark:bg-primary-700 dark:text-primary-200';
+                statusStyle = 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
               }
 
               const requestedCount = attendanceCounts.get(cls.id) || 0;
               const respondedCount = responseCounts.get(cls.id) || 0;
 
               return (
-                <div key={cls.id} className={`bg-warm-50 dark:bg-primary-800/50 p-4 rounded-btn flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isFinished ? 'opacity-60' : ''}`}>
+                <div key={cls.id} className={`bg-gray-50 dark:bg-gray-800/50 p-4 rounded-btn flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 ${isFinished ? 'opacity-60' : ''}`}>
                   <div className="flex-grow w-full">
                     <div className="flex items-center gap-3 mb-1">
-                      <h2 className="text-lg font-bold text-primary-800 dark:text-warm-100">{cls.title}</h2>
+                      <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">{cls.title}</h2>
                       <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-badge ${statusStyle}`}>{statusText}</span>
                     </div>
-                    <p className="text-sm text-warm-600 dark:text-warm-400 mt-1">講師: {cls.instructor_name || '未設定'}</p>
-                    <p className="text-sm text-warm-500 dark:text-warm-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">講師: {cls.instructor_name || '未設定'}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {startTime.toLocaleString('ja-JP', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - {endTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                   <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 self-end sm:self-center">
                     {!isFinished && cls.passcode && (
                       <div className="text-left sm:text-right">
-                        <p className="text-sm text-warm-600 dark:text-warm-300">パスコード</p>
-                        <p className="text-2xl font-mono font-bold text-primary-600 dark:text-primary-400 tracking-widest">{cls.passcode}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">パスコード</p>
+                        <p className="text-2xl font-mono font-bold text-primary-600 dark:text-gray-400 tracking-widest">{cls.passcode}</p>
                       </div>
                     )}
                     <div className="flex items-center gap-2">
                       {isFinished && (
                         <div className="flex items-center">
                           {requestedCount > 0 && (
-                            <span className="text-sm text-warm-500 dark:text-warm-400">({respondedCount}/{requestedCount})</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">({respondedCount}/{requestedCount})</span>
                           )}
-                          <Link href={`/admin/classes/${cls.id}/surveys`} className="ml-2 px-4 py-2 text-sm font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/40 dark:text-primary-200 rounded-btn hover:bg-primary-200 dark:hover:bg-primary-900/60 transition-colors">
+                          <Link href={`/admin/classes/${cls.id}/surveys`} className="ml-2 px-4 py-2 text-sm font-medium bg-primary-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-200 rounded-btn hover:bg-primary-200 dark:hover:bg-gray-800/60 transition-colors">
                             アンケート結果
                           </Link>
                         </div>
                       )}
-                      <Link href={`/admin/classes/${cls.id}/attendance`} className="px-4 py-2 text-sm font-medium bg-white dark:bg-primary-700 border border-warm-300 dark:border-primary-600 rounded-btn shadow-sm hover:bg-warm-50 dark:hover:bg-primary-600 text-primary-800 dark:text-warm-100">
+                      <Link href={`/admin/classes/${cls.id}/attendance`} className="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-btn shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100">
                         詳細を見る
                       </Link>
                       {currentUser?.role === 'super' && (

@@ -92,44 +92,44 @@ export default function AdminGeneralSurveyResultsPage() {
 
   return (
     <div className="w-full max-w-7xl card p-8 animate-fade-in mt-8 mx-auto">
-      <div className="flex justify-between items-start mb-6 border-b dark:border-primary-800 pb-4">
+      <div className="flex justify-between items-start mb-6 border-b dark:border-gray-800 pb-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">アンケート結果</h1>
-          {surveyModel && <p className="text-warm-500 dark:text-warm-400 mt-1">{surveyModel.title}</p>}
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">アンケート結果</h1>
+          {surveyModel && <p className="text-gray-500 dark:text-gray-400 mt-1">{surveyModel.title}</p>}
         </div>
-        <Link href="/admin/surveys" className="text-sm text-primary-600 dark:text-primary-400 hover:underline flex-shrink-0 mt-1">&larr; アンケート管理に戻る</Link>
+        <Link href="/admin/surveys" className="text-sm text-primary-600 dark:text-gray-400 hover:underline flex-shrink-0 mt-1">&larr; アンケート管理に戻る</Link>
       </div>
       {responses.length > 0 && (
         <div className="text-right mb-4">
-          <span className="font-semibold text-primary-700 dark:text-warm-300">総回答数: {responses.length}件</span>
+          <span className="font-semibold text-gray-700 dark:text-gray-300">総回答数: {responses.length}件</span>
         </div>
       )}
 
       {!surveyModel || responses.length === 0 ? (
-        <div className="text-center p-8 bg-warm-50 dark:bg-primary-800/50 rounded-card">
-          <p className="text-warm-600 dark:text-warm-400">このアンケートに対する回答はまだありません。</p>
+        <div className="text-center p-8 bg-gray-50 dark:bg-gray-800/50 rounded-card">
+          <p className="text-gray-600 dark:text-gray-400">このアンケートに対する回答はまだありません。</p>
         </div>
       ) : (
-        <div className="overflow-x-auto border border-warm-200 dark:border-primary-800 rounded-card">
-          <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-            <thead className="bg-warm-50 dark:bg-primary-800">
+        <div className="overflow-x-auto border border-gray-200 dark:border-gray-800 rounded-card">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="sticky left-0 z-10 bg-warm-50 dark:bg-primary-800 px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">回答者</th>
+                <th className="sticky left-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">回答者</th>
                 {questionLabels.map((label) => (
-                  <th key={label} className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider min-w-[250px]">{label}</th>
+                  <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[250px]">{label}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
               {responses.map((response, index) => (
-                <tr key={index} className="hover:bg-warm-50 dark:hover:bg-primary-950/50">
-                  <td className="sticky left-0 z-10 bg-white dark:bg-primary-900 px-6 py-4 whitespace-nowrap">
-                    <Link href={`/admin/student/${response.userId}`} className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline">{response.nickname}</Link>
+                <tr key={index} className="hover:bg-gray-50 dark:hover:bg-primary-950/50">
+                  <td className="sticky left-0 z-10 bg-white dark:bg-gray-900 px-6 py-4 whitespace-nowrap">
+                    <Link href={`/admin/student/${response.userId}`} className="text-sm font-medium text-primary-600 dark:text-gray-400 hover:underline">{response.nickname}</Link>
                   </td>
                   {questionLabels.map((label) => {
                     const answer = response.responses[label] || '';
                     return (
-                      <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-warm-600 dark:text-warm-300">
+                      <td key={`${response.userId}-${label}`} className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                         <div className="max-w-sm whitespace-pre-wrap">{typeof answer === 'string' ? answer : (answer as string[]).join(', ')}</div>
                       </td>
                     );

@@ -313,38 +313,38 @@ export default function CurriculumsPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-6 text-primary-700 dark:text-warm-100 tracking-wider">カリキュラム進捗</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-700 dark:text-gray-100 tracking-wider">カリキュラム進捗</h1>
 
       {/* Subject Progress Bar */}
       {activeSubjectId && (
-        <div className="mb-6 bg-white dark:bg-primary-900 p-4 rounded-btn shadow-sm border border-warm-200 dark:border-primary-800">
+        <div className="mb-6 bg-white dark:bg-gray-900 p-4 rounded-btn shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex justify-between items-end mb-2">
             <div>
-              <span className="text-sm font-bold text-primary-700 dark:text-warm-300">科目全体の進捗</span>
-              <span className="text-xs text-warm-500 dark:text-warm-400 ml-2">
+              <span className="text-sm font-bold text-gray-700 dark:text-gray-300">科目全体の進捗</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
                 ({subjectProgress.completed} / {subjectProgress.total} タスク完了)
               </span>
             </div>
-            <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+            <span className="text-2xl font-bold text-primary-600 dark:text-gray-400">
               {subjectProgress.percentage}%
             </span>
           </div>
-          <div className="w-full h-3 bg-warm-200 dark:bg-primary-800 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
             <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${subjectProgress.percentage}%` }} />
           </div>
         </div>
       )}
 
       {/* Subject Tabs */}
-      <div className="flex overflow-x-auto border-b border-warm-200 dark:border-primary-800 mb-6">
+      <div className="flex overflow-x-auto border-b border-gray-200 dark:border-gray-800 mb-6">
         {subjects.map(subject => (
           <button
             key={subject.id}
             onClick={() => setActiveSubjectId(subject.id)}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
               activeSubjectId === subject.id
-                ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                : 'border-transparent text-warm-500 hover:text-primary-700 dark:text-warm-400 dark:hover:text-warm-300'
+                ? 'border-primary-500 text-primary-600 dark:text-gray-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           >
             {subject.name}
@@ -353,15 +353,15 @@ export default function CurriculumsPage() {
       </div>
 
       {filteredDivisions.length === 0 ? (
-        <div className="text-center text-warm-500 py-8">この科目のカリキュラムはありません</div>
+        <div className="text-center text-gray-500 py-8">この科目のカリキュラムはありません</div>
       ) : (
         filteredDivisions.map(division => {
           const divisionBooks = processedData.booksByDivision.get(division.id) || [];
 
           return (
             <div key={division.id} className="mb-8">
-              <div className="flex justify-between items-center mb-4 border-b pb-2 border-warm-300 dark:border-primary-700">
-                <h2 className="text-xl font-bold text-primary-800 dark:text-warm-200">{division.name}</h2>
+              <div className="flex justify-between items-center mb-4 border-b pb-2 border-gray-300 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">{division.name}</h2>
                 {isAdmin && (
                   <button
                     onClick={() => { setTargetDivisionId(division.id); setIsAddCustomBookModalOpen(true); }}
@@ -373,7 +373,7 @@ export default function CurriculumsPage() {
               </div>
 
               {divisionBooks.length === 0 ? (
-                <div className="text-warm-500 text-sm mb-4">参考書がありません</div>
+                <div className="text-gray-500 text-sm mb-4">参考書がありません</div>
               ) : (
                 <div className="space-y-4">
                   {divisionBooks.map(book => {
@@ -384,15 +384,15 @@ export default function CurriculumsPage() {
                     const maxLaps = book.max_laps || 1;
 
                     return (
-                      <div key={book.id} className="bg-white dark:bg-primary-900 rounded-btn shadow-md overflow-hidden border border-warm-200 dark:border-primary-800">
+                      <div key={book.id} className="bg-white dark:bg-gray-900 rounded-btn shadow-md overflow-hidden border border-gray-200 dark:border-gray-800">
                         {/* Accordion Header */}
-                        <div className="p-4 cursor-pointer hover:bg-warm-50 dark:hover:bg-primary-800 transition-colors" onClick={() => toggleBookExpansion(book.id)}>
+                        <div className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => toggleBookExpansion(book.id)}>
                           <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-3">
                               {book.image_url ? (
-                                <img src={book.image_url} alt={book.name} className="w-12 h-16 object-cover rounded-btn shadow-sm bg-warm-50" referrerPolicy="no-referrer" />
+                                <img src={book.image_url} alt={book.name} className="w-12 h-16 object-cover rounded-btn shadow-sm bg-gray-50" referrerPolicy="no-referrer" />
                               ) : (
-                                <div className="w-12 h-16 bg-warm-200 rounded-btn flex items-center justify-center text-warm-400 text-xs">No Img</div>
+                                <div className="w-12 h-16 bg-gray-200 rounded-btn flex items-center justify-center text-gray-400 text-xs">No Img</div>
                               )}
                               <div>
                                 <div className="flex items-center gap-2 mb-1">
@@ -400,11 +400,11 @@ export default function CurriculumsPage() {
                                     <span className="badge-warning text-xs px-2 py-0.5 font-bold">カスタム</span>
                                   )}
                                   {book.drive_url ? (
-                                    <a href={book.drive_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="font-bold text-lg text-primary-600 dark:text-primary-400 hover:underline">
+                                    <a href={book.drive_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="font-bold text-lg text-primary-600 dark:text-gray-400 hover:underline">
                                       {book.name}
                                     </a>
                                   ) : (
-                                    <h3 className="font-bold text-lg text-primary-800 dark:text-warm-100">{book.name}</h3>
+                                    <h3 className="font-bold text-lg text-gray-800 dark:text-gray-100">{book.name}</h3>
                                   )}
                                 </div>
                               </div>
@@ -421,7 +421,7 @@ export default function CurriculumsPage() {
                                   </svg>
                                 </button>
                               )}
-                              <svg className={`h-5 w-5 text-warm-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <svg className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                               </svg>
                             </div>
@@ -429,33 +429,33 @@ export default function CurriculumsPage() {
 
                           {/* Progress Bar */}
                           <div className="flex items-center gap-3 mt-2">
-                            <div className="flex-1 h-2 bg-warm-200 dark:bg-primary-800 rounded-full overflow-hidden">
+                            <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                               <div className="h-full bg-primary-500 transition-all duration-500" style={{ width: `${progress}%` }} />
                             </div>
-                            <span className="text-sm font-medium text-warm-600 dark:text-warm-400 w-10 text-right">{progress}%</span>
+                            <span className="text-sm font-medium text-gray-600 dark:text-gray-400 w-10 text-right">{progress}%</span>
                           </div>
                           {averageScore !== null && (
-                            <div className="mt-1 text-right text-xs text-warm-500 dark:text-warm-400">
-                              平均点: <span className="font-bold text-primary-800 dark:text-warm-200">{averageScore}点</span>
+                            <div className="mt-1 text-right text-xs text-gray-500 dark:text-gray-400">
+                              平均点: <span className="font-bold text-gray-800 dark:text-gray-200">{averageScore}点</span>
                             </div>
                           )}
                         </div>
 
                         {/* Accordion Content */}
                         {isExpanded && (
-                          <div className="border-t border-warm-200 dark:border-primary-800 bg-warm-50 dark:bg-primary-950/50">
+                          <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50">
                             {book.remarks && (
-                              <div className="p-4 bg-warning-50 dark:bg-warning-900/20 border-b border-warm-200 dark:border-primary-800">
-                                <h4 className="text-xs font-bold text-warm-500 dark:text-warm-400 mb-1">備考・指示</h4>
-                                <p className="text-sm text-primary-800 dark:text-warm-200 whitespace-pre-wrap">{book.remarks}</p>
+                              <div className="p-4 bg-warning-50 dark:bg-warning-900/20 border-b border-gray-200 dark:border-gray-800">
+                                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">備考・指示</h4>
+                                <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{book.remarks}</p>
                               </div>
                             )}
                             {bookTasks.length === 0 ? (
-                              <div className="p-4 text-center text-warm-500 text-sm">タスクが登録されていません</div>
+                              <div className="p-4 text-center text-gray-500 text-sm">タスクが登録されていません</div>
                             ) : (
-                              <div className="divide-y divide-warm-200 dark:divide-primary-800">
+                              <div className="divide-y divide-gray-200 dark:divide-gray-800">
                                 {/* Header Row */}
-                                <div className="flex items-center p-3 bg-warm-50 dark:bg-primary-900 text-xs font-semibold text-warm-500 dark:text-warm-400">
+                                <div className="flex items-center p-3 bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-gray-500 dark:text-gray-400">
                                   <div className="flex-1">タスク名</div>
                                   <div className="flex gap-2 mr-2">
                                     {Array.from({ length: maxLaps }).map((_, i) => (
@@ -466,8 +466,8 @@ export default function CurriculumsPage() {
 
                                 {/* Task Rows */}
                                 {bookTasks.map(task => (
-                                  <div key={task.id} className="flex items-center p-3 hover:bg-white dark:hover:bg-primary-900 transition-colors">
-                                    <div className="flex-1 text-sm font-medium text-primary-800 dark:text-warm-200 pr-4">{task.name}</div>
+                                  <div key={task.id} className="flex items-center p-3 hover:bg-white dark:hover:bg-gray-800 transition-colors">
+                                    <div className="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200 pr-4">{task.name}</div>
                                     <div className="flex gap-2 mr-2">
                                       {Array.from({ length: maxLaps }).map((_, i) => {
                                         const lap = i + 1;
@@ -486,8 +486,8 @@ export default function CurriculumsPage() {
                                                 isChecked
                                                   ? 'bg-success-500 border-success-500 text-white shadow-sm'
                                                   : isLocked
-                                                    ? 'bg-warm-50 dark:bg-primary-900 border-warm-200 dark:border-primary-800 cursor-not-allowed opacity-50'
-                                                    : 'bg-white dark:bg-primary-800 border-warm-300 dark:border-primary-700 hover:border-primary-400'
+                                                    ? 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 cursor-not-allowed opacity-50'
+                                                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 hover:border-primary-400'
                                               }`}
                                             >
                                               {isChecked && (
@@ -497,7 +497,7 @@ export default function CurriculumsPage() {
                                               )}
                                             </button>
                                             {isChecked && score !== undefined && score !== null && (
-                                              <span className="text-[10px] font-bold text-warm-600 dark:text-warm-400">{score}点</span>
+                                              <span className="text-[10px] font-bold text-gray-600 dark:text-gray-400">{score}点</span>
                                             )}
                                           </div>
                                         );

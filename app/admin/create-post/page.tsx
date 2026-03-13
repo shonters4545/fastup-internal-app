@@ -88,14 +88,14 @@ export default function CreatePostPage() {
 
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
-      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
         <Link href="/admin/posts" className="hover:text-primary-600 dark:hover:text-primary-400">記事管理</Link>
         <span>/</span>
-        <span className="text-primary-800 dark:text-warm-100 font-medium">新規作成</span>
+        <span className="text-gray-800 dark:text-gray-100 font-medium">新規作成</span>
       </nav>
 
       <div className="card p-8">
-        <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-6">記事作成</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">記事作成</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -143,7 +143,7 @@ export default function CreatePostPage() {
               onChange={e => { setImageFile(e.target.files?.[0] || null); if (e.target.files?.[0]) setImageUrl(''); }}
               className="input text-sm"
             />
-            <p className="text-xs text-warm-500 dark:text-warm-400 mt-1">または画像URLを直接入力:</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">または画像URLを直接入力:</p>
             <input
               type="url"
               value={imageUrl}
@@ -171,8 +171,8 @@ export default function CreatePostPage() {
             />
           </div>
 
-          <div className="flex justify-between items-center pt-4 border-t dark:border-primary-800">
-            <Link href="/admin/posts" className="text-warm-500 hover:text-primary-700 dark:text-warm-400 dark:hover:text-warm-200">
+          <div className="flex justify-between items-center pt-4 border-t dark:border-gray-800">
+            <Link href="/admin/posts" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-gray-200">
               キャンセル
             </Link>
             <button

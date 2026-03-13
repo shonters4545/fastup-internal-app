@@ -127,7 +127,7 @@ export default function InstructorDetailPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 mx-auto mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">読み込み中...</p>
       </div>
     );
   }
@@ -153,7 +153,7 @@ export default function InstructorDetailPage() {
       <div className="flex justify-between items-center">
         <Link
           href="/admin/instructors"
-          className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-sm text-primary-600 dark:text-gray-400 hover:underline"
         >
           &larr; 講師一覧に戻る
         </Link>
@@ -170,8 +170,8 @@ export default function InstructorDetailPage() {
                 className="w-20 h-20 rounded-full object-cover"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+              <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-gray-900/30 flex items-center justify-center">
+                <span className="text-2xl font-bold text-primary-600 dark:text-gray-400">
                   {instructor.display_name.charAt(0)}
                 </span>
               </div>
@@ -227,17 +227,17 @@ export default function InstructorDetailPage() {
             ) : (
               <>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">
+                  <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider">
                     {instructor.display_name}
                   </h1>
                   <span className="badge-primary">
                     {instructor.role}
                   </span>
                 </div>
-                <p className="text-sm text-warm-500 dark:text-warm-400 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   {instructor.email}
                 </p>
-                <p className="text-xs text-warm-400 dark:text-warm-500 mt-1">
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                   登録日: {new Date(instructor.created_at).toLocaleDateString('ja-JP')}
                 </p>
                 {currentUser?.role === 'super' && (
@@ -257,35 +257,35 @@ export default function InstructorDetailPage() {
       {/* Activity Stats */}
       {stats && (
         <div className="card">
-          <h2 className="text-xl font-bold text-primary-700 dark:text-warm-100 mb-4 border-b dark:border-primary-800 pb-3">
+          <h2 className="text-xl font-bold text-gray-700 dark:text-gray-100 mb-4 border-b dark:border-gray-800 pb-3">
             活動履歴
           </h2>
           <div className="mb-4">
-            <span className="text-sm text-warm-600 dark:text-warm-400">
-              担当授業数: <strong className="text-primary-800 dark:text-warm-100">{stats.total_classes}回</strong>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              担当授業数: <strong className="text-gray-800 dark:text-gray-100">{stats.total_classes}回</strong>
             </span>
           </div>
 
           {stats.recent_classes.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-                <thead className="bg-warm-50 dark:bg-primary-800">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                       授業名
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                       日時
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-warm-200 dark:divide-primary-800">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {stats.recent_classes.map((cls) => (
                     <tr key={cls.id}>
-                      <td className="px-4 py-3 text-sm text-primary-800 dark:text-warm-100">
+                      <td className="px-4 py-3 text-sm text-gray-800 dark:text-gray-100">
                         {cls.title}
                       </td>
-                      <td className="px-4 py-3 text-sm text-warm-500 dark:text-warm-400">
+                      <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
                         {new Date(cls.start_time).toLocaleString('ja-JP')}
                       </td>
                     </tr>
@@ -294,7 +294,7 @@ export default function InstructorDetailPage() {
               </table>
             </div>
           ) : (
-            <p className="text-warm-500 dark:text-warm-400 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               まだ活動履歴がありません。
             </p>
           )}

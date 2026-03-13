@@ -126,50 +126,50 @@ export default function AdminSpecialEntriesPage() {
 
   return (
     <div className="w-full max-w-5xl card p-8 mx-auto mt-8">
-      <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-        <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">
+      <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
           {specialTitle} - 申込者一覧
         </h1>
         <Link
           href="/admin/specials"
-          className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-sm text-primary-600 dark:text-gray-400 hover:underline"
         >
           &larr; 講座一覧に戻る
         </Link>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-          <thead className="bg-warm-50 dark:bg-primary-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 生徒名
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 申込日時
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                 ステータス
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
             {entries.length === 0 ? (
               <tr>
                 <td
                   colSpan={3}
-                  className="text-center py-10 text-warm-500 dark:text-warm-400"
+                  className="text-center py-10 text-gray-500 dark:text-gray-400"
                 >
                   申込者はいません。
                 </td>
               </tr>
             ) : (
               entries.map((entry) => (
-                <tr key={entry.id} className="hover:bg-warm-50 dark:hover:bg-primary-800/50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary-800 dark:text-warm-100">
+                <tr key={entry.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-100">
                     {entry.nickname}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-warm-500 dark:text-warm-400">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {new Date(entry.created_at).toLocaleString('ja-JP')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -180,7 +180,7 @@ export default function AdminSpecialEntriesPage() {
                       }
                       className={`p-1 rounded-input text-xs border ${
                         entry.status === 'applied'
-                          ? 'bg-primary-100 dark:bg-primary-900/50 border-primary-300 dark:border-primary-700 text-primary-800 dark:text-primary-200'
+                          ? 'bg-primary-100 dark:bg-gray-900/50 border-primary-300 dark:border-gray-700 text-gray-800 dark:text-gray-200'
                           : 'bg-success-100 dark:bg-success-900/50 border-success-300 dark:border-success-700 text-success-800 dark:text-success-200'
                       }`}
                     >

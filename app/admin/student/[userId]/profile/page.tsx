@@ -155,16 +155,16 @@ export default function AdminStudentProfilePage() {
   return (
     <div className="w-full max-w-4xl animate-fade-in mt-8">
       {/* Breadcrumbs */}
-      <nav className="flex items-center text-sm text-warm-500 dark:text-warm-400 mb-4 gap-2">
+      <nav className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4 gap-2">
         <Link href="/admin/students" className="hover:text-primary-600 dark:hover:text-primary-400">生徒一覧</Link>
         <span>/</span>
         <Link href={`/admin/student/${userId}`} className="hover:text-primary-600 dark:hover:text-primary-400">{studentName}</Link>
         <span>/</span>
-        <span className="text-primary-800 dark:text-warm-100 font-medium">プロフィール</span>
+        <span className="text-gray-800 dark:text-gray-100 font-medium">プロフィール</span>
       </nav>
 
       <div className="card">
-        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6">プロフィール編集</h1>
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider mb-6">プロフィール編集</h1>
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -207,11 +207,11 @@ export default function AdminStudentProfilePage() {
             <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="radio" name="location" value="classroom" checked={learningLocation === 'classroom'} onChange={() => setLearningLocation('classroom')} className="h-4 w-4 text-primary-600" />
-                <span className="text-sm text-primary-700 dark:text-warm-300">教室</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">教室</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="radio" name="location" value="online" checked={learningLocation === 'online'} onChange={() => setLearningLocation('online')} className="h-4 w-4 text-primary-600" />
-                <span className="text-sm text-primary-700 dark:text-warm-300">オンライン</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">オンライン</span>
               </label>
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function AdminStudentProfilePage() {
               {allSubjects.map(subject => (
                 <label key={subject.id} className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={selectedSubjects.includes(subject.id)} onChange={e => handleSubjectToggle(subject.id, e.target.checked)} className="h-4 w-4 text-primary-600 rounded" />
-                  <span className="text-sm text-primary-700 dark:text-warm-200">{subject.name}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-200">{subject.name}</span>
                 </label>
               ))}
             </div>
@@ -239,12 +239,12 @@ export default function AdminStudentProfilePage() {
                   if (!subject) return null;
                   return (
                     <div key={subjectId} className="flex items-center gap-4">
-                      <span className="text-sm font-medium text-primary-800 dark:text-warm-200 w-24">{subject.name}</span>
+                      <span className="text-sm font-medium text-gray-800 dark:text-gray-200 w-24">{subject.name}</span>
                       <div className="flex gap-4">
                         {[1, 2, 3].map(level => (
                           <label key={level} className="flex items-center gap-1 cursor-pointer">
                             <input type="radio" name={`level-${subjectId}`} checked={levels[subjectId] === level} onChange={() => setLevels(prev => ({ ...prev, [subjectId]: level }))} className="h-4 w-4 text-primary-600" />
-                            <span className="text-sm text-primary-700 dark:text-warm-300">Lv.{level}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">Lv.{level}</span>
                           </label>
                         ))}
                       </div>
@@ -256,8 +256,8 @@ export default function AdminStudentProfilePage() {
           )}
 
           {/* Save Button */}
-          <div className="flex justify-end pt-4 border-t dark:border-primary-800">
-            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-warm-400">
+          <div className="flex justify-end pt-4 border-t dark:border-gray-800">
+            <button onClick={handleSave} disabled={saving} className="btn-primary disabled:bg-gray-400">
               {saving ? '保存中...' : '保存する'}
             </button>
           </div>

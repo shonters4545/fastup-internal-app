@@ -159,9 +159,9 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full max-w-2xl card p-8 animate-fade-in mt-8">
-      <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-        <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider">プロフィール編集</h1>
-        <Link href="/mypage" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">&larr; マイページに戻る</Link>
+      <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+        <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider">プロフィール編集</h1>
+        <Link href="/mypage" className="text-sm text-primary-600 dark:text-gray-400 hover:underline">&larr; マイページに戻る</Link>
       </div>
       {profile && (
         <form onSubmit={handleSaveChanges} className="space-y-6">
@@ -236,34 +236,34 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="p-4 bg-warm-50 dark:bg-primary-800/50 rounded-input opacity-80">
+          <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-input opacity-80">
             <div className="flex justify-between items-center mb-2">
               <span className="label">受講場所</span>
-              <span className="text-xs text-warm-500 dark:text-warm-400">（変更は管理者にご連絡ください）</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">（変更は管理者にご連絡ください）</span>
             </div>
-            <p className="w-full px-3 py-2 bg-white dark:bg-primary-700 border border-warm-200 dark:border-primary-700 rounded-input shadow-sm">
+            <p className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-input shadow-sm">
               {profile.learningLocation === 'classroom' ? '教室' : 'オンライン'}
             </p>
           </div>
 
           <div
-            className="p-4 bg-warm-50 dark:bg-primary-800/50 rounded-input opacity-80 cursor-not-allowed"
+            className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-input opacity-80 cursor-not-allowed"
             onClick={() => alert('カリキュラムが変更されるため、このページからは編集できません。\n変更は管理者にご連絡ください。')}
             title="編集はカリキュラム管理ページから行えます"
           >
             <div className="flex justify-between items-center mb-2">
               <span className="label">受験科目</span>
-              <span className="text-xs text-warm-500 dark:text-warm-400">（編集不可）</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">（編集不可）</span>
             </div>
-            <p className="text-xs text-warm-500 dark:text-warm-400 mb-4">カリキュラムに影響するため、変更は管理者にご連絡ください。</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">カリキュラムに影響するため、変更は管理者にご連絡ください。</p>
 
             <div className="space-y-2">
               {userSubjects.length > 0 ? userSubjects.map(subject => (
-                <div key={subject.id} className="p-3 bg-white dark:bg-primary-700 rounded-input shadow-sm">
-                  <p className="font-medium text-primary-800 dark:text-warm-200">{subject.name}</p>
+                <div key={subject.id} className="p-3 bg-white dark:bg-gray-700 rounded-input shadow-sm">
+                  <p className="font-medium text-gray-800 dark:text-gray-200">{subject.name}</p>
                 </div>
               )) : (
-                <p className="text-sm text-warm-500 dark:text-warm-400">受験科目が設定されていません。</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">受験科目が設定されていません。</p>
               )}
             </div>
           </div>
@@ -271,7 +271,7 @@ export default function ProfilePage() {
           <div className="flex items-center justify-end gap-4 pt-4">
             {successMessage && <p className="text-sm text-success-600 dark:text-success-400 animate-fade-in">{successMessage}</p>}
             {error && <p className="text-sm text-danger-600 dark:text-danger-400">{error}</p>}
-            <button type="submit" disabled={isSubmitting} className="btn-primary px-6 py-2 disabled:bg-warm-400 transition-colors">
+            <button type="submit" disabled={isSubmitting} className="btn-primary px-6 py-2 disabled:bg-gray-400 transition-colors">
               {isSubmitting ? '保存中...' : '変更を保存'}
             </button>
           </div>

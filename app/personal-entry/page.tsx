@@ -156,7 +156,7 @@ export default function PersonalEntryPage() {
     return (
       <div className="w-full max-w-md card p-8 animate-fade-in mt-8 text-center">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">申請状況を確認中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">申請状況を確認中...</p>
       </div>
     );
   }
@@ -165,8 +165,8 @@ export default function PersonalEntryPage() {
     if (existingEntry.status === 'applied' || existingEntry.status === 'pending_addition') {
       return (
         <div className="w-full max-w-md card p-8 animate-fade-in mt-8 text-center">
-          <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4">申請中です</h1>
-          <p className="text-warm-600 dark:text-warm-300 mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">申請中です</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
             管理者からの連絡をお待ちください。
             <br />
             現在のステータス: <span className="font-semibold text-accent-500">{statusMap[existingEntry.status] || existingEntry.status}</span>
@@ -187,18 +187,18 @@ export default function PersonalEntryPage() {
 
       return (
         <div className="w-full max-w-md card p-8 animate-fade-in mt-8">
-          <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-4 text-center">個別講義 追加申請</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 text-center">個別講義 追加申請</h1>
 
-          <div className="mb-6 p-4 bg-warm-50 dark:bg-primary-800 rounded-btn">
-            <h2 className="text-sm font-semibold text-primary-700 dark:text-warm-300">現在の契約科目</h2>
+          <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-btn">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">現在の契約科目</h2>
             {contractedSubjectNames.length > 0 ? (
               <ul className="mt-2 space-y-1">
                 {contractedSubjectNames.map(subjectName => (
-                  <li key={subjectName} className="text-primary-800 dark:text-warm-100 font-medium">{subjectName}</li>
+                  <li key={subjectName} className="text-gray-800 dark:text-gray-100 font-medium">{subjectName}</li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-1 text-warm-500 dark:text-warm-400">現在契約中の科目はありません。</p>
+              <p className="mt-1 text-gray-500 dark:text-gray-400">現在契約中の科目はありません。</p>
             )}
           </div>
 
@@ -237,11 +237,11 @@ export default function PersonalEntryPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-accent w-full py-3 mt-4 disabled:bg-warm-400 disabled:cursor-not-allowed"
+                className="btn-accent w-full py-3 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? '申請中...' : '追加申請する'}
               </button>
-              {availableSubjects.length === 0 && <p className="text-xs text-center mt-2 text-warm-500 dark:text-warm-400">すべての科目を契約済みです。</p>}
+              {availableSubjects.length === 0 && <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">すべての科目を契約済みです。</p>}
             </div>
           </form>
         </div>
@@ -251,8 +251,8 @@ export default function PersonalEntryPage() {
 
   return (
     <div className="w-full max-w-md card p-8 animate-fade-in mt-8">
-      <h1 className="text-2xl font-bold text-primary-800 dark:text-warm-100 mb-2 text-center">個別講義 申請フォーム</h1>
-      <p className="text-warm-600 dark:text-warm-300 mb-6 text-center text-sm">個別講義をご希望の場合は、以下のフォームから申請してください。</p>
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 text-center">個別講義 申請フォーム</h1>
+      <p className="text-gray-600 dark:text-gray-300 mb-6 text-center text-sm">個別講義をご希望の場合は、以下のフォームから申請してください。</p>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="subject" className="label">希望科目</label>
@@ -288,7 +288,7 @@ export default function PersonalEntryPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-accent w-full py-3 mt-4 disabled:bg-warm-400 disabled:cursor-not-allowed"
+            className="btn-accent w-full py-3 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? '申請中...' : '申請する'}
           </button>

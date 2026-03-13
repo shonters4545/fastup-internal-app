@@ -59,7 +59,7 @@ export default function PostDetailPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">記事を読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">記事を読み込み中...</p>
       </div>
     );
   }
@@ -97,7 +97,7 @@ export default function PostDetailPage() {
       `}</style>
 
       <div className="text-left mb-8">
-        <Link href="/timeline" className="text-primary-600 dark:text-primary-400 hover:underline">
+        <Link href="/timeline" className="text-primary-600 dark:text-gray-400 hover:underline">
           &larr; タイムラインに戻る
         </Link>
       </div>
@@ -107,14 +107,14 @@ export default function PostDetailPage() {
           <img src={post.thumbnail_url} alt={post.title} className="w-full h-80 object-cover" />
         )}
         <div className="p-8 md:p-12">
-          <h1 className="text-4xl font-extrabold text-primary-800 dark:text-warm-100">{post.title}</h1>
-          <div className="text-base text-warm-500 dark:text-warm-400 mt-4 mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-800 dark:text-gray-100">{post.title}</h1>
+          <div className="text-base text-gray-500 dark:text-gray-400 mt-4 mb-8">
             <span>{post.author_name}</span>
             <span className="mx-2">&middot;</span>
             <span>{new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
           </div>
           <div
-            className="text-primary-800 dark:text-warm-200 leading-relaxed prose-styles"
+            className="text-gray-800 dark:text-gray-200 leading-relaxed prose-styles"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </div>

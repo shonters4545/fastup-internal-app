@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== Google Fonts: Zen Old Mincho ===== */
 @import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700;900&display=swap');
 
-/* ===== Base layer ===== */
 @layer base {
   html {
     font-family: 'Zen Old Mincho', serif;
@@ -15,30 +13,27 @@
   }
 
   body {
-    @apply bg-warm-50 text-primary-800;
+    @apply bg-gray-50 text-gray-800;
   }
 
   .dark body {
-    @apply bg-primary-950 text-warm-100;
+    @apply bg-gray-950 text-gray-100;
   }
 
-  /* Headings */
   h1, h2, h3, h4 {
     letter-spacing: 0.05em;
     line-height: 1.4;
   }
 
-  /* Focus ring for accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary-400 ring-offset-2;
+    @apply outline-none ring-2 ring-accent-400 ring-offset-2;
   }
 
   .dark *:focus-visible {
-    @apply ring-accent-400 ring-offset-primary-950;
+    @apply ring-accent-400 ring-offset-gray-900;
   }
 }
 
-/* ===== Component layer ===== */
 @layer components {
   /* --- Buttons --- */
   .btn {
@@ -50,26 +45,27 @@
   }
 
   .btn-primary {
-    @apply btn bg-primary-500 text-white
-           hover:bg-primary-600 active:bg-primary-700
-           focus-visible:ring-primary-400;
+    @apply btn bg-accent-500 text-white
+           hover:bg-accent-600 active:bg-accent-700
+           focus-visible:ring-accent-400
+           shadow-sm hover:shadow-md;
   }
 
   .btn-accent {
-    @apply btn bg-accent-500 text-white
-           hover:bg-accent-600 active:bg-accent-700
-           focus-visible:ring-accent-400;
+    @apply btn bg-primary-600 text-white
+           hover:bg-primary-700 active:bg-primary-800
+           focus-visible:ring-primary-400;
   }
 
   .btn-secondary {
-    @apply btn bg-warm-200 text-primary-700
-           hover:bg-warm-300 active:bg-warm-400
-           focus-visible:ring-warm-400;
+    @apply btn bg-gray-100 text-gray-700 border border-gray-300
+           hover:bg-gray-200 active:bg-gray-300
+           focus-visible:ring-gray-400;
   }
 
   .dark .btn-secondary {
-    @apply bg-primary-800 text-warm-200
-           hover:bg-primary-700 active:bg-primary-600;
+    @apply bg-gray-800 text-gray-200 border-gray-600
+           hover:bg-gray-700 active:bg-gray-600;
   }
 
   .btn-danger {
@@ -79,13 +75,13 @@
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-primary-600
-           hover:bg-warm-100 active:bg-warm-200
-           focus-visible:ring-primary-400;
+    @apply btn bg-transparent text-gray-600
+           hover:bg-gray-100 active:bg-gray-200
+           focus-visible:ring-gray-400;
   }
 
   .dark .btn-ghost {
-    @apply text-warm-300 hover:bg-primary-800 active:bg-primary-700;
+    @apply text-gray-300 hover:bg-gray-800 active:bg-gray-700;
   }
 
   /* --- Cards --- */
@@ -94,7 +90,7 @@
   }
 
   .dark .card {
-    @apply bg-primary-900 shadow-none border border-primary-800;
+    @apply bg-gray-900 shadow-none border border-gray-800;
   }
 
   .card-hover {
@@ -105,24 +101,24 @@
   /* --- Form inputs --- */
   .input {
     @apply w-full px-3 py-2.5 text-sm rounded-input
-           border border-warm-300 bg-white text-primary-800
-           placeholder:text-warm-400
-           focus:border-primary-400 focus:ring-1 focus:ring-primary-400
+           border border-gray-300 bg-white text-gray-800
+           placeholder:text-gray-400
+           focus:border-accent-500 focus:ring-1 focus:ring-accent-500
            transition-colors duration-200;
   }
 
   .dark .input {
-    @apply border-primary-700 bg-primary-900 text-warm-100
-           placeholder:text-primary-600
-           focus:border-accent-500 focus:ring-accent-500;
+    @apply border-gray-600 bg-gray-900 text-gray-100
+           placeholder:text-gray-500
+           focus:border-accent-400 focus:ring-accent-400;
   }
 
   .label {
-    @apply block text-sm font-medium text-primary-700 mb-1.5;
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
   }
 
   .dark .label {
-    @apply text-warm-300;
+    @apply text-gray-300;
   }
 
   /* --- Badges --- */
@@ -155,7 +151,7 @@
     @apply badge bg-info-100 text-info-700;
   }
 
-  /* --- Modal overlay --- */
+  /* --- Modal --- */
   .modal-overlay {
     @apply fixed inset-0 bg-black/50 backdrop-blur-sm
            flex items-center justify-center z-50 p-4;
@@ -165,28 +161,21 @@
     @apply card max-w-lg w-full max-h-[85vh] overflow-y-auto;
   }
 
-  /* --- Loading spinner --- */
+  /* --- Spinner --- */
   .spinner {
-    @apply w-10 h-10 border-4 border-warm-200 border-t-primary-500
+    @apply w-10 h-10 border-4 border-gray-200 border-t-accent-500
            rounded-full animate-spin;
   }
 
   .dark .spinner {
-    @apply border-primary-800 border-t-accent-400;
+    @apply border-gray-700 border-t-accent-400;
   }
 }
 
-/* ===== Utility layer ===== */
 @layer utilities {
   @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .animate-fade-in {

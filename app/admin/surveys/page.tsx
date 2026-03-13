@@ -77,7 +77,7 @@ export default function AdminSurveysListPage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">アンケートを読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">アンケートを読み込み中...</p>
       </div>
     );
   }
@@ -89,23 +89,23 @@ export default function AdminSurveysListPage() {
 
   return (
     <div className="w-full max-w-6xl card p-8 animate-fade-in mt-8">
-      <div className="flex justify-between items-center mb-6 border-b dark:border-primary-800 pb-4">
-        <h1 className="text-3xl font-bold text-primary-800 dark:text-warm-100">アンケート管理</h1>
+      <div className="flex justify-between items-center mb-6 border-b dark:border-gray-800 pb-4">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">アンケート管理</h1>
         <button onClick={() => router.push('/admin/surveys/create')} className="btn-primary">
           新規アンケートを作成
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-warm-200 dark:divide-primary-800">
-          <thead className="bg-warm-50 dark:bg-primary-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+          <thead className="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">タイトル</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">ステータス</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-warm-500 dark:text-warm-300 uppercase tracking-wider">配信日時</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">タイトル</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ステータス</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">配信日時</th>
               <th className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-primary-900 divide-y divide-warm-200 dark:divide-primary-800">
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
             {surveys.length > 0 ? surveys.map((survey) => {
               const statusMap: Record<string, { text: string; style: string }> = {
                 scheduled: { text: '予約済み', style: 'bg-warning-200 text-warning-800 dark:bg-warning-700 dark:text-warning-100' },
@@ -116,19 +116,19 @@ export default function AdminSurveysListPage() {
               const responded = responseCounts.get(survey.id) || 0;
 
               return (
-                <tr key={survey.id} className="hover:bg-warm-50 dark:hover:bg-primary-800/50 transition-colors">
+                <tr key={survey.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-primary-800 dark:text-warm-100">{survey.title}</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100">{survey.title}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {statusInfo ? (
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-badge ${statusInfo.style}`}>{statusInfo.text}</span>
                     ) : (
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-badge bg-warm-200 text-primary-800 dark:bg-primary-700 dark:text-warm-300">下書き</span>
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-badge bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300">下書き</span>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-warm-500 dark:text-warm-300">
+                    <div className="text-sm text-gray-500 dark:text-gray-300">
                       {survey.delivery_time ? new Date(survey.delivery_time).toLocaleString('ja-JP', { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '未設定'}
                     </div>
                   </td>
@@ -136,12 +136,12 @@ export default function AdminSurveysListPage() {
                     <div className="flex items-center justify-end gap-4">
                       <div className="flex items-center">
                         {survey.delivery_status === 'sent' && requested > 0 && (
-                          <span className="text-sm text-warm-500 dark:text-warm-400">({responded}/{requested})</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">({responded}/{requested})</span>
                         )}
-                        <Link href={`/admin/surveys/${survey.id}/results`} className="ml-2 text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-200">アンケート結果</Link>
+                        <Link href={`/admin/surveys/${survey.id}/results`} className="ml-2 text-primary-600 hover:text-primary-900 dark:text-gray-400 dark:hover:text-gray-200">アンケート結果</Link>
                       </div>
                       {survey.delivery_status !== 'sent' && (
-                        <Link href={`/admin/surveys/edit/${survey.id}`} className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-200">編集</Link>
+                        <Link href={`/admin/surveys/edit/${survey.id}`} className="text-primary-600 hover:text-primary-900 dark:text-gray-400 dark:hover:text-gray-200">編集</Link>
                       )}
                       <button onClick={() => handleDelete(survey.id, survey.title)} className="text-danger-600 hover:text-danger-900 dark:text-danger-400 dark:hover:text-danger-200">削除</button>
                     </div>
@@ -150,7 +150,7 @@ export default function AdminSurveysListPage() {
               );
             }) : (
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-sm text-warm-500 dark:text-warm-400">
+                <td colSpan={4} className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
                   全生徒向けアンケートはまだ作成されていません。
                 </td>
               </tr>

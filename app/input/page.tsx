@@ -143,14 +143,14 @@ export default function InputPage() {
     return (
       <div className="w-full max-w-md card p-8 animate-fade-in mt-8 text-center">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">Loading...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">Loading...</p>
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-md card p-8 animate-fade-in mt-8 mx-auto">
-      <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider mb-6 text-center">プロフィール情報入力</h1>
+      <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider mb-6 text-center">プロフィール情報入力</h1>
       <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Nickname */}
         <div>
@@ -184,13 +184,13 @@ export default function InputPage() {
                   name="subjects"
                   type="checkbox"
                   value={subject.id}
-                  className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-warm-300 rounded"
+                  className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 rounded"
                   onChange={handleSubjectChange}
                   disabled={selectedSubjects.length >= 3 && !selectedSubjects.includes(subject.id)}
                 />
                 <label
                   htmlFor={`subject-${subject.id}`}
-                  className={`ml-3 block text-sm font-medium text-primary-700 dark:text-warm-200 ${
+                  className={`ml-3 block text-sm font-medium text-gray-700 dark:text-gray-200 ${
                     selectedSubjects.length >= 3 && !selectedSubjects.includes(subject.id)
                       ? 'opacity-50 cursor-not-allowed'
                       : ''
@@ -232,7 +232,7 @@ export default function InputPage() {
                 if (!subject) return null;
                 return (
                   <fieldset key={subject.id}>
-                    <legend className="text-sm font-medium text-primary-800 dark:text-warm-200 mb-1">{subject.name}</legend>
+                    <legend className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{subject.name}</legend>
                     <div className="flex items-center space-x-6">
                       {[1, 2, 3].map(level => (
                         <div className="flex items-center" key={level}>
@@ -243,11 +243,11 @@ export default function InputPage() {
                             value={level}
                             checked={levels[subject.id] === level}
                             onChange={() => handleLevelChange(subject.id, level)}
-                            className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-warm-300"
+                            className="focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300"
                           />
                           <label
                             htmlFor={`${subject.id}-level-${level}`}
-                            className="ml-2 block text-sm font-medium text-primary-700 dark:text-warm-300"
+                            className="ml-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                           >
                             レベル{level}
                           </label>
@@ -266,7 +266,7 @@ export default function InputPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-primary w-full py-2 mt-4 disabled:bg-warm-400 disabled:cursor-not-allowed"
+            className="btn-primary w-full py-2 mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {isSubmitting ? '登録中...' : '登録する'}
           </button>

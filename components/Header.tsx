@@ -17,22 +17,22 @@ export function Header() {
   const showBackButton = pathname !== '/' && pathname !== '/login';
 
   return (
-    <header className="bg-white dark:bg-primary-900 shadow-header w-full border-b border-warm-200 dark:border-primary-800">
-      <nav className="container mx-auto px-6 py-3.5 flex justify-between items-center">
+    <header className="bg-primary-700 w-full shadow-header">
+      <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
         <div className="flex items-center gap-4">
           {showBackButton && (
             <button
               onClick={() => router.back()}
-              className="btn-ghost !px-2.5 !py-1.5 text-sm"
+              className="flex items-center gap-1 text-primary-200 hover:text-white transition-colors text-sm px-2 py-1 rounded-btn hover:bg-white/10"
               aria-label="前のページに戻る"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
               戻る
             </button>
           )}
-          <Link href="/" className="text-xl font-bold text-primary-600 dark:text-accent-400 tracking-wider hover:text-primary-500 dark:hover:text-accent-300 transition-colors">
+          <Link href="/" className="text-xl font-bold text-white tracking-wider hover:text-accent-300 transition-colors">
             FAST-UP
           </Link>
         </div>
@@ -40,12 +40,12 @@ export function Header() {
           {currentUser ? (
             <button
               onClick={handleSignOut}
-              className="btn-ghost !text-danger-500 hover:!bg-danger-50 dark:hover:!bg-danger-500/10 text-sm"
+              className="text-primary-200 hover:text-white text-sm font-medium px-3 py-1.5 rounded-btn hover:bg-white/10 transition-colors"
             >
               ログアウト
             </button>
           ) : (
-            <Link href="/login" className="btn-primary text-sm">
+            <Link href="/login" className="bg-accent-500 hover:bg-accent-400 text-white font-semibold text-sm px-4 py-2 rounded-btn transition-colors shadow-sm">
               ログイン
             </Link>
           )}

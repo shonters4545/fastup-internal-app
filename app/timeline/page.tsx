@@ -79,23 +79,23 @@ export default function TimelinePage() {
     return (
       <div className="w-full max-w-4xl text-center p-8 animate-fade-in mt-8">
         <div className="spinner mx-auto"></div>
-        <p className="text-warm-600 dark:text-warm-300 mt-4">お知らせを読み込み中...</p>
+        <p className="text-gray-600 dark:text-gray-300 mt-4">お知らせを読み込み中...</p>
       </div>
     );
   }
 
   return (
     <div className="w-full max-w-5xl animate-fade-in mt-8 space-y-8 mx-auto px-4">
-      <h1 className="text-2xl font-bold text-primary-700 dark:text-warm-100 tracking-wider text-center">お知らせタイムライン</h1>
+      <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-100 tracking-wider text-center">お知らせタイムライン</h1>
 
       {categories.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-2 pb-4 border-b border-warm-200 dark:border-primary-800">
+        <div className="flex flex-wrap justify-center gap-2 pb-4 border-b border-gray-200 dark:border-gray-800">
           <button
             onClick={() => setSelectedCategory(null)}
             className={`px-4 py-2 text-sm font-medium rounded-badge transition ${
               !selectedCategory
                 ? 'bg-primary-600 text-white'
-                : 'bg-warm-200 dark:bg-primary-800 text-primary-800 dark:text-warm-200 hover:bg-warm-300 dark:hover:bg-primary-700'
+                : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             すべて
@@ -107,7 +107,7 @@ export default function TimelinePage() {
               className={`px-4 py-2 text-sm font-medium rounded-badge transition ${
                 selectedCategory === cat.id
                   ? 'bg-primary-600 text-white'
-                  : 'bg-warm-200 dark:bg-primary-800 text-primary-800 dark:text-warm-200 hover:bg-warm-300 dark:hover:bg-primary-700'
+                  : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700'
               }`}
             >
               {cat.name}
@@ -120,27 +120,27 @@ export default function TimelinePage() {
         {filteredPosts.length > 0 ? (
           filteredPosts.map(post => (
             <Link key={post.id} href={`/timeline/${post.id}`} className="block group">
-              <div className="bg-white dark:bg-primary-900 rounded-card shadow-card overflow-hidden h-full flex flex-col transition-all duration-300 transform group-hover:-translate-y-1 group-hover:shadow-card-hover">
+              <div className="bg-white dark:bg-gray-900 rounded-card shadow-card overflow-hidden h-full flex flex-col transition-all duration-300 transform group-hover:-translate-y-1 group-hover:shadow-card-hover">
                 {post.thumbnail_url ? (
                   <img src={post.thumbnail_url} alt={post.title} className="w-full h-48 object-cover" />
                 ) : (
-                  <div className="w-full h-48 bg-warm-200 dark:bg-primary-800 flex items-center justify-center">
-                    <svg className="w-10 h-10 text-warm-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                    <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
                   </div>
                 )}
                 <div className="p-6 flex flex-col flex-grow">
-                  <h2 className="text-xl font-bold text-primary-800 dark:text-warm-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300 line-clamp-2">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-accent-400 transition-colors duration-300 line-clamp-2">
                     {post.title}
                   </h2>
-                  <p className="text-sm text-warm-500 dark:text-warm-400 mt-2 mb-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-4">
                     {new Date(post.created_at).toLocaleDateString('ja-JP')}
                   </p>
-                  <p className="text-warm-600 dark:text-warm-300 leading-relaxed flex-grow line-clamp-3">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed flex-grow line-clamp-3">
                     {createSnippet(post.content, 100)}
                   </p>
-                  <div className="text-right mt-4 text-primary-600 dark:text-primary-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="text-right mt-4 text-primary-600 dark:text-gray-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     続きを読む &rarr;
                   </div>
                 </div>
@@ -148,8 +148,8 @@ export default function TimelinePage() {
             </Link>
           ))
         ) : (
-          <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center p-8 bg-warm-50 dark:bg-primary-900 rounded-btn">
-            <p className="text-warm-600 dark:text-warm-400">
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center p-8 bg-gray-50 dark:bg-gray-900 rounded-btn">
+            <p className="text-gray-600 dark:text-gray-400">
               {selectedCategory ? 'このカテゴリーのお知らせはありません。' : 'お知らせはまだありません。'}
             </p>
           </div>
