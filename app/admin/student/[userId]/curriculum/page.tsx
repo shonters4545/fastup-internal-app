@@ -127,7 +127,7 @@ export default function AdminStudentCurriculumPage() {
       list.push(task);
       tasksByBook.set(task.book_id, list);
     });
-    tasksByBook.forEach(list => list.sort((a, b) => a.display_order - b.display_order));
+    tasksByBook.forEach(list => list.sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0)));
 
     return { booksByDivision, tasksByBook };
   }, [books, tasks]);
