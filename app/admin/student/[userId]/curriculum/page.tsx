@@ -117,7 +117,7 @@ export default function AdminStudentCurriculumPage() {
       list.sort((a, b) => {
         if (a.is_custom && !b.is_custom) return -1;
         if (!a.is_custom && b.is_custom) return 1;
-        return a.display_order - b.display_order;
+        return (a.display_order ?? 0) - (b.display_order ?? 0);
       });
     });
 
