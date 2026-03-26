@@ -111,7 +111,7 @@ export default function CurriculumsPage() {
       list.sort((a, b) => {
         if (a.is_custom && !b.is_custom) return -1;
         if (!a.is_custom && b.is_custom) return 1;
-        return a.display_order - b.display_order;
+        return (a.display_order ?? 0) - (b.display_order ?? 0);
       });
     });
 
@@ -121,7 +121,7 @@ export default function CurriculumsPage() {
       list.push(task);
       tasksByBook.set(task.book_id, list);
     });
-    tasksByBook.forEach(list => list.sort((a, b) => a.display_order - b.display_order));
+    tasksByBook.forEach(list => list.sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0)));
 
     return { booksByDivision, tasksByBook };
   }, [books, tasks]);

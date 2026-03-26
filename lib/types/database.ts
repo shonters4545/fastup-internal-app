@@ -1407,3 +1407,5 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
+export type UserRole = 'student' | 'admin' | 'super'

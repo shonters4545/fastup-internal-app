@@ -12,8 +12,8 @@ export default function MyPage() {
 
   useEffect(() => {
     if (!currentUser) return;
-    supabase.rpc('get_point_balance', { p_user_id: currentUser.id })
-      .then(({ data }) => setPointBalance(data ?? 0));
+    (supabase.rpc as any)('get_point_balance', { p_user_id: currentUser.id })
+      .then(({ data }: { data: number | null }) => setPointBalance(data ?? 0));
   }, [currentUser]);
 
   if (loading) {

@@ -35,7 +35,7 @@ export default function StudentPointsPage() {
     const fetchData = async () => {
       try {
         const [{ data: balanceData }, { data: txns }] = await Promise.all([
-          supabase.rpc('get_point_balance', { p_user_id: currentUser.id }),
+          (supabase.rpc as any)('get_point_balance', { p_user_id: currentUser.id }),
           (supabase.from('point_transactions') as any)
             .select('id, amount, reason, created_at')
             .eq('user_id', currentUser.id)

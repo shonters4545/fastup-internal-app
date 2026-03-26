@@ -37,7 +37,7 @@ export default function AdminPointsPage() {
     try {
       const [{ data: user }, { data: balanceData }, { data: txns }] = await Promise.all([
         (supabase.from('users') as any).select('nickname').eq('id', userId).single(),
-        supabase.rpc('get_point_balance', { p_user_id: userId }),
+        (supabase.rpc as any)('get_point_balance', { p_user_id: userId }),
         (supabase.from('point_transactions') as any)
           .select('id, amount, reason, reference_type, created_by, created_at')
           .eq('user_id', userId)
