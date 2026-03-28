@@ -506,10 +506,15 @@ export default function AdminStudentListPage() {
 
   if (loading || authLoading) {
     return (
-      <div className="text-center text-gray-500 dark:text-gray-400 py-12">
-        <div className="spinner mx-auto mb-4" />
-        <p>読み込み中...</p>
-      </div>
+      <>
+        <div className="text-center text-gray-500 dark:text-gray-400 py-12">
+          <div className="spinner mx-auto mb-4" />
+          <p>読み込み中...</p>
+        </div>
+        {isRegisterModalOpen && <RegistrationModal onClose={() => setIsRegisterModalOpen(false)} onSuccess={() => { setIsRegisterModalOpen(false); fetchStudents(); }} />}
+        {isInviteModalOpen && <InvitedStudentsModal onClose={() => setIsInviteModalOpen(false)} />}
+        <FilterModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)} onApply={f => { setActiveFilters(f); setIsFilterModalOpen(false); }} subjects={subjects} currentFilters={activeFilters} />
+      </>
     );
   }
 

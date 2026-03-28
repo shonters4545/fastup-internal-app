@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useContext, createContext, useCallback } from 'react';
+import { useState, useEffect, useContext, createContext, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import type { UserRole } from '@/lib/types/database';
@@ -34,6 +34,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [supabase] = useState(() => createClient());
+  const currentUserRef = useRef<AuthUser | null>(null);
+
+  // Only update currentUser if values actually changed (prevents unnecessary re-renders on token refresh)
+  const updateCurrentUser = useCallback((newUser: AuthUser | null) => {
+    const prev = currentUserRef.current;
+    if (prev === newUser) return;
+    if (prev && newUser && prev.id === newUser.id && prev.authId === newUser.authId && prev.role === newUser.role && prev.email === newUser.email && prev.displayName === newUser.displayName && prev.photoURL === newUser.photoURL) return;
+    currentUserRef.current = newUser;
+    setCurrentUser(newUser);
+  }, []);
 
   useEffect(() => {
     const isPlaceholder = process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('placeholder');
@@ -86,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const retryRows = await retryRes.json();
               const retryProfile = Array.isArray(retryRows) ? retryRows[0] : null;
               if (retryProfile) {
-                setCurrentUser({
+                updateCurrentUser({
                   id: retryProfile.id,
                   authId: user.id,
                   displayName: user.user_metadata?.full_name ?? null,
@@ -102,11 +112,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('[Auth] Invite processing failed:', inviteErr);
           }
           console.warn('[Auth] No user profile and no invite found for:', user.email);
-          setCurrentUser(null);
+          updateCurrentUser(null);
           setLoading(false);
           return;
         }
-        setCurrentUser({
+        updateCurrentUser({
           id: profile.id,
           authId: user.id,
           displayName: user.user_metadata?.full_name ?? null,
@@ -116,7 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       } catch (err) {
         console.error('Error fetching user profile:', err);
-        setCurrentUser(null);
+        updateCurrentUser(null);
       } finally {
         setLoading(false);
       }
@@ -129,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user && session.access_token) {
           await fetchUserProfile(session.access_token, session.user);
         } else {
-          setCurrentUser(null);
+          updateCurrentUser(null);
           setLoading(false);
         }
       }
@@ -154,6 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut({ scope: 'local' });
+    currentUserRef.current = null;
     setCurrentUser(null);
   }, [supabase]);
 
