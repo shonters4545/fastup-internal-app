@@ -49,26 +49,19 @@ export async function GET(request: NextRequest) {
   }
 
   // 5. Look up email in web-exam profiles
-  const webExamUrl = process.env.WEBEXAM_SUPABASE_URL;
-  const webExamKey = process.env.WEBEXAM_SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!webExamUrl || !webExamKey) {
-    return NextResponse.json({ results: [], debug: 'WEBEXAM env vars missing' });
+  if (!process.env.WEBEXAM_SUPABASE_URL || !process.env.WEBEXAM_SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json({ results: [] });
   }
 
   const webExam = createWebExamClient();
-  const { data: webProfile, error: profileError } = await webExam
+  const { data: webProfile } = await webExam
     .from('profiles')
     .select('id')
     .eq('email', targetEmail)
     .maybeSingle();
 
-  if (profileError) {
-    return NextResponse.json({ results: [], debug: `Profile lookup error: ${profileError.message}` });
-  }
-
   if (!webProfile) {
-    return NextResponse.json({ results: [], debug: `No web-exam profile for email: ${targetEmail}` });
+    return NextResponse.json({ results: [] });
   }
 
   // 6. Fetch exam results
@@ -80,7 +73,7 @@ export async function GET(request: NextRequest) {
     .limit(20);
 
   if (error) {
-    return NextResponse.json({ results: [], debug: `Results fetch error: ${error.message}` });
+    return NextResponse.json({ results: [] });
   }
 
   return NextResponse.json({ results: (results || []) as WebExamResult[] });
