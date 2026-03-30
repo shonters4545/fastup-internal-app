@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
+import WebExamResults from '@/components/WebExamResults';
 
 type SubjectProgress = {
   subject_id: string;
@@ -512,6 +513,12 @@ export default function AdminStudentStatusPage() {
           ) : (
             <p className="text-gray-500 dark:text-gray-400 text-center py-4">テストスコアのデータがありません。</p>
           )}
+        </div>
+
+        {/* === Section 3.5: Web Exam Results === */}
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">模試結果</h2>
+          <WebExamResults userId={userId as string} />
         </div>
 
         {/* === Section 4: Attendance === */}

@@ -1,0 +1,4 @@
+"教材ID","分野","分野ID","教材名","教材種別","学習順序","総Unit数","目安時間(h/Unit)","前提教材ID","推奨ペース(週)","推奨周回数","ミニ模試基準点","備考","imageUrl","driveUrl",""
+"GEN_01","総合","general","FAST-UP古文総合 CORE16","Main","1","16","3","なし","2","1","80","第0回~第15回","core100.jpg","https://docs.google.com/document/d/1P84rcIQ3ozSRyYl8waLfFhXTzYtgB1JigKXgwjrwu9Q/edit?usp=drive_link",""
+"GEN_02","総合","general","FAST-UP古文総合 ADVANCE15","Main","2","15","3","COMP_01","2","2","80","第1回~15回","advance100.jpg","https://docs.google.com/document/d/1oXeGRejNpM0VizF7QrFNkpRPKL6LJI8KKh02yZ3UNIQ/edit?usp=drive_link",""
+"GEN_03","総合","general","FAST-UP古文総合 TOP-LEVEL12","Main","3","12","3","COMP_02","2","2","80","第1回~12回","top100.jpg","https://docs.google.com/document/d/1BYnHaeegttRdzdVfTB4qvsJDAsZnF9ZAzT-H3tgBJhw/edit?usp=drive_link",""

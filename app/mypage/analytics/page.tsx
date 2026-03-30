@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
+import WebExamResults from '@/components/WebExamResults';
 
 type TimeRange = '7' | '30';
 
@@ -419,6 +420,12 @@ export default function AnalyticsPage() {
                 </ul>
               </div>
             </div>
+          </div>
+
+          {/* Web Exam Results */}
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">模試結果</h3>
+            <WebExamResults userId={currentUser!.id} />
           </div>
 
           {/* Attendance Record */}

@@ -1,0 +1,4 @@
+"教材ID","分野","分野ID","教材名","教材種別","学習順序","総Unit数","単位名称","目安時間(h/Unit)","前提教材ID","推奨ペース(週)","周回タイプ","推奨周回数","2周目時短係数","ミニ模試の点数","備考","imageUrl","driveUrl"
+"COMP_01","総合","general","FAST-UP現代文 - 総合教材 CORE20","Main","1","20","講","3","","2","Must","1","0.75","80","第1講~第20講","","https://docs.google.com/document/d/1qoGk6XOc58ypETX2I0hogHIyt6oqri9IVmnoz1Dqgbw/edit?usp=drive_link"
+"COMP_02","総合","general","FAST-UP現代文 - 総合教材 ADVANCE16","Main","2","16","講","3","COMP_02","2","Must","2","0.75","80","第21講~第36講","","https://docs.google.com/document/d/16sDfb6lbb4ngVgkgRZ6lmaGOFfjPSWgivh-QxxvDxJU/edit?usp=drive_link"
+"COMP_03","総合","general","FAST-UP現代文 - 総合教材 TOP-LEVEL12","Main","3","12","講","3","COMP_03","2","Must","2","0.75","80","第37講~第48講","",""
