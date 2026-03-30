@@ -49,15 +49,26 @@ export async function GET(request: NextRequest) {
   }
 
   // 5. Look up email in web-exam profiles
+  const webExamUrl = process.env.WEBEXAM_SUPABASE_URL;
+  const webExamKey = process.env.WEBEXAM_SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!webExamUrl || !webExamKey) {
+    return NextResponse.json({ results: [], debug: 'WEBEXAM env vars missing' });
+  }
+
   const webExam = createWebExamClient();
-  const { data: webProfile } = await webExam
+  const { data: webProfile, error: profileError } = await webExam
     .from('profiles')
     .select('id')
     .eq('email', targetEmail)
     .maybeSingle();
 
+  if (profileError) {
+    return NextResponse.json({ results: [], debug: `Profile lookup error: ${profileError.message}` });
+  }
+
   if (!webProfile) {
-    return NextResponse.json({ results: [] });
+    return NextResponse.json({ results: [], debug: `No web-exam profile for email: ${targetEmail}` });
   }
 
   // 6. Fetch exam results
@@ -69,7 +80,7 @@ export async function GET(request: NextRequest) {
     .limit(20);
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to fetch results' }, { status: 500 });
+    return NextResponse.json({ results: [], debug: `Results fetch error: ${error.message}` });
   }
 
   return NextResponse.json({ results: (results || []) as WebExamResult[] });
