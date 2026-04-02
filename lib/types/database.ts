@@ -142,6 +142,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_custom: boolean
+          level: string | null
           max_laps: number
           name: string
           remarks: string | null
@@ -156,6 +157,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_custom?: boolean
+          level?: string | null
           max_laps?: number
           name: string
           remarks?: string | null
@@ -170,6 +172,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_custom?: boolean
+          level?: string | null
           max_laps?: number
           name?: string
           remarks?: string | null

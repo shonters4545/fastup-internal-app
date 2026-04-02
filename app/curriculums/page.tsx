@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { createClient } from '@/lib/supabase/client';
 import TestScoreModal from '@/components/TestScoreModal';
 import AddCustomBookModal from '@/components/AddCustomBookModal';
+import BookCover from '@/components/BookCover';
 import type { Database } from '@/lib/types/database';
 
 type Subject = Database['public']['Tables']['subjects']['Row'];
@@ -389,7 +390,13 @@ export default function CurriculumsPage() {
                         <div className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" onClick={() => toggleBookExpansion(book.id)}>
                           <div className="flex justify-between items-center mb-2">
                             <div className="flex items-center gap-3">
-                              {book.image_url ? (
+                              {!book.is_custom ? (
+                                <BookCover
+                                  name={book.name}
+                                  subjectName={subjects.find(s => s.id === book.subject_id)?.name || ''}
+                                  level={book.level as 'core' | 'advance' | 'top' | 'all' | null}
+                                />
+                              ) : book.image_url ? (
                                 <img src={book.image_url} alt={book.name} className="w-12 h-16 object-cover rounded-btn shadow-sm bg-gray-50" referrerPolicy="no-referrer" />
                               ) : (
                                 <div className="w-12 h-16 bg-gray-200 rounded-btn flex items-center justify-center text-gray-400 text-xs">No Img</div>

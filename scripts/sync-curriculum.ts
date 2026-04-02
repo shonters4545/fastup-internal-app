@@ -1,197 +1,111 @@
 /**
- * スプレッドシート(CSV) → Supabase カリキュラム同期スクリプト
+ * Google Sheets → Supabase カリキュラム同期スクリプト
  *
  * 使い方:
- *   1. scripts/curriculum-csv/ に最新CSVを配置
- *   2. scripts/curriculum-images/ に新規画像を配置（任意）
- *   3. npx tsx scripts/sync-curriculum.ts
+ *   npx tsx scripts/sync-curriculum.ts
+ *   (SUPABASE_SERVICE_ROLE_KEY は .env.local から自動読み込み)
  *
- * 処理フロー:
- *   1. バックアップ (scripts/backup_YYYYMMDD_HHmmss.json)
- *   2. 画像アップロード (curriculum-images/ → Supabase Storage)
- *   3. master books 削除 (CASCADE: tasks, user_curriculum / SET NULL: progress, attendance_records)
- *   4. 空 divisions 削除
- *   5. divisions UPSERT
- *   6. books INSERT
- *   7. tasks 自動生成
+ * 処理フロー（UPSERT方式 - progressを一切壊さない）:
+ *   1. Google Drive APIでデータベースフォルダ内のスプレッドシート一覧を取得
+ *   2. Google Sheets APIで各シートのデータを取得
+ *   3. バックアップ (scripts/backup_YYYYMMDD_HHmmss.json)
+ *   4. divisions UPSERT
+ *   5. books UPSERT（名前+subject_idで既存マッチ → UPDATE / なければINSERT）
+ *   6. tasks UPSERT（book_id+display_orderで既存マッチ → UPDATE / なければINSERT）
+ *   7. CSVにないbooksを削除（そのbookにprogressがなければ）
+ *   8. 余分なtasksを削除（display_order > 総Unit数 かつ progressがなければ）
+ *   9. 空 divisions 削除
  *
- * progressは一切削除しない:
- *   - FK制約が SET NULL のため、books/tasks削除時にprogress.book_id/task_idがNULLになるだけ
- *   - 孤立したprogressはUIに表示されないが、データは保持される
- *
- * 画像の命名規則:
- *   Storage上: {sheetPrefix}_{教材ID}.jpg (例: english_VOC_01.jpg)
- *   curriculum-images/ にも同じ名前で配置する
+ * ★ progressは絶対に削除・NULL化しない
  *
  * Google Drive:
- *   スプレッドシート: https://drive.google.com/drive/u/0/folders/1KF0tSucUewtztJz8mK337piU09b5vN51
- *   画像: https://drive.google.com/drive/u/0/folders/1jz7QcHJaEllEL3kz9iDtA-A0gbX4frEJ
+ *   カリキュラムルート: https://drive.google.com/drive/u/0/folders/1bTsj0ycmC7Y6iA-fD2PnoYyzaYcXF-S0
+ *   データベース: https://drive.google.com/drive/u/0/folders/1GhL0ZmwPPt6BlXnLEq3IzoMJB7CpyV10
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { google } from 'googleapis';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+// .env.local から環境変数を読み込み
+dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
 // ── Config ──────────────────────────────────────────
 const SUPABASE_URL = 'https://ytunykqlsqulrgfmkkmo.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_KEY) {
-  console.error('Error: SUPABASE_SERVICE_ROLE_KEY env var is required.');
-  console.error('Run with: SUPABASE_SERVICE_ROLE_KEY=<key> npx tsx scripts/sync-curriculum.ts');
+  console.error('Error: SUPABASE_SERVICE_ROLE_KEY not found in .env.local');
   process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const CSV_DIR = path.join(__dirname, 'curriculum-csv');
-const IMAGE_DIR = path.join(__dirname, 'curriculum-images');
-const STORAGE_BUCKET = 'book-images';
-const STORAGE_PATH = 'books';
-const IMAGE_BASE = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${STORAGE_PATH}`;
+const SERVICE_ACCOUNT_KEY = path.join(__dirname, 'firebase-service-account.json');
+const DATABASE_FOLDER_ID = '1GhL0ZmwPPt6BlXnLEq3IzoMJB7CpyV10';
 const DEFAULT_UNIT_LABEL = 'Unit';
 
-// ── CSV Parser ──────────────────────────────────────
-function parseCSV(csv: string): Record<string, string>[] {
-  const lines = csv.split('\n').filter(l => l.trim());
-  if (lines.length < 2) return [];
-
-  const parseRow = (line: string): string[] => {
-    const fields: string[] = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i];
-      if (inQuotes) {
-        if (ch === '"' && line[i + 1] === '"') {
-          current += '"';
-          i++;
-        } else if (ch === '"') {
-          inQuotes = false;
-        } else {
-          current += ch;
-        }
-      } else {
-        if (ch === '"') {
-          inQuotes = true;
-        } else if (ch === ',') {
-          fields.push(current);
-          current = '';
-        } else {
-          current += ch;
-        }
-      }
-    }
-    fields.push(current);
-    return fields;
-  };
-
-  const headers = parseRow(lines[0]);
-  return lines.slice(1).map(line => {
-    const values = parseRow(line);
-    const row: Record<string, string> = {};
-    headers.forEach((h, i) => {
-      if (h) row[h] = values[i] || '';
-    });
-    return row;
+// ── Google API Setup ────────────────────────────────
+function getGoogleAuth() {
+  return new google.auth.GoogleAuth({
+    keyFile: SERVICE_ACCOUNT_KEY,
+    scopes: [
+      'https://www.googleapis.com/auth/drive.readonly',
+      'https://www.googleapis.com/auth/spreadsheets.readonly',
+    ],
   });
+}
+
+// ── Fetch Spreadsheets from Drive ───────────────────
+async function fetchSpreadsheetList(): Promise<{ id: string; name: string }[]> {
+  const auth = getGoogleAuth();
+  const drive = google.drive({ version: 'v3', auth });
+
+  const res = await drive.files.list({
+    q: `'${DATABASE_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.spreadsheet'`,
+    fields: 'files(id, name)',
+    pageSize: 50,
+    supportsAllDrives: true,
+    includeItemsFromAllDrives: true,
+  });
+
+  return (res.data.files || []).map(f => ({ id: f.id!, name: f.name! }));
+}
+
+// ── Fetch Sheet Data ────────────────────────────────
+async function fetchSheetData(spreadsheetId: string): Promise<Record<string, string>[]> {
+  const auth = getGoogleAuth();
+  const sheets = google.sheets({ version: 'v4', auth });
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: 'A:Z',
+  });
+
+  const rows = res.data.values;
+  if (!rows || rows.length < 2) return [];
+
+  const headers = rows[0] as string[];
+  return rows.slice(1)
+    .filter(row => row.some((cell: string) => cell?.trim()))
+    .map(row => {
+      const obj: Record<string, string> = {};
+      headers.forEach((h, i) => { if (h) obj[h] = (row[i] as string) || ''; });
+      return obj;
+    });
 }
 
 // ── Helpers ─────────────────────────────────────────
 function getSubjectName(filename: string): string {
-  const base = path.basename(filename, '.csv');
-  const idx = base.indexOf('_');
-  return idx >= 0 ? base.substring(idx + 1) : base;
+  const idx = filename.indexOf('_');
+  return idx >= 0 ? filename.substring(idx + 1) : filename;
 }
 
 function getSheetPrefix(filename: string): string {
-  const base = path.basename(filename, '.csv');
-  const idx = base.indexOf('_');
-  return idx >= 0 ? base.substring(0, idx) : base;
-}
-
-function storageFileName(sheetPrefix: string, materialId: string): string {
-  return `${sheetPrefix}_${materialId}.jpg`;
-}
-
-function buildImageUrl(sheetPrefix: string, materialId: string): string {
-  return `${IMAGE_BASE}/${storageFileName(sheetPrefix, materialId)}`;
-}
-
-// ── Image Upload ────────────────────────────────────
-async function uploadImages(
-  sheets: { sheetPrefix: string; rows: Record<string, string>[] }[]
-): Promise<Set<string>> {
-  console.log('Checking images...');
-
-  if (!fs.existsSync(IMAGE_DIR)) {
-    fs.mkdirSync(IMAGE_DIR, { recursive: true });
-    console.log(`  Created ${IMAGE_DIR} (place images here for upload)\n`);
-    return new Set();
-  }
-
-  const localFiles = fs.readdirSync(IMAGE_DIR).filter(f =>
-    /\.(jpg|jpeg|png|webp)$/i.test(f)
-  );
-
-  if (localFiles.length === 0) {
-    console.log('  No local images found in curriculum-images/. Skipping upload.\n');
-    return new Set();
-  }
-
-  const expectedFiles = new Map<string, string>();
-  for (const sheet of sheets) {
-    for (const row of sheet.rows) {
-      if (row['imageUrl']) {
-        const sfn = storageFileName(sheet.sheetPrefix, row['教材ID']);
-        const exactMatch = localFiles.find(f => f === sfn);
-        const csvMatch = localFiles.find(f => f === row['imageUrl']);
-        const match = exactMatch || csvMatch;
-        if (match) {
-          expectedFiles.set(sfn, path.join(IMAGE_DIR, match));
-        }
-      }
-    }
-  }
-
-  if (expectedFiles.size === 0) {
-    console.log('  No matching images found for CSV entries. Skipping upload.\n');
-    return new Set();
-  }
-
-  const uploaded = new Set<string>();
-  let uploadCount = 0;
-  let skipCount = 0;
-
-  for (const [sfn, localPath] of expectedFiles) {
-    const storagePath = `${STORAGE_PATH}/${sfn}`;
-    const { data: existing } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .list(STORAGE_PATH, { search: sfn });
-
-    if (existing?.some(f => f.name === sfn)) {
-      skipCount++;
-      uploaded.add(sfn);
-      continue;
-    }
-
-    const fileBuffer = fs.readFileSync(localPath);
-    const contentType = sfn.endsWith('.png') ? 'image/png' : 'image/jpeg';
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(storagePath, fileBuffer, { contentType, upsert: true });
-
-    if (error) {
-      console.error(`  Error uploading ${sfn}:`, error.message);
-    } else {
-      uploadCount++;
-      uploaded.add(sfn);
-      console.log(`  Uploaded: ${sfn}`);
-    }
-  }
-
-  console.log(`  Images: ${uploadCount} uploaded, ${skipCount} already existed\n`);
-  return uploaded;
+  const idx = filename.indexOf('_');
+  return idx >= 0 ? filename.substring(0, idx) : filename;
 }
 
 // ── Backup ──────────────────────────────────────────
@@ -217,37 +131,37 @@ async function backup() {
   console.log(`  Saved to: ${backupPath}\n`);
 }
 
-// ── Main Sync ───────────────────────────────────────
+// ── Main Sync (UPSERT方式) ─────────────────────────
 async function main() {
-  console.log('=== カリキュラム同期スクリプト ===\n');
+  console.log('=== カリキュラム同期スクリプト (Google Sheets API + UPSERT方式) ===\n');
 
-  // ── Step 0: Read CSV files ──
-  const csvFiles = fs.readdirSync(CSV_DIR).filter(f => f.endsWith('.csv'));
-  if (csvFiles.length === 0) {
-    console.error('No CSV files found in', CSV_DIR);
+  // ── Step 0: Fetch spreadsheets from Google Drive ──
+  console.log('Fetching spreadsheet list from Google Drive...');
+  const spreadsheets = await fetchSpreadsheetList();
+  if (spreadsheets.length === 0) {
+    console.error('No spreadsheets found in database folder.');
     process.exit(1);
   }
-  console.log(`Found ${csvFiles.length} CSV files: ${csvFiles.join(', ')}\n`);
+  console.log(`Found ${spreadsheets.length} spreadsheets:\n`);
 
+  // ── Step 1: Fetch data from each sheet ──
   const sheets: { filename: string; subjectName: string; sheetPrefix: string; rows: Record<string, string>[] }[] = [];
-  for (const file of csvFiles) {
-    const csv = fs.readFileSync(path.join(CSV_DIR, file), 'utf-8');
-    const rows = parseCSV(csv);
+
+  for (const ss of spreadsheets) {
+    const rows = await fetchSheetData(ss.id);
+    const validRows = rows.filter(r => r['教材ID']?.trim());
     sheets.push({
-      filename: file,
-      subjectName: getSubjectName(file),
-      sheetPrefix: getSheetPrefix(file),
-      rows,
+      filename: ss.name,
+      subjectName: getSubjectName(ss.name),
+      sheetPrefix: getSheetPrefix(ss.name),
+      rows: validRows,
     });
-    console.log(`  ${file}: ${rows.length} materials`);
+    console.log(`  ${ss.name}: ${validRows.length} materials`);
   }
   console.log('');
 
-  // ── Step 1: Backup ──
+  // ── Step 2: Backup ──
   await backup();
-
-  // ── Step 2: Upload images ──
-  const uploadedImages = await uploadImages(sheets);
 
   // ── Step 3: Get existing subjects ──
   const { data: allSubjects } = await supabase.from('subjects').select('*');
@@ -266,61 +180,20 @@ async function main() {
   }
   console.log('');
 
-  // ── Step 4: Save existing image URLs before deletion ──
-  const { data: existingBooks } = await supabase
-    .from('books')
-    .select('id, name, image_url, subject_id')
-    .eq('is_custom', false)
-    .in('subject_id', targetSubjectIds);
+  // ── Step 4: UPSERT divisions, books, tasks ──
+  let updatedBooks = 0;
+  let insertedBooks = 0;
+  let updatedTasks = 0;
+  let insertedTasks = 0;
+  let deletedTasks = 0;
 
-  const masterBookCount = existingBooks?.length || 0;
-  const existingImageMap = new Map<string, string>();
-  existingBooks?.forEach(b => {
-    if (b.image_url) existingImageMap.set(b.name, b.image_url);
-  });
-
-  // ── Step 5: Delete master books ──
-  // CASCADE: tasks, user_curriculum
-  // SET NULL: progress.task_id, progress.book_id, attendance_records.book_id
-  // → progressは一切消えない
-  console.log(`  Existing master books to replace: ${masterBookCount}`);
-
-  if (masterBookCount > 0) {
-    const { error: delErr, count: delCount } = await supabase
-      .from('books')
-      .delete({ count: 'exact' })
-      .eq('is_custom', false)
-      .in('subject_id', targetSubjectIds);
-    console.log(`  Deleted master books: ${delCount ?? 0} ${delErr ? '(ERROR: ' + delErr.message + ')' : ''}`);
-  }
-
-  // ── Step 6: Clean up empty divisions ──
-  const { data: allDivisions } = await supabase
-    .from('divisions')
-    .select('id, name, subject_id')
-    .in('subject_id', targetSubjectIds);
-
-  if (allDivisions) {
-    for (const div of allDivisions) {
-      const { count } = await supabase
-        .from('books')
-        .select('id', { count: 'exact', head: true })
-        .eq('division_id', div.id);
-      if (count === 0) {
-        await supabase.from('divisions').delete().eq('id', div.id);
-        console.log(`  Deleted empty division: ${div.name}`);
-      }
-    }
-  }
-  console.log('');
-
-  // ── Step 7: Upsert divisions & Insert books & tasks ──
-  let totalBooks = 0;
-  let totalTasks = 0;
+  const sheetBookNames = new Map<string, Set<string>>();
 
   for (const sheet of sheets) {
     const subjectId = subjectMap.get(sheet.subjectName)!;
     console.log(`-- ${sheet.subjectName} --`);
+
+    if (!sheetBookNames.has(subjectId)) sheetBookNames.set(subjectId, new Set());
 
     // Ensure divisions exist
     const divisionNames = [...new Set(sheet.rows.map(r => r['分野']))];
@@ -351,12 +224,11 @@ async function main() {
       }
     }
 
-    // Insert books
+    // UPSERT books
     for (const row of sheet.rows) {
       const divisionId = divisionMap.get(row['分野']);
       if (!divisionId) continue;
 
-      const materialId = row['教材ID'];
       const bookName = row['教材名'];
       const displayOrder = parseInt(row['学習順序']) || 0;
       const maxLaps = parseInt(row['推奨周回数']) || 1;
@@ -364,67 +236,175 @@ async function main() {
       const remarks = row['備考'] || null;
       const unitLabel = row['単位名称'] || DEFAULT_UNIT_LABEL;
       const totalUnits = parseInt(row['総Unit数']) || 0;
+      const level = row['レベル']?.trim() || null;
 
-      // Image URL: reuse existing, or construct if CSV has imageUrl
-      let imageUrl: string | null = existingImageMap.get(bookName) || null;
-      if (!imageUrl && row['imageUrl']) {
-        imageUrl = buildImageUrl(sheet.sheetPrefix, materialId);
-      }
+      sheetBookNames.get(subjectId)!.add(bookName);
 
-      const { data: newBook, error: bookErr } = await supabase
+      // Check if book already exists
+      const { data: existingBook } = await supabase
         .from('books')
-        .insert({
-          division_id: divisionId,
-          subject_id: subjectId,
-          name: bookName,
-          display_order: displayOrder,
-          max_laps: maxLaps,
-          drive_url: driveUrl,
-          image_url: imageUrl,
-          remarks: remarks,
-          is_custom: false,
-        })
         .select('id')
-        .single();
+        .eq('subject_id', subjectId)
+        .eq('name', bookName)
+        .eq('is_custom', false)
+        .maybeSingle();
 
-      if (bookErr) {
-        console.error(`  Error inserting book "${bookName}":`, bookErr.message);
-        continue;
+      let bookId: string;
+
+      if (existingBook) {
+        const { error: updateErr } = await supabase
+          .from('books')
+          .update({
+            division_id: divisionId,
+            display_order: displayOrder,
+            max_laps: maxLaps,
+            drive_url: driveUrl,
+            remarks: remarks,
+            level: level,
+          })
+          .eq('id', existingBook.id);
+
+        if (updateErr) {
+          console.error(`  Error updating book "${bookName}":`, updateErr.message);
+          continue;
+        }
+        bookId = existingBook.id;
+        updatedBooks++;
+        console.log(`  UPDATE ${bookName} [${level || '-'}]`);
+      } else {
+        const { data: newBook, error: insertErr } = await supabase
+          .from('books')
+          .insert({
+            division_id: divisionId,
+            subject_id: subjectId,
+            name: bookName,
+            display_order: displayOrder,
+            max_laps: maxLaps,
+            drive_url: driveUrl,
+            remarks: remarks,
+            is_custom: false,
+            level: level,
+          })
+          .select('id')
+          .single();
+
+        if (insertErr) {
+          console.error(`  Error inserting book "${bookName}":`, insertErr.message);
+          continue;
+        }
+        bookId = newBook.id;
+        insertedBooks++;
+        console.log(`  INSERT ${bookName} [${level || '-'}]`);
       }
 
-      totalBooks++;
+      // UPSERT tasks
+      if (totalUnits > 0) {
+        const { data: existingTasks } = await supabase
+          .from('tasks')
+          .select('id, display_order, name')
+          .eq('book_id', bookId)
+          .order('display_order');
 
-      // Generate tasks
-      if (totalUnits > 0 && newBook) {
-        const tasks = [];
+        const existingTaskMap = new Map<number, { id: string; name: string }>();
+        existingTasks?.forEach(t => existingTaskMap.set(t.display_order, { id: t.id, name: t.name }));
+
         for (let i = 1; i <= totalUnits; i++) {
-          tasks.push({
-            book_id: newBook.id,
-            name: `${unitLabel}${i}`,
-            display_order: i,
-          });
-        }
+          const taskName = `${unitLabel}${i}`;
+          const existing = existingTaskMap.get(i);
 
-        for (let i = 0; i < tasks.length; i += 500) {
-          const batch = tasks.slice(i, i + 500);
-          const { error: taskErr } = await supabase.from('tasks').insert(batch);
-          if (taskErr) {
-            console.error(`  Error inserting tasks for "${bookName}":`, taskErr.message);
+          if (existing) {
+            if (existing.name !== taskName) {
+              await supabase.from('tasks').update({ name: taskName }).eq('id', existing.id);
+            }
+            updatedTasks++;
+          } else {
+            const { error: taskErr } = await supabase.from('tasks').insert({
+              book_id: bookId,
+              name: taskName,
+              display_order: i,
+            });
+            if (taskErr) {
+              console.error(`  Error inserting task "${taskName}" for "${bookName}":`, taskErr.message);
+            }
+            insertedTasks++;
           }
         }
-        totalTasks += totalUnits;
-      }
 
-      console.log(`  OK ${bookName} (${totalUnits} ${unitLabel})`);
+        // Delete excess tasks only if no progress
+        const excessTasks = (existingTasks || []).filter(t => t.display_order > totalUnits);
+        for (const task of excessTasks) {
+          const { count: progressCount } = await supabase
+            .from('progress')
+            .select('id', { count: 'exact', head: true })
+            .eq('task_id', task.id);
+
+          if (progressCount === 0) {
+            await supabase.from('tasks').delete().eq('id', task.id);
+            deletedTasks++;
+          } else {
+            console.log(`  SKIP delete task ${task.name} (${progressCount} progress records)`);
+          }
+        }
+      }
     }
     console.log('');
   }
 
+  // ── Step 5: Delete books no longer in sheets (only if no progress) ──
+  let deletedBooks = 0;
+  let skippedBooks = 0;
+
+  for (const subjectId of targetSubjectIds) {
+    const { data: dbBooks } = await supabase
+      .from('books')
+      .select('id, name')
+      .eq('subject_id', subjectId)
+      .eq('is_custom', false);
+
+    const names = sheetBookNames.get(subjectId) || new Set();
+
+    for (const book of dbBooks || []) {
+      if (!names.has(book.name)) {
+        const { count: progressCount } = await supabase
+          .from('progress')
+          .select('id', { count: 'exact', head: true })
+          .eq('book_id', book.id);
+
+        if (progressCount === 0) {
+          await supabase.from('books').delete().eq('id', book.id);
+          deletedBooks++;
+          console.log(`  Deleted obsolete book: ${book.name}`);
+        } else {
+          skippedBooks++;
+          console.log(`  SKIP delete book "${book.name}" (${progressCount} progress records)`);
+        }
+      }
+    }
+  }
+
+  // ── Step 6: Clean up empty divisions ──
+  const { data: allDivisions } = await supabase
+    .from('divisions')
+    .select('id, name, subject_id')
+    .in('subject_id', targetSubjectIds);
+
+  if (allDivisions) {
+    for (const div of allDivisions) {
+      const { count } = await supabase
+        .from('books')
+        .select('id', { count: 'exact', head: true })
+        .eq('division_id', div.id);
+      if (count === 0) {
+        await supabase.from('divisions').delete().eq('id', div.id);
+        console.log(`  Deleted empty division: ${div.name}`);
+      }
+    }
+  }
+
   // ── Summary ──
-  console.log('=== 同期完了 ===');
-  console.log(`  Books: ${totalBooks} inserted`);
-  console.log(`  Tasks: ${totalTasks} generated`);
-  console.log(`  Images: ${uploadedImages.size} in storage`);
+  console.log('\n=== 同期完了 ===');
+  console.log(`  Books: ${updatedBooks} updated, ${insertedBooks} inserted, ${deletedBooks} deleted, ${skippedBooks} skipped (has progress)`);
+  console.log(`  Tasks: ${updatedTasks} updated, ${insertedTasks} inserted, ${deletedTasks} deleted`);
 
   const { count: bookCount } = await supabase
     .from('books')
@@ -436,7 +416,23 @@ async function main() {
   const { count: progressCount } = await supabase
     .from('progress')
     .select('id', { count: 'exact', head: true });
-  console.log(`  DB total: ${bookCount} master books, ${taskCount} tasks, ${progressCount} progress (preserved)`);
+  const { count: nullBookProgress } = await supabase
+    .from('progress')
+    .select('id', { count: 'exact', head: true })
+    .is('book_id', null);
+  const { count: nullTaskProgress } = await supabase
+    .from('progress')
+    .select('id', { count: 'exact', head: true })
+    .is('task_id', null);
+
+  console.log(`  DB total: ${bookCount} master books, ${taskCount} tasks, ${progressCount} progress`);
+  console.log(`  Progress integrity: ${nullBookProgress} null book_id, ${nullTaskProgress} null task_id`);
+
+  if ((nullBookProgress || 0) > 0 || (nullTaskProgress || 0) > 0) {
+    console.error('  ⚠ WARNING: Some progress records have NULL references!');
+  } else {
+    console.log('  ✓ All progress references intact');
+  }
 }
 
 main().catch(err => {
