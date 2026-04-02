@@ -293,8 +293,28 @@ export default function AttendancePlanPage() {
         </h1>
         <p className="text-sm text-gray-500 mt-2 font-medium leading-relaxed">
           毎日個別特訓に参加する日程をタップして選択してください。<br />
-          <span className="text-primary-600 dark:text-gray-400 font-bold">※毎月末日</span>に翌月分が確定されます。
+          <span className="text-primary-600 dark:text-gray-400 font-bold">※毎月25日</span>までに翌月分を提出してください。
         </p>
+      </div>
+
+      {/* 警告バナー */}
+      <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-300 dark:border-warning-800 rounded-card p-4 mb-6">
+        <h3 className="text-sm font-bold text-warning-800 dark:text-warning-200 mb-2 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          出席申請をしないとどうなる？
+        </h3>
+        <ul className="space-y-1.5 text-xs text-warning-700 dark:text-warning-300">
+          <li className="flex items-start gap-2">
+            <span className="font-bold text-danger-500 mt-0.5">-</span>
+            <span><span className="font-bold">コーチが割り当てられない可能性があります。</span>出席申請をもとにルーム振り分けを行うため、未申請の場合は待機教室（教室Z）に案内されます。</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="font-bold text-danger-500 mt-0.5">-</span>
+            <span><span className="font-bold">FAST-UPポイントが加算されません。</span>特訓参加で獲得できるポイント（1回1pt）は、出席申請済みの場合のみ付与されます。ポイントを貯めるとご褒美と交換できます。</span>
+          </li>
+        </ul>
       </div>
 
       {/* Confirmed months */}

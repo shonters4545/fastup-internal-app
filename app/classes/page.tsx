@@ -295,10 +295,18 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
             </div>
 
             {isZRoom && (
-              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3">
-                <p className="text-xs text-warning-700 dark:text-warning-300">
+              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3 space-y-2">
+                <p className="text-xs font-bold text-warning-800 dark:text-warning-200">
                   出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
                 </p>
+                <div className="border-t border-warning-200 dark:border-warning-700 pt-2 space-y-1">
+                  <p className="text-xs text-danger-600 dark:text-danger-400 font-bold">
+                    - 今回の参加ではポイントが加算されません
+                  </p>
+                  <p className="text-[10px] text-warning-600 dark:text-warning-400">
+                    次回からは出席申請を提出してから参加しましょう。出席申請はマイページ &gt; 出席予定から登録できます。
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -476,9 +484,12 @@ const AttendanceDetailModal: React.FC<AttendanceDetailModalProps> = ({ classItem
             </div>
 
             {isZRoom && (
-              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3">
-                <p className="text-xs text-warning-700 dark:text-warning-300">
+              <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3 space-y-2">
+                <p className="text-xs font-bold text-warning-800 dark:text-warning-200">
                   出席予定が未提出のため、グループには振り分けられていません。教室Zでお待ちください。
+                </p>
+                <p className="text-[10px] text-warning-600 dark:text-warning-400">
+                  次回からは出席申請を提出してから参加しましょう。出席申請はマイページ &gt; 出席予定から登録できます。
                 </p>
               </div>
             )}

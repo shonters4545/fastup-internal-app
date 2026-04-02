@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from '@/hooks/useAuth';
 import { Header } from '@/components/Header';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { SurveyProvider } from '@/components/SurveyProvider';
+import { AttendanceGate } from '@/components/AttendanceGate';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { currentUser } = useAuth();
@@ -16,6 +17,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <BottomNavBar />
+      <AttendanceGate />
     </div>
   );
 }
