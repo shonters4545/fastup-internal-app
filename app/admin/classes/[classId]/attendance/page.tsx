@@ -487,7 +487,7 @@ export default function AdminClassDetailPage() {
           const roomTypeColor = room.room_type === 'science' ? 'text-info-600 dark:text-info-400' : 'text-accent-600 dark:text-accent-400';
 
           return (
-            <div key={room.id} className={`bg-white dark:bg-gray-800 rounded-card shadow-card border overflow-hidden ${isOverCapacity ? 'border-danger-400 dark:border-danger-500' : 'border-gray-50 dark:border-gray-700'}`}>
+            <div key={room.id} className={`bg-white dark:bg-gray-800 rounded-card shadow-card border overflow-visible ${isOverCapacity ? 'border-danger-400 dark:border-danger-500' : 'border-gray-50 dark:border-gray-700'}`}>
               {/* ルームヘッダー */}
               <div className={`px-6 py-4 border-b flex flex-wrap justify-between items-center gap-3 ${isOverCapacity ? 'bg-danger-50 dark:bg-danger-900/30 border-danger-200 dark:border-danger-800' : 'bg-info-50 dark:bg-info-900/30 border-info-100 dark:border-info-800'}`}>
                 <div className="flex items-center gap-3">
