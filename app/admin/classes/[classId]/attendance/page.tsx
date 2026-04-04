@@ -31,6 +31,7 @@ type Attendee = {
   user_id: string;
   subject_id: string | null;
   book_id: string | null;
+  task_id: string | null;
   room_id: string | null;
   is_trial: boolean;
   round_checks: boolean[];
@@ -66,6 +67,8 @@ export default function AdminClassDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [addMemberRoomId, setAddMemberRoomId] = useState<string | null>(null);
   const [selectedMoveUserId, setSelectedMoveUserId] = useState('');
+  const [memberSearchQuery, setMemberSearchQuery] = useState('');
+  const [showMemberDropdown, setShowMemberDropdown] = useState(false);
   const [showAddRoomForm, setShowAddRoomForm] = useState(false);
   const [newRoomLabel, setNewRoomLabel] = useState('');
   const [newRoomType, setNewRoomType] = useState<'humanities' | 'science'>('humanities');
@@ -81,7 +84,7 @@ export default function AdminClassDetailPage() {
       const [classRes, roomsRes, attendeesRes, instructorsRes] = await Promise.all([
         (supabase.from('classes') as any).select('title, instructor_name, start_time, end_time').eq('id', classId).single(),
         (supabase.from('class_rooms') as any).select('*').eq('class_id', classId).order('label'),
-        (supabase.from('attendance_records') as any).select('id, user_id, instructor_name, student_name, study_material, attended_at, subject_id, book_id, room_id, is_trial, round_checks').eq('class_id', classId).order('attended_at', { ascending: true }),
+        (supabase.from('attendance_records') as any).select('id, user_id, instructor_name, student_name, study_material, attended_at, subject_id, book_id, task_id, room_id, is_trial, round_checks').eq('class_id', classId).order('attended_at', { ascending: true }),
         (supabase.from('users') as any).select('id, display_name').in('role', ['admin', 'super']),
       ]);
 
@@ -592,16 +595,52 @@ export default function AdminClassDetailPage() {
                 <div className="px-6 py-3 border-t border-gray-50 dark:border-gray-700">
                   {addMemberRoomId === room.id ? (
                     <div className="flex items-center gap-2">
-                      <select
-                        value={selectedMoveUserId}
-                        onChange={(e) => setSelectedMoveUserId(e.target.value)}
-                        className="input flex-grow text-sm"
-                      >
-                        <option value="">-- 追加するメンバー --</option>
-                        {[...zAttendees, ...unassignedAttendees].map(a => (
-                          <option key={a.id} value={a.id}>{a.student_name || '不明'}{a.room_id ? ' (Z)' : ' (未割当)'}</option>
-                        ))}
-                      </select>
+                      <div className="relative flex-grow">
+                        <input
+                          type="text"
+                          value={memberSearchQuery}
+                          onChange={(e) => {
+                            setMemberSearchQuery(e.target.value);
+                            setSelectedMoveUserId('');
+                            setShowMemberDropdown(true);
+                          }}
+                          onFocus={() => setShowMemberDropdown(true)}
+                          className="input w-full text-sm"
+                          placeholder="生徒名で検索..."
+                          autoFocus
+                        />
+                        {showMemberDropdown && (() => {
+                          const candidates = [...zAttendees, ...unassignedAttendees].filter(a => {
+                            if (!memberSearchQuery.trim()) return true;
+                            return (a.student_name || '').toLowerCase().includes(memberSearchQuery.toLowerCase());
+                          });
+                          return (
+                            <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-input shadow-lg max-h-48 overflow-y-auto">
+                              {candidates.length === 0 ? (
+                                <div className="p-3 text-sm text-gray-400">該当する生徒がいません</div>
+                              ) : (
+                                candidates.map(a => (
+                                  <button
+                                    key={a.id}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedMoveUserId(a.id);
+                                      setMemberSearchQuery(`${a.student_name || '不明'}${a.room_id ? ' (Z)' : ' (未割当)'}`);
+                                      setShowMemberDropdown(false);
+                                    }}
+                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors ${
+                                      selectedMoveUserId === a.id ? 'bg-primary-100 dark:bg-gray-900/30 font-bold' : 'text-gray-800 dark:text-gray-200'
+                                    }`}
+                                  >
+                                    {a.student_name || '不明'}
+                                    <span className="text-xs text-gray-400 ml-1">{a.room_id ? '(Z)' : '(未割当)'}</span>
+                                  </button>
+                                ))
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </div>
                       <button
                         onClick={() => handleAddFromZ(room.id)}
                         disabled={!selectedMoveUserId}
@@ -610,7 +649,7 @@ export default function AdminClassDetailPage() {
                         追加
                       </button>
                       <button
-                        onClick={() => { setAddMemberRoomId(null); setSelectedMoveUserId(''); }}
+                        onClick={() => { setAddMemberRoomId(null); setSelectedMoveUserId(''); setMemberSearchQuery(''); setShowMemberDropdown(false); }}
                         className="btn-secondary text-sm px-3 py-1.5"
                       >
                         取消
@@ -618,7 +657,7 @@ export default function AdminClassDetailPage() {
                     </div>
                   ) : (
                     <button
-                      onClick={() => setAddMemberRoomId(room.id)}
+                      onClick={() => { setAddMemberRoomId(room.id); setMemberSearchQuery(''); setSelectedMoveUserId(''); setShowMemberDropdown(false); }}
                       className="text-sm text-primary-600 dark:text-gray-400 hover:underline"
                     >
                       + メンバーを追加

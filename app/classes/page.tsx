@@ -24,6 +24,12 @@ type BookOption = {
   subject_id: string;
 };
 
+type TaskOption = {
+  id: string;
+  name: string;
+  display_order: number;
+};
+
 type RoomInfo = {
   id: string;
   label: string;
@@ -45,6 +51,7 @@ type RegistrationResult = {
   roomType: string;
   instructorName: string | null;
   bookName: string;
+  taskName: string | null;
 };
 
 const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userName, onClose, onSuccess }) => {
@@ -52,6 +59,9 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
   const [selectedSubjectId, setSelectedSubjectId] = useState('');
   const [selectedBookId, setSelectedBookId] = useState('');
   const [bookSearchQuery, setBookSearchQuery] = useState('');
+  const [selectedTaskId, setSelectedTaskId] = useState('');
+  const [tasks, setTasks] = useState<TaskOption[]>([]);
+  const [loadingTasks, setLoadingTasks] = useState(false);
   const [isTrial, setIsTrial] = useState(false);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [allBooks, setAllBooks] = useState<BookOption[]>([]);
@@ -82,6 +92,28 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
     fetchData();
   }, []);
 
+  // 教材選択時にタスク一覧を取得
+  useEffect(() => {
+    if (!selectedBookId) {
+      setTasks([]);
+      setSelectedTaskId('');
+      return;
+    }
+    const fetchTasks = async () => {
+      setLoadingTasks(true);
+      try {
+        const supabase = createClient();
+        const { data } = await supabase.from('tasks').select('id, name, display_order').eq('book_id', selectedBookId).order('display_order');
+        setTasks((data || []) as TaskOption[]);
+      } catch (err) {
+        console.error('Failed to fetch tasks:', err);
+      } finally {
+        setLoadingTasks(false);
+      }
+    };
+    fetchTasks();
+  }, [selectedBookId]);
+
   // ドロップダウン外クリックで閉じる
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -109,6 +141,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
     setSelectedBookId(book.id);
     setBookSearchQuery(book.name);
     setShowBookDropdown(false);
+    setSelectedTaskId('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,6 +152,10 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
     }
     if (!selectedBookId) {
       setError('教材を選択してください。');
+      return;
+    }
+    if (tasks.length > 0 && !selectedTaskId) {
+      setError('ユニットを選択してください。');
       return;
     }
 
@@ -212,14 +249,18 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
       }
 
       // 出席記録を挿入
+      const selectedTask = tasks.find(t => t.id === selectedTaskId);
+      const studyMaterialLabel = selectedTask ? `${selectedBookName}（${selectedTask.name}〜）` : selectedBookName;
+
       const { error: insertError } = await (supabase.from('attendance_records') as any).insert({
         class_id: classItem.id,
         user_id: userId,
         student_name: userName,
         instructor_name: assignedInstructorName,
-        study_material: selectedBookName,
+        study_material: studyMaterialLabel,
         subject_id: selectedSubjectId,
         book_id: selectedBookId,
+        task_id: selectedTaskId || null,
         room_id: assignedRoomId,
         is_trial: isTrial,
         attended_at: new Date().toISOString(),
@@ -228,11 +269,13 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 
       // 振り分け結果を表示
       if (assignedRoomLabel) {
+        const selectedTaskObj = tasks.find(t => t.id === selectedTaskId);
         setRegistrationResult({
           roomLabel: assignedRoomLabel,
           roomType: assignedRoomType,
           instructorName: assignedInstructorName,
           bookName: selectedBookName,
+          taskName: selectedTaskObj?.name || null,
         });
       } else {
         onSuccess();
@@ -252,7 +295,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
 
   // 登録完了・振り分け結果画面
   if (registrationResult) {
-    const { roomLabel, roomType, instructorName, bookName } = registrationResult;
+    const { roomLabel, roomType, instructorName, bookName, taskName } = registrationResult;
     const isZRoom = roomLabel === 'Z';
     const roomTypeLabel = roomType === 'science' ? '理系' : roomType === 'humanities' ? '文系' : '';
 
@@ -293,6 +336,14 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
               <span className="text-xs text-gray-500 dark:text-gray-400">教材</span>
               <span className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate ml-2">{bookName}</span>
             </div>
+
+            {/* 開始ユニット */}
+            {taskName && (
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-btn p-3 flex items-center justify-between">
+                <span className="text-xs text-gray-500 dark:text-gray-400">開始ユニット</span>
+                <span className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate ml-2">{taskName}〜</span>
+              </div>
+            )}
 
             {isZRoom && (
               <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-btn p-3 space-y-2">
@@ -352,6 +403,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
                 setSelectedSubjectId(e.target.value);
                 setSelectedBookId('');
                 setBookSearchQuery('');
+                setSelectedTaskId('');
               }}
               className="input w-full p-2 text-sm"
               required
@@ -406,6 +458,30 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
             )}
           </div>
 
+          {/* ユニット選択 */}
+          {selectedBookId && (
+            <div>
+              <label className="label uppercase">どのユニットから始めますか？</label>
+              {loadingTasks ? (
+                <div className="text-sm text-gray-400 p-2">読み込み中...</div>
+              ) : tasks.length === 0 ? (
+                <div className="text-sm text-gray-400 p-2">この教材にはユニットが設定されていません</div>
+              ) : (
+                <select
+                  value={selectedTaskId}
+                  onChange={(e) => setSelectedTaskId(e.target.value)}
+                  className="input w-full p-2 text-sm"
+                  required
+                >
+                  <option value="">-- ユニットを選択 --</option>
+                  {tasks.map(t => (
+                    <option key={t.id} value={t.id}>{t.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+          )}
+
           {/* 体験チェックボックス */}
           <div className="flex items-center gap-2 p-3 bg-warning-50 dark:bg-warning-900/20 rounded-input border border-warning-200 dark:border-warning-800">
             <input
@@ -426,7 +502,7 @@ const PasscodeModal: React.FC<PasscodeModalProps> = ({ classItem, userId, userNa
             <button type="button" onClick={onClose} disabled={isSubmitting} className="btn-secondary px-4 py-2 text-sm">キャンセル</button>
             <button
               type="submit"
-              disabled={isSubmitting || passcode.length !== 4 || !selectedSubjectId || !selectedBookId}
+              disabled={isSubmitting || passcode.length !== 4 || !selectedSubjectId || !selectedBookId || (tasks.length > 0 && !selectedTaskId)}
               className="btn-primary px-4 py-2 text-sm disabled:bg-gray-400"
             >
               {isSubmitting ? '送信中...' : '出席する'}
