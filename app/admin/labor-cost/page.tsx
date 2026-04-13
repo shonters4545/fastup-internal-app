@@ -339,6 +339,72 @@ export default function AdminLaborCostPage() {
     return 'text-primary-600 bg-primary-100';
   };
 
+  const handleCsvDownload = async () => {
+    const supabase = createClient();
+    const startOfMonth = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1);
+    const endOfMonth = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0, 23, 59, 59);
+
+    // Get classes in the selected month
+    const { data: classes } = await (supabase.from('classes') as any)
+      .select('id, start_time')
+      .gte('start_time', startOfMonth.toISOString())
+      .lte('start_time', endOfMonth.toISOString());
+
+    if (!classes || classes.length === 0) {
+      alert('該当月の特訓データがありません。');
+      return;
+    }
+
+    const classIds = classes.map((c: any) => c.id);
+    const classDateMap = new Map<string, string>();
+    classes.forEach((c: any) => {
+      classDateMap.set(c.id, formatDate(new Date(c.start_time)));
+    });
+
+    // Get rooms with instructor assignments
+    const { data: rooms } = await (supabase.from('class_rooms') as any)
+      .select('class_id, instructor_name, room_type')
+      .in('class_id', classIds)
+      .not('instructor_name', 'is', null);
+
+    if (!rooms || rooms.length === 0) {
+      alert('該当月のコーチ配置データがありません。');
+      return;
+    }
+
+    // Deduplicate by (date, instructor_name, room_type)
+    const seen = new Set<string>();
+    const rows: { date: string; instructorName: string; content: string }[] = [];
+
+    for (const room of rooms) {
+      const date = classDateMap.get(room.class_id);
+      if (!date || !room.instructor_name) continue;
+      const content = room.room_type === 'science' ? '理系' : '文系';
+      const key = `${date}_${room.instructor_name}_${content}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      rows.push({ date, instructorName: room.instructor_name, content });
+    }
+
+    rows.sort((a, b) => a.date.localeCompare(b.date) || a.instructorName.localeCompare(b.instructorName));
+
+    // Generate CSV with BOM for Excel
+    const csvLines = ['勤務日,コーチ氏名,指導内容'];
+    for (const row of rows) {
+      csvLines.push(`${row.date},${row.instructorName},${row.content}`);
+    }
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const y = selectedMonth.getFullYear();
+    const m = ('0' + (selectedMonth.getMonth() + 1)).slice(-2);
+    a.download = `コーチ勤務一覧_${y}${m}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center">
@@ -356,17 +422,25 @@ export default function AdminLaborCostPage() {
     <div className="w-full max-w-7xl mx-auto p-4 md:p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">人件費管理</h1>
-        <select
-          className="input w-auto"
-          value={selectedMonth.toISOString()}
-          onChange={(e) => setSelectedMonth(new Date(e.target.value))}
-        >
-          {monthOptions.map((date) => (
-            <option key={date.toISOString()} value={date.toISOString()}>
-              {date.getFullYear()}年{date.getMonth() + 1}月
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleCsvDownload}
+            className="btn btn-secondary text-sm"
+          >
+            CSV出力
+          </button>
+          <select
+            className="input w-auto"
+            value={selectedMonth.toISOString()}
+            onChange={(e) => setSelectedMonth(new Date(e.target.value))}
+          >
+            {monthOptions.map((date) => (
+              <option key={date.toISOString()} value={date.toISOString()}>
+                {date.getFullYear()}年{date.getMonth() + 1}月
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Dashboard */}
