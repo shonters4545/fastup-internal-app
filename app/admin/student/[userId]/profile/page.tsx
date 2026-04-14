@@ -23,6 +23,8 @@ export default function AdminStudentProfilePage() {
   const supabase = createClient();
 
   const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [originalEmail, setOriginalEmail] = useState('');
   const [grade, setGrade] = useState('');
   const [targetCollege, setTargetCollege] = useState('');
   const [learningLocation, setLearningLocation] = useState('classroom');
@@ -52,6 +54,8 @@ export default function AdminStudentProfilePage() {
           .single();
         if (user) {
           setNickname(user.nickname || '');
+          setEmail(user.email || '');
+          setOriginalEmail(user.email || '');
           setStudentName(user.nickname || '名前未設定');
           setGrade(user.grade || '');
           setTargetCollege(user.target_college || '');
@@ -104,19 +108,26 @@ export default function AdminStudentProfilePage() {
     setSaving(true);
     try {
       // Update user profile
+      const updateData: Record<string, any> = {
+        nickname,
+        grade,
+        target_college: targetCollege,
+        learning_location: learningLocation,
+        high_school: highSchool,
+        phone_number: phoneNumber,
+        parent_email: parentEmail,
+        target_time: targetTime,
+      };
+      if (email !== originalEmail) {
+        updateData.email = email;
+      }
       const { error: updateErr } = await (supabase.from('users') as any)
-        .update({
-          nickname,
-          grade,
-          target_college: targetCollege,
-          learning_location: learningLocation,
-          high_school: highSchool,
-          phone_number: phoneNumber,
-          parent_email: parentEmail,
-          target_time: targetTime,
-        })
+        .update(updateData)
         .eq('id', userId);
       if (updateErr) throw updateErr;
+      if (email !== originalEmail) {
+        setOriginalEmail(email);
+      }
 
       // Update user_subjects: delete existing, insert new
       await (supabase.from('user_subjects') as any).delete().eq('user_id', userId);
@@ -171,6 +182,13 @@ export default function AdminStudentProfilePage() {
             <div>
               <label className="label">ニックネーム</label>
               <input type="text" value={nickname} onChange={e => setNickname(e.target.value)} className="input" />
+            </div>
+            <div>
+              <label className="label">ログイン用メールアドレス</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="input" />
+              {email !== originalEmail && (
+                <p className="text-xs text-warning-600 mt-1">変更後、生徒は新しいGmailアカウントで再ログインが必要です</p>
+              )}
             </div>
             <div>
               <label className="label">学年</label>

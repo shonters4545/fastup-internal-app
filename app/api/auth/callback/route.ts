@@ -30,13 +30,14 @@ export async function GET(request: Request) {
           .single();
 
         if (!existingUser) {
-          // No match by auth_id — try matching by email (migrated users have Firebase UIDs)
+          // No match by auth_id — try matching by email (migrated users or email change)
           const { data: emailMatch } = await (serviceClient.from('users') as any)
-            .select('id')
+            .select('id, auth_id')
             .eq('email', user.email!)
             .single();
 
           if (emailMatch) {
+            const oldAuthId = emailMatch.auth_id;
             // Update auth_id to the new Supabase Auth UUID
             const { error: updateError } = await (serviceClient.from('users') as any)
               .update({ auth_id: user.id })
@@ -45,6 +46,15 @@ export async function GET(request: Request) {
               console.error('Failed to update auth_id:', updateError);
             } else {
               console.log('Linked Supabase auth to existing user:', user.email);
+              // Clean up old auth user to prevent stale login
+              if (oldAuthId && oldAuthId !== user.id) {
+                const { error: deleteError } = await serviceClient.auth.admin.deleteUser(oldAuthId);
+                if (deleteError) {
+                  console.error('Failed to delete old auth user:', deleteError);
+                } else {
+                  console.log('Deleted old auth user:', oldAuthId);
+                }
+              }
             }
           } else {
             // Truly new user — process invite directly (no redirect to avoid cookie issues)
