@@ -19,6 +19,9 @@ type DisplayResponse = {
   userId: string;
   nickname: string;
   instructorName: string;
+  subjectName: string;
+  bookName: string;
+  taskName: string;
   responses: { [key: string]: string | string[] };
   hasSubmitted: boolean;
 };
@@ -50,17 +53,33 @@ export default function AdminClassSurveysPage() {
       // Fetch class and attendance
       const [classRes, attendanceRes] = await Promise.all([
         (supabase.from('classes') as any).select('title, start_time').eq('id', classId).single(),
-        (supabase.from('attendance_records') as any).select('user_id, instructor_name').eq('class_id', classId),
+        (supabase.from('attendance_records') as any).select('user_id, instructor_name, subject_id, book_id, task_id').eq('class_id', classId),
       ]);
       if (classRes.error) throw new Error('特訓情報が見つかりません。');
       setClassInfo(classRes.data);
 
-      const attendees: { userId: string; instructorName: string }[] = (attendanceRes.data || []).map((a: any) => ({
+      const attendees: { userId: string; instructorName: string; subjectId: string | null; bookId: string | null; taskId: string | null }[] = (attendanceRes.data || []).map((a: any) => ({
         userId: a.user_id,
         instructorName: a.instructor_name || '未設定',
+        subjectId: a.subject_id || null,
+        bookId: a.book_id || null,
+        taskId: a.task_id || null,
       }));
 
       if (attendees.length === 0) { setResponses([]); setLoading(false); return; }
+
+      // Fetch subject / book / task names
+      const subjectIds = [...new Set(attendees.map((a) => a.subjectId).filter((v): v is string => !!v))];
+      const bookIds = [...new Set(attendees.map((a) => a.bookId).filter((v): v is string => !!v))];
+      const taskIds = [...new Set(attendees.map((a) => a.taskId).filter((v): v is string => !!v))];
+      const [subjectsRes, booksRes, tasksRes] = await Promise.all([
+        subjectIds.length > 0 ? (supabase.from('subjects') as any).select('id, name').in('id', subjectIds) : Promise.resolve({ data: [] }),
+        bookIds.length > 0 ? (supabase.from('books') as any).select('id, name').in('id', bookIds) : Promise.resolve({ data: [] }),
+        taskIds.length > 0 ? (supabase.from('tasks') as any).select('id, name').in('id', taskIds) : Promise.resolve({ data: [] }),
+      ]);
+      const subjectsMap = new Map<string, string>((subjectsRes.data || []).map((s: any) => [s.id, s.name]));
+      const booksMap = new Map<string, string>((booksRes.data || []).map((b: any) => [b.id, b.name]));
+      const tasksMap = new Map<string, string>((tasksRes.data || []).map((t: any) => [t.id, t.name]));
 
       // Fetch survey responses for this class
       const { data: responsesData } = await (supabase.from('survey_responses') as any)
@@ -99,6 +118,9 @@ export default function AdminClassSurveysPage() {
           userId: attendee.userId,
           nickname: usersMap.get(attendee.userId) || '（不明な生徒）',
           instructorName: attendee.instructorName,
+          subjectName: (attendee.subjectId && subjectsMap.get(attendee.subjectId)) || '-',
+          bookName: (attendee.bookId && booksMap.get(attendee.bookId)) || '-',
+          taskName: (attendee.taskId && tasksMap.get(attendee.taskId)) || '-',
           responses: actual ? (actual.responses || {}) : {},
           hasSubmitted: !!actual,
         };
@@ -283,6 +305,9 @@ export default function AdminClassSurveysPage() {
               <tr>
                 <th className="sticky left-0 z-10 bg-gray-50 dark:bg-gray-800 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">回答者</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">担当コーチ</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">科目</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">使用教材</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ユニット</th>
                 {questionLabels.map((label) => (
                   <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[250px]">{label}</th>
                 ))}
@@ -290,7 +315,7 @@ export default function AdminClassSurveysPage() {
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
               {filteredResponses.length === 0 ? (
-                <tr><td colSpan={questionLabels.length + 2} className="px-6 py-10 text-center text-gray-500 italic">条件に一致する生徒はいません</td></tr>
+                <tr><td colSpan={questionLabels.length + 5} className="px-6 py-10 text-center text-gray-500 italic">条件に一致する生徒はいません</td></tr>
               ) : filteredResponses.map((response, index) => (
                 <tr key={index} className={`hover:bg-gray-50 dark:hover:bg-gray-800 ${!response.hasSubmitted ? 'opacity-70 bg-gray-50/30' : ''}`}>
                   <td className="sticky left-0 z-10 bg-inherit px-6 py-4 whitespace-nowrap font-bold border-r dark:border-gray-700">
@@ -298,6 +323,9 @@ export default function AdminClassSurveysPage() {
                     {!response.hasSubmitted && <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-badge text-xs font-medium bg-danger-100 text-danger-800 dark:bg-danger-900/30 dark:text-danger-400">未回答</span>}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{response.instructorName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{response.subjectName}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300"><div className="max-w-xs whitespace-pre-wrap">{response.bookName}</div></td>
+                  <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300"><div className="max-w-xs whitespace-pre-wrap">{response.taskName}</div></td>
                   {questionLabels.map((label) => {
                     const answer = response.responses[label];
                     if (!response.hasSubmitted || answer === undefined) {
